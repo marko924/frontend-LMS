@@ -9,6 +9,6 @@ import { HttpClient } from '@angular/common/http';
 export class TipZvanjaService extends GenericCrudService<TipZvanja, number> {
 
   constructor(protected override http: HttpClient) {
-    super(http, `http://localhost:8080/api/tipovi-zvanja`);
+    super(http, `http://localhost:8080/api/tipoviZvanja`);
   }
 }

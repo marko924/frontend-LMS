@@ -9,6 +9,6 @@ import { HttpClient } from '@angular/common/http';
 export class StudijskiProgramService extends GenericCrudService<StudijskiProgram, number> {
 
   constructor(protected override http: HttpClient) {
-    super(http, `http://localhost:8080/api/studijski-programi`);
+    super(http, `http://localhost:8080/api/studijskiProgrami`);
   }
 }
