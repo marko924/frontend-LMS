@@ -1,11 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Page } from '../models/page';
 
-@Injectable({
-  providedIn: 'root',
-})
+
 export class GenericCrudService<T, ID> {
 
   protected constructor(
