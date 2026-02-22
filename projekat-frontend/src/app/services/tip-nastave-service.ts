@@ -9,6 +9,6 @@ import { HttpClient } from '@angular/common/http';
 export class TipNastaveService extends GenericCrudService<TipNastave, number> {
 
   constructor(protected override http: HttpClient) {
-    super(http, `http://localhost:8080/api/tipovi-nastave`);
+    super(http, `http://localhost:8080/api/tipoviNastave`);
   }
 }

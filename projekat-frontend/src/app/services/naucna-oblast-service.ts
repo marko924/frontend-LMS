@@ -9,6 +9,6 @@ import { HttpClient } from '@angular/common/http';
 export class NaucnaOblastService extends GenericCrudService<NaucnaOblast, number> {
 
   constructor(protected override http: HttpClient) {
-    super(http, `http://localhost:8080/api/naucne-oblasti`);
+    super(http, `http://localhost:8080/api/naucneOblasti`);
   }
 }

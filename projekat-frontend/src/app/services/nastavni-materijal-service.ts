@@ -9,6 +9,6 @@ import { HttpClient } from '@angular/common/http';
 export class NastavniMaterijalService extends GenericCrudService<NastavniMaterijal, number> {
 
   constructor(protected override http: HttpClient) {
-    super(http, `http://localhost:8080/api/nastavni-materijali`);
+    super(http, `http://localhost:8080/api/nastavniMaterijali`);
   }
 }
