@@ -1,0 +1,40 @@
+<div class="auth-container">
+  <mat-card class="auth-card">
+    <mat-card-header>
+      <mat-card-title>Prijava na sistem</mat-card-title>
+    </mat-card-header>
+    
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <mat-card-content>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Korisničko ime</mat-label>
+          <input matInput formControlName="username" placeholder="Unesite korisnicko ime">
+          <!--<mat-error *ngIf="loginForm.get('korisnickoIme')?.hasError('required')">
+            Korisničko ime je obavezno
+          </mat-error>-->
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Lozinka</mat-label>
+          <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password">
+          <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
+            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <div *ngIf="errorMessage" class="error-message">
+          {{ errorMessage }}
+        </div>
+      </mat-card-content>
+
+      <mat-card-actions>
+        <button mat-raised-button color="primary" class="full-width" [disabled]="loginForm.invalid">
+          PRIJAVI SE
+        </button>
+      </mat-card-actions>
+    </form>
+    <mat-card-footer class="auth-footer">
+       <p>Nemaš nalog? <a routerLink="/register">Registruj se besplatno</a></p>
+    </mat-card-footer>
+  </mat-card>
+</div>
