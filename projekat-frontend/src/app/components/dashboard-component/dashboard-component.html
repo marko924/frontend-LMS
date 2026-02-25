@@ -1,0 +1,58 @@
+<div class="dashboard-container">
+  <mat-toolbar color="primary" class="main-header">
+    <div class="header-left">
+      <img src="assets/logo-univ.png" alt="Logo" class="univ-logo">
+      <span>Univerzitet Singidunum</span>
+    </div>
+    
+    <span class="spacer"></span>
+    
+    <div class="header-right">
+      <span class="user-info">{{ currentUsername }}</span>
+      <button mat-icon-button (click)="onLogout()" title="Odjavi se">
+        <mat-icon>logout</mat-icon>
+      </button>
+    </div>
+  </mat-toolbar>
+
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav mode="side" opened class="main-sidebar">
+      <mat-nav-list>
+        <a mat-list-item routerLink="/dashboard/home">
+          <mat-icon matListItemIcon>home</mat-icon>
+          <span matListItemTitle>Početna</span>
+        </a>
+
+        <ng-container *ngIf="userRole === 'ROLE_STUDENT'">
+          <a mat-list-item routerLink="/dashboard/prijavi-ispit">
+            <mat-icon matListItemIcon>edit_note</mat-icon>
+            <span matListItemTitle>Prijava ispita</span>
+          </a>
+          <a mat-list-item routerLink="/dashboard/moji-predmeti">
+            <mat-icon matListItemIcon>book</mat-icon>
+            <span matListItemTitle>Moji predmeti</span>
+          </a>
+        </ng-container>
+
+        <ng-container *ngIf="userRole === 'ROLE_NASTAVNIK'">
+          <a mat-list-item routerLink="/dashboard/unos-ocena">
+            <mat-icon matListItemIcon>grade</mat-icon>
+            <span matListItemTitle>Unos ocena</span>
+          </a>
+        </ng-container>
+
+        <ng-container *ngIf="userRole === 'ROLE_ADMIN'">
+          <a mat-list-item routerLink="/dashboard/administracija">
+            <mat-icon matListItemIcon>settings</mat-icon>
+            <span matListItemTitle>Administracija</span>
+          </a>
+        </ng-container>
+
+      </mat-nav-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content class="page-content">
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

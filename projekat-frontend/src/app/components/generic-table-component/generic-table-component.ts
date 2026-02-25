@@ -12,8 +12,14 @@ import { ColumnDef } from '../../models/column-def';
 export class GenericTableComponent<T extends Record<string, any>> {
 
   @Input() data: T[] = [];
+
   @Input() columns: ColumnDef<T>[] = [];
-  @Input() actions: { edit?: boolean; delete?: boolean; view?: boolean } = {
+
+  @Input() actions: {
+    edit?: boolean;
+    delete?: boolean;
+    view?: boolean;
+  } = {
     edit: false,
     delete: false,
     view: false
@@ -23,6 +29,22 @@ export class GenericTableComponent<T extends Record<string, any>> {
   @Output() delete = new EventEmitter<T>();
   @Output() view = new EventEmitter<T>();
   @Output() customEvent = new EventEmitter<{ row: T; event: string }>();
+
+
+  // 🔹 Proverava da li neka kolona ima custom action button
+  hasActionButtons(): boolean {
+    return this.columns?.some(col => !!col.actionButton) ?? false;
+  }
+
+  // 🔹 Proverava da li treba prikazati kolonu "Akcije"
+  hasAnyActions(): boolean {
+    return (
+      !!this.actions?.view ||
+      !!this.actions?.edit ||
+      !!this.actions?.delete ||
+      this.hasActionButtons()
+    );
+  }
 
   formatCell(value: unknown, type?: string): string {
     if (value == null) return '-';

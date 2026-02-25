@@ -2,10 +2,40 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './components/login-component/login-component';
 import { RegisterComponent } from './components/register-component/register-component';
 import { HomeComponent } from './components/home-component/home-component';
+import { DashboardComponent } from './components/dashboard-component/dashboard-component';
+import { RoleGuard } from './guard/role.guard';
 
 export const routes: Routes = [
-    {path: '', component: HomeComponent},
-    {path: 'register', component: RegisterComponent},
-    {path: 'login', component: LoginComponent}
+     // --- JAVNI DEO ---
+  {
+    path: '',
+    component: HomeComponent, 
+    children: [
+      //{ path: '', redirectTo: 'public-home', pathMatch: 'full' },
+      //{ path: 'public-home', component: UniversityDetailsComponent },
+      //{ path: 'fakulteti', component: FacultyListComponent },
+      //{ path: 'studije', component: someOtherComponent },
+    ]
+  },
+
+  // --- AUTENTIFIKACIJA ---
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+
+  // --- ZAŠTIĆENI DEO (DASHBOARD) ---
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+    canActivate: [RoleGuard],
+    children: [
+      //{ path: 'home', component: DashboardWelcomeComponent }, 
+      //{ path: 'administracija', component: AdminTableComponent },
+      //{ path: 'moji-predmeti', component: StudentSubjectsComponent },
+      // ... ostale rute
+    ]
+  },
+
+  // Wildcard ruta za 404
+  { path: '**', redirectTo: '' }
     
 ];

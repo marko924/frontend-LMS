@@ -5,7 +5,7 @@
         {{ col.label }}
       </th>
 
-      <th *ngIf="actions.view || actions.edit || actions.delete || columns.some(c => c.actionButton)">
+      <th *ngIf="hasAnyActions()">
         Akcije
       </th>
     </tr>
@@ -15,20 +15,27 @@
     <tr *ngFor="let row of data">
 
       <td *ngFor="let col of columns">
-
         {{ formatCell(row[col.key], col.type) }}
 
-        <button *ngIf="col.actionButton"
-                (click)="onCustomEvent(row, col.actionButton.event)">
+        <button
+          *ngIf="col.actionButton"
+          (click)="onCustomEvent(row, col.actionButton.event)">
           {{ col.actionButton.label }}
         </button>
-
       </td>
 
-      <td *ngIf="actions.view || actions.edit || actions.delete">
-        <button *ngIf="actions.view" (click)="onView(row)">Pogledaj</button>
-        <button *ngIf="actions.edit" (click)="onEdit(row)">Izmeni</button>
-        <button *ngIf="actions.delete" (click)="onDelete(row)">Obriši</button>
+      <td *ngIf="hasAnyActions()">
+        <button *ngIf="actions.view" (click)="onView(row)">
+          Pogledaj
+        </button>
+
+        <button *ngIf="actions.edit" (click)="onEdit(row)">
+          Izmeni
+        </button>
+
+        <button *ngIf="actions.delete" (click)="onDelete(row)">
+          Obriši
+        </button>
       </td>
 
     </tr>

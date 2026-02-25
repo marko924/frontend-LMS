@@ -1,0 +1,45 @@
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  z-index: 2;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.univ-logo {
+  height: 40px;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.user-info {
+  font-size: 14px;
+  margin-right: 10px;
+}
+
+.sidenav-container {
+  flex: 1;
+}
+
+.main-sidebar {
+  width: 240px;
+  background-color: #f8f9fa;
+  border-right: 1px solid #ddd;
+}
+
+.page-content {
+  padding: 20px;
+  background-color: #fff;
+}
