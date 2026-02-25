@@ -38,12 +38,7 @@ export class LoginComponent implements OnInit {
       this.authService.login(this.loginForm.value).subscribe({
         next: (res) => {
           // Nakon uspešnog logina, proveravamo ulogu i preusmeravamo
-          const role = this.authService.getRole();
-          if (role === 'ROLE_ADMIN') {
-            this.router.navigate(['/admin-dashboard']);
-          } else {
-            this.router.navigate(['/home']);
-          }
+          this.router.navigate(['/dashboard']);
         },
         error: (err) => {
           this.errorMessage = 'Neispravno korisničko ime ili lozinka.';
