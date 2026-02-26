@@ -1,0 +1,24 @@
+import { Injectable } from '@angular/core';
+import { ZahtevZaUpis } from '../models/zahtev-za-upis';
+import { HttpClient } from '@angular/common/http';
+import { GenericCrudService } from './generic-crud-service';
+import { OdobravanjeZahteva } from '../models/odobravanje-zahteva';
+import { Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class ZahtevZaUpisService extends GenericCrudService<ZahtevZaUpis, number>{
+  
+  constructor(protected override http: HttpClient) {
+    super(http, `http://localhost:8080/api/zahteviZaUpis`);
+  }
+
+  odobri(id: number, podaci: OdobravanjeZahteva): Observable<void> {
+    return this.http.put<void>(`http://localhost:8080/api/zahteviZaUpis/${id}/odobri`, podaci);
+  }
+
+  odbij(id: number): Observable<void> {
+    return this.http.put<void>(`http://localhost:8080/api/zahteviZaUpis/${id}/odbij`, {});
+  }
+}
