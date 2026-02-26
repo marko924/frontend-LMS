@@ -8,5 +8,5 @@ export interface ZahtevZaUpis {
     godinaStudijaId: number;
     status: StatusZahteva;
     vremePodnosenja: Date | string;
-    napomena: string;
+    napomena?: string;
 }
