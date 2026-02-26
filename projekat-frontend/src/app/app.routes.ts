@@ -3,6 +3,7 @@ import { LoginComponent } from './components/login-component/login-component';
 import { RegisterComponent } from './components/register-component/register-component';
 import { HomeComponent } from './components/home-component/home-component';
 import { DashboardComponent } from './components/dashboard-component/dashboard-component';
+import { UpisNaGodinuComponent } from './components/upis-na-godinu-component/upis-na-godinu-component';
 import { RoleGuard } from './guard/role.guard';
 
 export const routes: Routes = [
@@ -28,6 +29,7 @@ export const routes: Routes = [
     component: DashboardComponent,
     canActivate: [RoleGuard],
     children: [
+      { path: 'upis-na-godinu', component: UpisNaGodinuComponent },
       //{ path: 'home', component: DashboardWelcomeComponent }, 
       //{ path: 'administracija', component: AdminTableComponent },
       //{ path: 'moji-predmeti', component: StudentSubjectsComponent },

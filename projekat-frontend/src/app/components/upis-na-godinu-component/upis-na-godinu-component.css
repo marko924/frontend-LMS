@@ -1,0 +1,91 @@
+/* Centriranje forme na sredinu ekrana */
+.upis-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Glavna kartica forme */
+.upis-card {
+  width: 450px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+/* Naslov kartice */
+.upis-card h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #3f51b5;
+}
+
+/* Polja forme (input i select) */
+.upis-card input,
+.upis-card select {
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+/* Fokus na input/select */
+.upis-card input:focus,
+.upis-card select:focus {
+  border-color: #3f51b5;
+  outline: none;
+  box-shadow: 0 0 5px rgba(63, 81, 181, 0.3);
+}
+
+/* Dugme */
+.upis-card button {
+  width: 100%;
+  padding: 12px;
+  background-color: #3f51b5;
+  color: #ffffff;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Hover efekat za dugme */
+.upis-card button:hover {
+  background-color: #5167e6;
+}
+
+/* Footer ispod forme (linkovi, napomene) */
+.upis-footer {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.upis-footer a {
+  color: #3f51b5;
+  text-decoration: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.upis-footer a:hover {
+  color: #5167e6;
+}
+
+/* Poruka o grešci */
+.error-message {
+  color: #f44336;
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
