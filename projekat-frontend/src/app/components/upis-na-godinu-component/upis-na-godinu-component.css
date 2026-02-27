@@ -1,4 +1,3 @@
-/* Centriranje forme na sredinu ekrana */
 .upis-container {
   display: flex;
   justify-content: center;
@@ -9,9 +8,9 @@
   box-sizing: border-box;
 }
 
-/* Glavna kartica forme */
 .upis-card {
-  width: 450px;
+  width: 100%;
+  max-width: 450px;
   background-color: #ffffff;
   border-radius: 8px;
   padding: 25px;
@@ -19,52 +18,43 @@
   box-sizing: border-box;
 }
 
-/* Naslov kartice */
 .upis-card h2 {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
   color: #3f51b5;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-/* Polja forme (input i select) */
-.upis-card input,
-.upis-card select {
+mat-form-field {
   width: 100%;
-  padding: 10px 12px;
-  margin-bottom: 15px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-  font-size: 14px;
+  margin-bottom: 5px;
 }
 
-/* Fokus na input/select */
-.upis-card input:focus,
-.upis-card select:focus {
-  border-color: #3f51b5;
-  outline: none;
-  box-shadow: 0 0 5px rgba(63, 81, 181, 0.3);
+textarea {
+  min-height: 80px;
 }
 
-/* Dugme */
-.upis-card button {
+.upis-card button[mat-raised-button] {
   width: 100%;
-  padding: 12px;
+  margin-top: 10px;
+  font-weight: bold;
+  height: 45px;
   background-color: #3f51b5;
   color: #ffffff;
-  font-weight: bold;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
-/* Hover efekat za dugme */
-.upis-card button:hover {
+.upis-card button[mat-raised-button]:hover:not([disabled]) {
   background-color: #5167e6;
 }
 
-/* Footer ispod forme (linkovi, napomene) */
+.error-message {
+  color: #f44336;
+  text-align: center;
+  font-weight: bold;
+  display: block;
+  margin-top: 10px;
+}
+
 .upis-footer {
   text-align: center;
   margin-top: 15px;
@@ -80,12 +70,4 @@
 
 .upis-footer a:hover {
   color: #5167e6;
-}
-
-/* Poruka o grešci */
-.error-message {
-  color: #f44336;
-  text-align: center;
-  font-weight: bold;
-  margin-bottom: 10px;
 }

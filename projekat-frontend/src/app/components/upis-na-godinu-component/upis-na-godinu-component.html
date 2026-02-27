@@ -2,28 +2,46 @@
   <div class="upis-card">
     <h2>Upis studenta na godinu</h2>
 
-    <form [formGroup]="forma" (ngSubmit)="sacuvaj()">
+    <form [formGroup]="forma" (ngSubmit)="sacuvaj()" class="upis-form">
+      
+      <mat-form-field appearance="outline">
+        <mat-label>Fakultet</mat-label>
+        <mat-select formControlName="fakultetId" (selectionChange)="onFakultetChange()">
+          <mat-option *ngFor="let f of fakulteti$ | async" [value]="f.id">
+            {{ f.naziv }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="forma.get('fakultetId')?.touched && forma.get('fakultetId')?.invalid">
+          Fakultet je obavezan
+        </mat-error>
+      </mat-form-field>
 
-      <select formControlName="fakultetId" (change)="onFakultetChange()">
-        <option value="">-- Izaberi fakultet --</option>
-        <option *ngFor="let f of fakulteti" [value]="f.id">{{ f.naziv }}</option>
-      </select>
+      <mat-form-field appearance="outline">
+        <mat-label>Studijski program</mat-label>
+        <mat-select formControlName="studijskiProgramId">
+          <mat-option *ngFor="let p of filtriraniProgrami" [value]="p.id">
+            {{ p.naziv }}
+          </mat-option>
+        </mat-select>
+        <mat-hint *ngIf="filtriraniProgrami.length === 0 && !forma.value.fakultetId">
+          Prvo izaberite fakultet
+        </mat-hint>
+      </mat-form-field>
 
-      <select formControlName="studijskiProgramId">
-        <option value="">-- Izaberi program --</option>
-        <option *ngFor="let p of filtriraniProgrami" [value]="p.id">{{ p.naziv }}</option>
-      </select>
+      <mat-form-field appearance="outline">
+        <mat-label>Godina studija</mat-label>
+        <mat-select formControlName="godinaStudijaId">
+          <mat-option *ngFor="let g of sveGodine$ | async" [value]="g.id">
+            {{ g.godina }}. godina
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
 
-      <select formControlName="godinaStudija">
-        <option value="">-- Izaberi godinu --</option>
-        <option *ngFor="let g of godineStudija" [value]="g">{{ g }}</option>
-      </select>
 
-      <button type="submit">Upiši</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="forma.invalid">
+        PODNESI ZAHTEV
+      </button>
+
     </form>
-
-    <div class="upis-footer">
-      <span class="error-message" *ngIf="forma.invalid">Popunite sva polja ispravno</span>
-    </div>
   </div>
 </div>

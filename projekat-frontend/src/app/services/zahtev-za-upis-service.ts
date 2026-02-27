@@ -10,15 +10,22 @@ import { Observable } from 'rxjs';
 })
 export class ZahtevZaUpisService extends GenericCrudService<ZahtevZaUpis, number>{
   
+  private url = `http://localhost:8080/api/zahteviZaUpis`;
+
   constructor(protected override http: HttpClient) {
     super(http, `http://localhost:8080/api/zahteviZaUpis`);
   }
 
+  // Dodajemo metodu koja ne zavisi od Generic tipa da bi izbegli probleme sa ID-em
+  postaviZahtev(dto: any): Observable<any> {
+    return this.http.post(this.url, dto);
+  }
+
   odobri(id: number, podaci: OdobravanjeZahteva): Observable<void> {
-    return this.http.put<void>(`http://localhost:8080/api/zahteviZaUpis/${id}/odobri`, podaci);
+    return this.http.put<void>(`${this.url}/${id}/odobri`, podaci);
   }
 
   odbij(id: number): Observable<void> {
-    return this.http.put<void>(`http://localhost:8080/api/zahteviZaUpis/${id}/odbij`, {});
+    return this.http.put<void>(`${this.url}/${id}/odbij`, {});
   }
 }
