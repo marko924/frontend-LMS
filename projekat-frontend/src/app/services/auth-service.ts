@@ -22,14 +22,27 @@ export class AuthService {
     );
   }
 
+  getLoggedInUserId(): number {
+    const token = localStorage.getItem('token');
+    if (!token) return 0;
+
+    try {
+      const decoded: any = jwtDecode(token);
+      // 'userId' je ključ koji smo definisali u Javi u JwtUtil klasi
+      return decoded.userId ? Number(decoded.userId) : 0;
+    } catch (error) {
+      console.error("Greška pri dekodiranju tokena:", error);
+      return 0;
+    }
+  }
+
   getRole(): string {
     const token = localStorage.getItem('token');
     if (!token) return '';
-  
     try {
       const decoded: any = jwtDecode(token);
-      return decoded.roles ? decoded.roles[0] : ''; 
-    } catch (Error) {
+      return decoded.roles ? decoded.roles[0] : '';
+    } catch (error) {
       return '';
     }
   }

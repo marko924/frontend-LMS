@@ -9,6 +9,6 @@ import { HttpClient } from '@angular/common/http';
 export class GodinaStudijaService extends GenericCrudService<GodinaStudija, number> {
 
   constructor(protected override http: HttpClient) {
-    super(http, `http://localhost:8080/api/godineStudija`);
+    super(http, `http://localhost:8080/api/godine-studija`);
   }
 }
