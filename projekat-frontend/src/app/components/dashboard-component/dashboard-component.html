@@ -52,6 +52,13 @@
           </a>
         </ng-container>
 
+        <ng-container *ngIf="userRole === 'ROLE_SLUZBA'">
+          <a mat-list-item routerLink="/dashboard/listaZahteva">
+            <mat-icon matListItemIcon>edit_note</mat-icon>
+            <span matListItemTitle>Zahtevi</span>
+          </a>
+        </ng-container>
+
       </mat-nav-list>
     </mat-sidenav>
 

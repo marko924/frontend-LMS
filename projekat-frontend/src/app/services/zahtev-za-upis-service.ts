@@ -25,5 +25,7 @@ export class ZahtevZaUpisService extends GenericCrudService<ZahtevZaUpis, number
     return this.http.put<void>(`${this.url}/${id}/odobri`, podaci);
   }
 
-  
+  odbij(id: number, napomena: string): Observable<void> {
+    return this.http.put<void>(`${this.url}/${id}/odbij`, napomena);
+  }
 }

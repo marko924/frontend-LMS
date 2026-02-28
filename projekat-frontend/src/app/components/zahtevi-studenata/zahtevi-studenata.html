@@ -1,0 +1,63 @@
+<div class="glavni-kontejner">
+  <div class="zaglavlje">
+    <h2 class="naslov">Zahtevi za upis</h2>
+    <span class="brojac">{{zahtevi.length}} novih zahteva</span>
+  </div>
+
+  <div class="mreza-zahteva">
+    <div class="kartica-omotac" *ngFor="let zahtev of zahtevi">
+      <div class="zahtev-card">
+        <div class="kartica-sadrzaj">
+          <h5 class="card-title">
+            <i></i> Student #{{zahtev.studentId}}
+          </h5>
+          
+          <div class="zahtev-info">
+            <p><i></i> <strong>Godina ID:</strong> {{zahtev.godinaStudijaId}}</p>
+            <p><i></i> <strong>Podneto:</strong> {{zahtev.vremePodnosenja | date:'dd.MM.yyyy - HH:mm'}}</p>
+          </div>
+
+          <div *ngIf="zahtevZaOdbijanjeId !== zahtev.id" class="akcije">
+            <button class="btn-odobri" (click)="prikaziFormuZaOdobravanje(zahtev.id!)">
+              Odobri
+            </button>
+            <button class="btn-odbij" (click)="prikaziFormuZaOdbijanje(zahtev.id!)">
+              Odbij
+            </button>
+          </div>
+
+          <div *ngIf="zahtevZaOdbijanjeId === zahtev.id" class="odbijanje-container">
+            <label class="odbijanje-label">Razlog odbijanja:</label>
+            <textarea 
+              class="odbijanje-tekst" 
+              rows="3" 
+              [(ngModel)]="napomenaTekst" 
+              placeholder="Unesite kratko obrazloženje...">
+            </textarea>
+            <div class="odbijanje-dugmici">
+              <button class="btn-otkazi" (click)="zahtevZaOdbijanjeId = null">Otkaži</button>
+              <button class="btn-confirm" (click)="potvrdiOdbijanje(zahtev.id!)">Potvrdi Odbijanje</button>
+            </div>
+          </div>
+          <div *ngIf="zahtevZaOdobrenjeId === zahtev.id" class="odobrenje-container">
+            <label class="odobrenje-label">Broj indeksa:</label>
+            <input 
+              type="text"
+              class="input-polje" 
+              [(ngModel)]="brojIndeksaTekst" 
+              placeholder="Npr. 2023/000000">
+  
+            <div class="odobravanje-dugmici">
+              <button class="btn-otkazi" (click)="zahtevZaOdobrenjeId = null">Otkaži</button>
+              <button class="btn-confirm-green" (click)="potvrdiOdobravanje(zahtev.id!)">Potvrdi</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="zahtevi.length === 0" class="prazna-lista">
+    Trenutno nema novih zahteva za obradu.
+  </div>
+</div>
