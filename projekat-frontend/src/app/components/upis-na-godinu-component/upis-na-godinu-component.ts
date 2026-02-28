@@ -20,6 +20,7 @@ import { AuthService } from '../../services/auth-service';
 
 @Component({
   selector: 'app-upis-na-godinu-component',
+  standalone: true,
   imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatSelectModule, MatInputModule, MatButtonModule],
   templateUrl: './upis-na-godinu-component.html',
   styleUrl: './upis-na-godinu-component.css',
@@ -31,8 +32,8 @@ export class UpisNaGodinuComponent implements OnInit {
   sviProgrami: StudijskiProgram[] = [];
   filtriraniProgrami: StudijskiProgram[] = [];
   
-
   podaciZaPrikaz: any = null;
+  studentId!: number;
 
   constructor(
     private fb: FormBuilder,
@@ -44,16 +45,17 @@ export class UpisNaGodinuComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const ulogovanId = this.authService.getLoggedInUserId();
-    this.inicijalizujFormu(ulogovanId);
+    this.studentId = this.authService.getLoggedInUserId();
+    this.inicijalizujFormu(this.studentId);
     this.ucitajPodatke();
+    this.proveriStatus();
   }
 
-  private inicijalizujFormu(studentId: number): void {
+  private inicijalizujFormu(id: number): void {
     this.forma = this.fb.group({
       fakultetId: ['', Validators.required],
       studijskiProgramId: ['', Validators.required],
-      studentId: [studentId, Validators.required],
+      studentId: [id, Validators.required],
       godinaStudijaId: ['', Validators.required],
       napomena: ['']
     });
@@ -62,8 +64,36 @@ export class UpisNaGodinuComponent implements OnInit {
   private ucitajPodatke(): void {
     this.fakulteti$ = this.fakultetService.getAllWithoutPagination();
     this.godinaStudijaService.getAllWithoutPagination().subscribe(res => this.sveGodine = res);
-    this.studijskiProgramService.getAllWithoutPagination().subscribe(res => this.sviProgrami = res);
+    this.studijskiProgramService.getAllWithoutPagination().subscribe(res => {
+      this.sviProgrami = res;
+      if (this.podaciZaPrikaz) this.proveriStatus();
+    });
   }
+
+  proveriStatus(): void {
+    this.zahtevService.getAllWithoutPagination().subscribe(zahtevi => {
+      const mojZahtev = zahtevi
+        .filter(z => z.studentId === this.studentId)
+        .sort((a, b) => b.id - a.id)[0];
+
+      if (mojZahtev) {
+        this.azurirajPrikaz(mojZahtev);
+      }
+    });
+  }
+
+  private azurirajPrikaz(zahtev: any): void {
+  
+
+  const god = this.sveGodine.find(g => Number(g.id) === Number(zahtev.godinaStudijaId));
+  const smer = this.sviProgrami.find(p => Number(p.id) === Number(zahtev.studijskiProgramId));
+
+  this.podaciZaPrikaz = {
+    status: zahtev.status,
+    godinaBroj: god ? god.godina : '',
+    smerNaziv: smer ? smer.naziv : 'Smer nije pronađen' 
+  };
+}
 
   onFakultetChange(): void {
     const fId = Number(this.forma.value.fakultetId);
@@ -73,35 +103,30 @@ export class UpisNaGodinuComponent implements OnInit {
 
   sacuvaj(): void {
     if (this.forma.valid) {
-      const formVrednosti = this.forma.value;
-      const zahtevDto = {
-        fakultetId: Number(formVrednosti.fakultetId),
-        studentId: Number(formVrednosti.studentId),
-        godinaStudijaId: Number(formVrednosti.godinaStudijaId),
+      const dto = {
+        ...this.forma.value,
+        fakultetId: Number(this.forma.value.fakultetId),
+        studijskiProgramId: Number(this.forma.value.studijskiProgramId),
+        godinaStudijaId: Number(this.forma.value.godinaStudijaId),
         status: StatusZahteva.NA_CEKANJU,
-        vremePodnosenja: new Date().toISOString(),
-        napomena: formVrednosti.napomena || ''
+        vremePodnosenja: new Date().toISOString()
       };
 
-      this.zahtevService.postaviZahtev(zahtevDto).subscribe({
-        next: (odgovor) => {
-          const odabranaGodina = this.sveGodine.find(g => g.id === zahtevDto.godinaStudijaId);
-          const odabraniSmer = this.sviProgrami.find(p => p.id === Number(formVrednosti.studijskiProgramId));
+      console.log('Slanje zahteva:', dto);
+     
 
-          
-          this.podaciZaPrikaz = {
-            status: odgovor.status,
-            godinaBroj: odabranaGodina ? odabranaGodina.godina : '',
-            smerNaziv: odabraniSmer ? odabraniSmer.naziv : ''
-          };
+      this.zahtevService.postaviZahtev(dto).subscribe({
+        next: (res) => {
+          this.azurirajPrikaz(res);
         },
-        error: (err) => alert('Greška na serveru.')
+        error: () => alert("Greška pri slanju.")
       });
     }
   }
 
-  
   pokusajPonovo(): void {
     this.podaciZaPrikaz = null;
+    this.forma.reset({ studentId: this.studentId });
+    this.filtriraniProgrami = [];
   }
 }
