@@ -1,0 +1,193 @@
+/* Osnovni kontejner (zamenjuje container i mt-5) */
+.glavni-kontejner {
+  max-width: 1200px;
+  margin: 3rem auto;
+  padding: 0 15px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Zaglavlje (zamenjuje d-flex justify-content-between mb-4) */
+.zaglavlje {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.naslov {
+  color: #0d6efd;
+  font-weight: 700;
+  margin: 0;
+}
+
+.brojac {
+  background-color: #6c757d;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+}
+
+/* Mreža kartica (zamenjuje row i col-md-4) */
+.mreza-zahteva {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Stil same kartice */
+.zahtev-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: fit-content;
+  border: 1px solid #eee;
+}
+
+.zahtev-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+}
+
+.kartica-sadrzaj {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.card-title {
+  color: #000000;
+  font-weight: 700;
+  border-bottom: 2px solid #f8f9fa;
+  padding-bottom: 10px;
+  margin: 0 0 1rem 0;
+}
+
+.card-title i { margin-right: 10px; color: #3498db; }
+
+.zahtev-info {
+  flex-grow: 1;
+  color: #000000;
+  font-size: 0.95rem;
+}
+
+.zahtev-info p { margin: 8px 0; }
+.zahtev-info i { width: 25px; color: #3498db; }
+
+/* Dugmići i Akcije */
+.akcije {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.btn-odobri, .btn-odbij, .btn-confirm, .btn-otkazi {
+  padding: 10px 15px;
+  border-radius: 6px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  flex: 1;
+  transition: opacity 0.2s;
+}
+
+.btn-odobri { background-color: #2ecc71; color: white; }
+.btn-odbij { background-color: #e74c3c; color: white; }
+.btn-confirm { background-color: #c0392b; color: white; }
+.btn-otkazi { background-color: #6c757d; color: white; }
+
+button:hover { opacity: 0.9; }
+
+/* Forma za odbijanje */
+.odbijanje-container {
+  background-color: #fff5f5;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.odbijanje-label {
+  display: block;
+  font-weight: 700;
+  color: #dc3545;
+  font-size: 0.85rem;
+  margin-bottom: 5px;
+}
+
+.odbijanje-tekst {
+  width: 250px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  resize: none;
+  margin-bottom: 10px;
+}
+
+.odbijanje-dugmici {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  flex: 1;
+}
+
+.odobravanje-dugmici {
+  display: flex;       
+  gap: 10px;           
+  width: 100%;        
+  margin-top: 10px;
+}
+
+.odobravanje-dugmici button {
+  flex: 1;             
+  padding: 10px;       
+  white-space: nowrap;
+}
+
+/* Prazna lista */
+.prazna-lista {
+  background-color: #cff4fc;
+  color: #055160;
+  padding: 2rem;
+  border-radius: 8px;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.odobrenje-container {
+  background-color: #f0fff4;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 10px;
+  animation: slideDown 0.3s ease-out;
+}
+
+.odobrenje-label {
+  display: block;
+  font-weight: 700;
+  color: #27ae60;
+  font-size: 0.85rem;
+  margin-bottom: 5px;
+}
+
+.input-polje {
+  width: 250px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.btn-confirm-green {
+  background-color: #2ecc71;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 6px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-confirm-green:hover {
+  background-color: #27ae60;
+}
