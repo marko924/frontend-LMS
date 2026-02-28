@@ -20,7 +20,6 @@ import { AuthService } from '../../services/auth-service';
 
 @Component({
   selector: 'app-upis-na-godinu-component',
-  standalone: true,
   imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatSelectModule, MatInputModule, MatButtonModule],
   templateUrl: './upis-na-godinu-component.html',
   styleUrl: './upis-na-godinu-component.css',
@@ -28,9 +27,12 @@ import { AuthService } from '../../services/auth-service';
 export class UpisNaGodinuComponent implements OnInit {
   forma!: FormGroup;
   fakulteti$!: Observable<Fakultet[]>;
-  sveGodine$!: Observable<GodinaStudija[]>;
+  sveGodine: GodinaStudija[] = []; 
   sviProgrami: StudijskiProgram[] = [];
   filtriraniProgrami: StudijskiProgram[] = [];
+  
+
+  podaciZaPrikaz: any = null;
 
   constructor(
     private fb: FormBuilder,
@@ -43,10 +45,6 @@ export class UpisNaGodinuComponent implements OnInit {
 
   ngOnInit(): void {
     const ulogovanId = this.authService.getLoggedInUserId();
-    
-    // LOG 1: Provera ID-a odmah pri učitavanju stranice
-    console.log('%c [AUTH] ID ulogovanog korisnika izvučen iz tokena:', 'background: #222; color: #bada55; font-size: 14px; padding: 5px;', ulogovanId);
-
     this.inicijalizujFormu(ulogovanId);
     this.ucitajPodatke();
   }
@@ -63,7 +61,7 @@ export class UpisNaGodinuComponent implements OnInit {
 
   private ucitajPodatke(): void {
     this.fakulteti$ = this.fakultetService.getAllWithoutPagination();
-    this.sveGodine$ = this.godinaStudijaService.getAllWithoutPagination();
+    this.godinaStudijaService.getAllWithoutPagination().subscribe(res => this.sveGodine = res);
     this.studijskiProgramService.getAllWithoutPagination().subscribe(res => this.sviProgrami = res);
   }
 
@@ -75,41 +73,35 @@ export class UpisNaGodinuComponent implements OnInit {
 
   sacuvaj(): void {
     if (this.forma.valid) {
+      const formVrednosti = this.forma.value;
       const zahtevDto = {
-        fakultetId: Number(this.forma.value.fakultetId),
-        studentId: Number(this.forma.value.studentId),
-        godinaStudijaId: Number(this.forma.value.godinaStudijaId),
+        fakultetId: Number(formVrednosti.fakultetId),
+        studentId: Number(formVrednosti.studentId),
+        godinaStudijaId: Number(formVrednosti.godinaStudijaId),
         status: StatusZahteva.NA_CEKANJU,
         vremePodnosenja: new Date().toISOString(),
-        napomena: this.forma.value.napomena || ''
+        napomena: formVrednosti.napomena || ''
       };
 
-      // LOG 2: Detaljan prikaz objekta koji ide na backend
-      console.log('%c [SEND] Šaljem sledeći DTO na backend:', 'color: #ff9900; font-weight: bold;');
-      console.table(zahtevDto); // Prikazuje podatke u lepoj tabeli
-
       this.zahtevService.postaviZahtev(zahtevDto).subscribe({
-        next: (response) => {
-          // LOG 3: Odgovor sa servera
-          console.log('%c [SUCCESS] Zahtev uspešno obrađen na serveru:', 'color: #00ff00; font-weight: bold;', response);
-          alert('Zahtev je uspešno podnet!');
-          this.resetujFormu();
+        next: (odgovor) => {
+          const odabranaGodina = this.sveGodine.find(g => g.id === zahtevDto.godinaStudijaId);
+          const odabraniSmer = this.sviProgrami.find(p => p.id === Number(formVrednosti.studijskiProgramId));
+
+          
+          this.podaciZaPrikaz = {
+            status: odgovor.status,
+            godinaBroj: odabranaGodina ? odabranaGodina.godina : '',
+            smerNaziv: odabraniSmer ? odabraniSmer.naziv : ''
+          };
         },
-        error: (err) => {
-          // LOG 4: Greška
-          console.error('%c [ERROR] Greška pri slanju zahteva:', 'color: #ff0000; font-weight: bold;', err);
-          alert('Greška pri slanju zahteva! Pogledaj konzolu za detalje.');
-        }
+        error: (err) => alert('Greška na serveru.')
       });
-    } else {
-      console.warn('%c [WARN] Forma nije validna. Proveri obavezna polja.', 'color: #ffff00;');
     }
   }
 
-  private resetujFormu(): void {
-    const sId = this.authService.getLoggedInUserId();
-    this.forma.reset({ studentId: sId });
-    this.filtriraniProgrami = [];
-    console.log('%c [RESET] Forma je resetovana na početne vrednosti.', 'color: #888;');
+  
+  pokusajPonovo(): void {
+    this.podaciZaPrikaz = null;
   }
 }

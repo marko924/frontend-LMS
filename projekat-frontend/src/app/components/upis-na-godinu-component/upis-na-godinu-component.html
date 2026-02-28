@@ -1,47 +1,52 @@
 <div class="upis-container">
-  <div class="upis-card">
+
+  <div *ngIf="podaciZaPrikaz" class="rezultat-kontejner">
+    
+    <p *ngIf="podaciZaPrikaz.status === 'NA_CEKANJU'">
+      Vas zahtev je za upis u {{ podaciZaPrikaz.godinaBroj }}. godinu studijskog smera {{ podaciZaPrikaz.smerNaziv }}, 
+      trenutni status vaseg zahteva je <strong>na cekanju</strong>.
+    </p>
+
+    <p *ngIf="podaciZaPrikaz.status === 'ODOBREN'">
+      Uspesno ste upisani u {{ podaciZaPrikaz.godinaBroj }}. godinu studijskog smera {{ podaciZaPrikaz.smerNaziv }}.
+    </p>
+
+    <div *ngIf="podaciZaPrikaz.status === 'ODBIJEN'" class="odbijen-sekcija">
+      <p>Vas zahtev je odbijen pokusajte sa zahtevom ponovo.</p>
+      <button mat-raised-button color="warn" (click)="pokusajPonovo()">
+        PONOVO PODNESI ZAHTEV
+      </button>
+    </div>
+
+  </div>
+
+  <form *ngIf="!podaciZaPrikaz" [formGroup]="forma" (ngSubmit)="sacuvaj()" class="upis-form">
     <h2>Upis studenta na godinu</h2>
 
-    <form [formGroup]="forma" (ngSubmit)="sacuvaj()" class="upis-form">
-      
-      <mat-form-field appearance="outline">
-        <mat-label>Fakultet</mat-label>
-        <mat-select formControlName="fakultetId" (selectionChange)="onFakultetChange()">
-          <mat-option *ngFor="let f of fakulteti$ | async" [value]="f.id">
-            {{ f.naziv }}
-          </mat-option>
-        </mat-select>
-        <mat-error *ngIf="forma.get('fakultetId')?.touched && forma.get('fakultetId')?.invalid">
-          Fakultet je obavezan
-        </mat-error>
-      </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Fakultet</mat-label>
+      <mat-select formControlName="fakultetId" (selectionChange)="onFakultetChange()">
+        <mat-option *ngFor="let f of fakulteti$ | async" [value]="f.id">{{ f.naziv }}</mat-option>
+      </mat-select>
+    </mat-form-field>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Studijski program</mat-label>
-        <mat-select formControlName="studijskiProgramId">
-          <mat-option *ngFor="let p of filtriraniProgrami" [value]="p.id">
-            {{ p.naziv }}
-          </mat-option>
-        </mat-select>
-        <mat-hint *ngIf="filtriraniProgrami.length === 0 && !forma.value.fakultetId">
-          Prvo izaberite fakultet
-        </mat-hint>
-      </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Studijski program</mat-label>
+      <mat-select formControlName="studijskiProgramId">
+        <mat-option *ngFor="let p of filtriraniProgrami" [value]="p.id">{{ p.naziv }}</mat-option>
+      </mat-select>
+    </mat-form-field>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Godina studija</mat-label>
-        <mat-select formControlName="godinaStudijaId">
-          <mat-option *ngFor="let g of sveGodine$ | async" [value]="g.id">
-            {{ g.godina }}. godina
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Godina studija</mat-label>
+      <mat-select formControlName="godinaStudijaId">
+        <mat-option *ngFor="let g of sveGodine" [value]="g.id">{{ g.godina }}. godina</mat-option>
+      </mat-select>
+    </mat-form-field>
 
+    <button mat-raised-button color="primary" type="submit" [disabled]="forma.invalid">
+      PODNESI ZAHTEV
+    </button>
+  </form>
 
-      <button mat-raised-button color="primary" type="submit" [disabled]="forma.invalid">
-        PODNESI ZAHTEV
-      </button>
-
-    </form>
-  </div>
 </div>

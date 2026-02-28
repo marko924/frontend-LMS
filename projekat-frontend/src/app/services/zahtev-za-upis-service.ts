@@ -16,7 +16,7 @@ export class ZahtevZaUpisService extends GenericCrudService<ZahtevZaUpis, number
     super(http, `http://localhost:8080/api/zahteviZaUpis`);
   }
 
-  // Dodajemo metodu koja ne zavisi od Generic tipa da bi izbegli probleme sa ID-em
+ 
   postaviZahtev(dto: any): Observable<any> {
     return this.http.post(this.url, dto);
   }
@@ -25,7 +25,5 @@ export class ZahtevZaUpisService extends GenericCrudService<ZahtevZaUpis, number
     return this.http.put<void>(`${this.url}/${id}/odobri`, podaci);
   }
 
-  odbij(id: number): Observable<void> {
-    return this.http.put<void>(`${this.url}/${id}/odbij`, {});
-  }
+  
 }
