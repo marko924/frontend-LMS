@@ -4,6 +4,7 @@ export interface ZahtevZaUpis {
 
     id: number;
     fakultetId: number;
+    studijskiProgramId: number;
     studentId: number;
     godinaStudijaId: number;
     status: StatusZahteva;

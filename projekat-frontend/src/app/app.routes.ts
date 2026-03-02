@@ -8,6 +8,7 @@ import { RoleGuard } from './guard/role.guard';
 import { ZahteviStudenata } from './components/zahtevi-studenata/zahtevi-studenata';
 import { PrijaviIspitComponent } from './components/prijavi-ispit-component/prijavi-ispit-component';
 import { MojiPredmetiComponent } from './components/moji-predmeti-component/moji-predmeti-component';
+import { ZakazivanjeIspita } from './components/zakazivanje-ispita/zakazivanje-ispita';
 
 export const routes: Routes = [
      // --- JAVNI DEO ---
@@ -35,6 +36,7 @@ export const routes: Routes = [
       {path: 'prijavi-ispit', component:PrijaviIspitComponent},
       { path: 'upis-na-godinu', component: UpisNaGodinuComponent },
       { path: 'listaZahteva', component: ZahteviStudenata },
+      { path: 'zakazivanjeIspita', component: ZakazivanjeIspita},
       //{ path: 'home', component: DashboardWelcomeComponent }, 
       //{ path: 'administracija', component: AdminTableComponent },
       { path: 'moji-predmeti', component: MojiPredmetiComponent },
