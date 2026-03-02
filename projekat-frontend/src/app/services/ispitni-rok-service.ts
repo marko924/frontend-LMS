@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
+import { IspitniRok } from '../models/ispitni-rok';
 import { GenericCrudService } from './generic-crud-service';
-import { RealizacijaPredmeta } from '../models/realizacija-predmeta';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
-export class RealizacijaPredmetaService extends GenericCrudService<RealizacijaPredmeta, number> {
-
+export class IspitniRokService extends GenericCrudService<IspitniRok, number>{
+  
   constructor(protected override http: HttpClient) {
-    super(http, `http://localhost:8080/api/realizacije-predmeta`);
+    super(http, `http://localhost:8080/api/ispitniRokovi`); 
   }
 }

@@ -9,15 +9,15 @@
       <div class="zahtev-card">
         <div class="kartica-sadrzaj">
           <h5 class="card-title">
-            <i></i> Student #{{zahtev.studentId}}
+            Student #{{zahtev.studentId}}
           </h5>
           
           <div class="zahtev-info">
-            <p><i></i> <strong>Godina ID:</strong> {{zahtev.godinaStudijaId}}</p>
-            <p><i></i> <strong>Podneto:</strong> {{zahtev.vremePodnosenja | date:'dd.MM.yyyy - HH:mm'}}</p>
+            <p> <strong>Godina ID:</strong> {{zahtev.godinaStudijaId}}</p>
+            <p> <strong>Podneto:</strong> {{zahtev.vremePodnosenja | date:'dd.MM.yyyy - HH:mm'}}h</p>
           </div>
 
-          <div *ngIf="zahtevZaOdbijanjeId !== zahtev.id" class="akcije">
+          <div *ngIf="zahtevZaOdbijanjeId !== zahtev.id && zahtevZaOdobrenjeId !== zahtev.id" class="akcije">
             <button class="btn-odobri" (click)="prikaziFormuZaOdobravanje(zahtev.id!)">
               Odobri
             </button>

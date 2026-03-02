@@ -62,6 +62,7 @@ export class ZahteviStudenata implements OnInit{
 
   prikaziFormuZaOdbijanje(id: number) {
     this.zahtevZaOdbijanjeId = id;
+    this.zahtevZaOdobrenjeId = null;
     this.napomenaTekst = '';
   }
 

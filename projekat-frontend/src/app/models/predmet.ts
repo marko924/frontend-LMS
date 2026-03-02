@@ -3,6 +3,6 @@ export interface Predmet {
   naziv: string;
   opis: string;
   espb: number;
-  studijskiProgramId: number;
+  studijskiProgramiId: number[];
   realizacijeId: number[];
 }

@@ -105,6 +105,8 @@ button:hover { opacity: 0.9; }
   background-color: #fff5f5;
   padding: 1rem;
   border-radius: 8px;
+  margin-top: 10px;
+  animation: slideDown 0.3s;
 }
 
 .odbijanje-label {

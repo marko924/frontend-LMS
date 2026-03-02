@@ -1,0 +1,113 @@
+<div class="container">
+  <h1>Zakazivanje termina ispitnog roka i ispita</h1>
+
+  <div *ngIf="uspesnaPoruka" class="alert alert-success">
+    {{ uspesnaPoruka }}
+  </div>
+
+  <div class="row">
+    <div>
+      <div class="card">
+        <div class="card-header bg-primary">
+          <h4>1. Kreiraj Ispitni Rok</h4>
+        </div>
+        <div class="card-body" style="padding: 20px;">
+          <form [formGroup]="rokForm" (ngSubmit)="dodajIspitniRok()">
+            <div>
+              <label class="form-label">Naziv ispitnog roka</label>
+              <input type="text" class="form-control" formControlName="naziv" placeholder="npr. Januarski 2026">
+            </div>
+
+            <div>
+              <label class="form-label">Datum početka</label>
+              <input type="datetime-local" class="form-control" formControlName="datumPocetka">
+            </div>
+
+            <div>
+              <label class="form-label">Datum završetka</label>
+              <input type="datetime-local" class="form-control" formControlName="datumZavrsetka">
+            </div>
+
+            <div *ngIf="datumRokaGreska" class="text-danger">
+              <strong>{{ datumRokaGreska }}</strong>
+            </div>
+
+            <button type="submit" class="btn btn-primary" [disabled]="rokForm.invalid">
+              Sačuvaj Rok
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <div class="card-header bg-success">
+          <h4>2. Zakaži Ispit</h4>
+        </div>
+        <div class="card-body" style="padding: 20px;">
+          <form [formGroup]="ispitForm" (ngSubmit)="zakaziIspit()">
+            
+            <div class="row">
+              <div>
+                <label class="form-label">Ispitni Rok</label>
+                <select class="form-select" formControlName="ispitniRokId">
+                  <option value="" disabled selected>Izaberi rok...</option>
+                  <option *ngFor="let rok of ispitniRokovi" [value]="rok.id">
+                    {{ rok.naziv }}
+                  </option>
+                </select>
+              </div>
+
+              <div>
+                <label class="form-label">Predmet</label>
+                <select class="form-select" formControlName="realizacijaPredmetaId">
+                  <option value="" disabled selected>Izaberi predmet...</option>
+                  <option *ngFor="let r of realizacije" [value]="r.id">
+                    {{ getNazivPredmeta(r.predmetId) }}
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row">
+              <div>
+                <label class="form-label">Instrument Evaluacije</label>
+                <select class="form-select" formControlName="instrumentEvaluacijeId">
+                  <option value="" disabled selected>Izaberi način polaganja...</option>
+                  <option *ngFor="let inst of instrumenti" [value]="inst.id">
+                    {{ inst.naziv }}
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label class="form-label">Maksimalni bodovi</label>
+              <input type="number" class="form-control" formControlName="maksimalniBodovi">
+            </div>
+
+            <div class="row">
+              <div>
+                <label class="form-label">Početak ispita</label>
+                <input type="datetime-local" class="form-control" formControlName="vremePocetka">
+              </div>
+              <div>
+                <label class="form-label">Završetak ispita</label>
+                <input type="datetime-local" class="form-control" formControlName="vremeZavrsetka">
+              </div>
+            </div>
+
+            <div *ngIf="backendGreska" class="alert alert-danger">
+              {{ backendGreska }}
+            </div>
+
+            <button type="submit" class="btn btn-success" [disabled]="ispitForm.invalid">
+              Zakaži Ispit
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

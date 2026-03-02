@@ -7,4 +7,5 @@ export interface EvaluacijaZnanja {
     tipEvaluacijeId: number;
     realizacijaPredmetaId: number;
     instrumentEvaluacijeId: number;
+    ispitniRokId: number;
 }

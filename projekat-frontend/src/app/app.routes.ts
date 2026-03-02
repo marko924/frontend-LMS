@@ -6,6 +6,7 @@ import { DashboardComponent } from './components/dashboard-component/dashboard-c
 import { UpisNaGodinuComponent } from './components/upis-na-godinu-component/upis-na-godinu-component';
 import { RoleGuard } from './guard/role.guard';
 import { ZahteviStudenata } from './components/zahtevi-studenata/zahtevi-studenata';
+import { ZakazivanjeIspita } from './components/zakazivanje-ispita/zakazivanje-ispita';
 
 export const routes: Routes = [
      // --- JAVNI DEO ---
@@ -31,7 +32,8 @@ export const routes: Routes = [
     canActivate: [RoleGuard],
     children: [
       { path: 'upis-na-godinu', component: UpisNaGodinuComponent },
-      { path: 'listaZahteva', component: ZahteviStudenata }
+      { path: 'listaZahteva', component: ZahteviStudenata },
+      { path: 'zakazivanjeIspita', component: ZakazivanjeIspita}
       //{ path: 'home', component: DashboardWelcomeComponent }, 
       //{ path: 'administracija', component: AdminTableComponent },
       //{ path: 'moji-predmeti', component: StudentSubjectsComponent },
