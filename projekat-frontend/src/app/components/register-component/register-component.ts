@@ -26,7 +26,7 @@ export class RegisterComponent implements OnInit {
       korisnickoIme: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       lozinka: ['', [Validators.required, Validators.minLength(6)]],
-      uloga: ['ROLE_NASTAVNIK'], // Podrazumevana uloga
+      uloga: ['ROLE_SLUZBA'], // Podrazumevana uloga
       ime: ['', Validators.required],
       prezime: ['', Validators.required],
       jmbg: ['', [Validators.required, Validators.minLength(13), Validators.maxLength(13), Validators.pattern(/^[0-9]*$/)]]
