@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MojiPredmetiComponent } from './moji-predmeti-component';
+import { UnosOceneComponent } from './unos-ocene-component';
 
-describe('MojiPredmetiComponent', () => {
-  let component: MojiPredmetiComponent;
-  let fixture: ComponentFixture<MojiPredmetiComponent>;
+describe('UnosOceneComponent', () => {
+  let component: UnosOceneComponent;
+  let fixture: ComponentFixture<UnosOceneComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MojiPredmetiComponent]
+      imports: [UnosOceneComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(MojiPredmetiComponent);
+    fixture = TestBed.createComponent(UnosOceneComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

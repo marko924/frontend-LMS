@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
+// Material
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
@@ -10,7 +11,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
-
+// Servisi
 import { PrijaviIspitService } from '../../services/prijavi-ispit-service';
 import { StudentNaGodiniService } from '../../services/student-na-godini-service';
 import { AuthService } from '../../services/auth-service';
@@ -19,14 +20,21 @@ import { EvaluacijaZnanjaService } from '../../services/evaluacija-znanja-servic
 import { PredmetService } from '../../services/predmet-service'; 
 import { NastavnikService } from '../../services/nastavnik-service';
 import { IspitniRokService } from '../../services/ispitni-rok-service';
+import { PohadjanjePredmetaService } from '../../services/pohadjanje-predmeta-service'; // NOVO
 
+// Modeli
 import { EvaluacijaZnanja } from '../../models/evaluacija-znanja';
 import { PrijaviIspit } from '../../models/prijavi-ispit';
 import { RealizacijaPredmeta } from '../../models/realizacija-predmeta';
+import { PohadjanjePredmeta } from '../../models/pohadjanje-predmeta';
 
 @Component({
   selector: 'app-prijavi-ispit',
-  imports: [CommonModule, FormsModule,MatCardModule, MatButtonModule, MatTableModule, MatIconModule, MatListModule,MatSelectModule,MatFormFieldModule],
+  standalone: true,
+  imports: [
+    CommonModule, FormsModule, MatCardModule, MatButtonModule, 
+    MatTableModule, MatIconModule, MatListModule, MatSelectModule, MatFormFieldModule
+  ],
   templateUrl: './prijavi-ispit-component.html',
   styleUrls: ['./prijavi-ispit-component.css']
 })
@@ -50,6 +58,7 @@ export class PrijaviIspitComponent implements OnInit {
     private predmetService: PredmetService,
     private nastavnikService: NastavnikService,
     private ispitniRokService: IspitniRokService,
+    private pohadjanjeService: PohadjanjePredmetaService, // DODATO
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -121,7 +130,6 @@ export class PrijaviIspitComponent implements OnInit {
                 const realizacija = sveRealizacije.find(r => r.id === ev?.realizacijaPredmetaId);
                 const predmet = sviPredmeti.find(pr => pr.id === realizacija?.predmetId);
                 
-                // Popravljeno: Traženje nastavnika za donju tabelu
                 let nInfo = 'Nije dodeljen';
                 if (realizacija?.nastavniciId && realizacija.nastavniciId.length > 0) {
                   const n = sviNastavnici.find(nast => nast.id === realizacija.nastavniciId[0]);
@@ -175,17 +183,43 @@ export class PrijaviIspitComponent implements OnInit {
     });
   }
 
-  private izvrsiPrijavu(ev: EvaluacijaZnanja, naziv: string): void {
+ private izvrsiPrijavu(ev: EvaluacijaZnanja, naziv: string): void {
+    
+    // Kreiramo objekte bez ID polja - TypeScript dozvoljava jer smo stavili 'id?' u modelu
     const body: PrijaviIspit = {
       studentNaGodiniId: this.studentNaGodiniId,
       evaluacijaZnanjaId: ev.id
     };
+
+    const pohadjanjeBody: PohadjanjePredmeta = {
+      studentNaGodiniId: this.studentNaGodiniId,
+      realizacijaId: ev.realizacijaPredmetaId,
+      konacnaOcena: 0
+    };
+
+    // 1. Šaljemo prijavu ispita
     this.prijaviIspitService.create(body).subscribe({
-      next: () => {
-        alert(`Uspešno prijavljen ispit: ${naziv}`);
-        this.osveziPrijavljeneIspite();
+      next: (odgovorPrijave: PrijaviIspit) => {
+        console.log("Prijava ispita uspešna. Generisani ID:", odgovorPrijave.id);
+
+        // 2. Šaljemo pohađanje predmeta
+        this.pohadjanjeService.create(pohadjanjeBody).subscribe({
+          next: (odgovorPohadjanja: PohadjanjePredmeta) => {
+            console.log("Pohađanje kreirano. Generisani ID:", odgovorPohadjanja.id);
+            
+            alert(`Uspešno prijavljen ispit: ${naziv}`);
+            this.osveziPrijavljeneIspite();
+          },
+          error: (err) => {
+            console.error("Greška kod pohađanja:", err);
+            alert("Ispit prijavljen, ali nije kreiran zapis o pohađanju.");
+          }
+        });
       },
-      error: () => alert("Greška na serveru.")
+      error: (err) => {
+        console.error("Greška kod prijave:", err);
+        alert("Greška na serveru.");
+      }
     });
   }
 }

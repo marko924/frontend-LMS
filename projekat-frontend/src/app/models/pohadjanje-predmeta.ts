@@ -1,5 +1,5 @@
 export interface PohadjanjePredmeta {
-  id: number;
+  id?: number;
   konacnaOcena: number;
   studentNaGodiniId: number;
   realizacijaId: number;
