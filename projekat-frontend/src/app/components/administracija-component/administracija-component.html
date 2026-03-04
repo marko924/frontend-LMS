@@ -1,0 +1,67 @@
+<div class="admin-panel">
+  <header>
+    <h1>Administracija sistema</h1>
+  </header>
+
+  <section class="selection-area">
+    <div class="form-group">
+      <label for="entity-picker">Izaberite tabelu za rad:</label>
+      <select 
+        id="entity-picker" 
+        (change)="onEntitySelect($event)" 
+        class="admin-select">
+        <option value="">-- Izaberite entitet --</option>
+        <option *ngFor="let entity of ADMIN_ENTITIES | keyvalue" [value]="entity.key">
+          {{ entity.value.label }}
+        </option>
+      </select>
+    </div>
+  </section>
+
+  <hr />
+
+  <main class="content-area" *ngIf="activeService()">
+    
+    <div *ngIf="isLoading()" class="loading-overlay">
+      <div class="spinner"></div>
+      <p>Učitavanje podataka...</p>
+    </div>
+
+    <div [class.dimmed]="isLoading()">
+      <app-generic-table 
+        [data]="data" 
+        [columns]="activeColumns"
+        [actions]="{ edit: true, delete: true, view: true }"
+        (delete)="handleDelete($event)">
+      </app-generic-table>
+
+      <div *ngIf="data.length === 0 && !isLoading()" class="empty-state">
+        Trenutno nema podataka u ovoj tabeli.
+      </div>
+    </div>
+
+    <footer class="pagination" *ngIf="totalPages() > 0">
+      <button 
+        [disabled]="currentPage() === 0 || isLoading()" 
+        (click)="changePage(-1)"
+        class="btn-nav">
+        &laquo; Prethodna
+      </button>
+
+      <span class="page-counter">
+        Stranica <strong>{{ currentPage() + 1 }}</strong> od <strong>{{ totalPages() }}</strong>
+      </span>
+
+      <button 
+        [disabled]="currentPage() === totalPages() - 1 || isLoading()" 
+        (click)="changePage(1)"
+        class="btn-nav">
+        Sledeća &raquo;
+      </button>
+    </footer>
+  </main>
+
+  <aside *ngIf="!activeService()" class="welcome-screen">
+    <p>Molimo izaberite entitet iz liste iznad kako biste videli podatke.</p>
+  </aside>
+</div>
