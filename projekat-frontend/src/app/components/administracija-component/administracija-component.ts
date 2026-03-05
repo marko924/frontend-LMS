@@ -4,10 +4,11 @@ import { CommonModule } from '@angular/common';
 import { GenericCrudService } from '../../services/generic-crud-service';
 import { ColumnDef } from '../../models/column-def';
 import { ADMIN_ENTITIES } from '../../models/admin-config';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-administracija-component',
-  imports: [GenericTableComponent, CommonModule],
+  imports: [GenericTableComponent, CommonModule, FormsModule],
   templateUrl: './administracija-component.html',
   styleUrl: './administracija-component.css',
 })
@@ -23,6 +24,9 @@ export class AdministracijaComponent {
   currentPage = signal(0);
   totalPages = signal(0);
   pageSize = 10;
+
+  isEditModalOpen = signal(false);
+  selectedItem = signal<any>(null);
 
   constructor(private injector: Injector) {}
 
@@ -86,6 +90,32 @@ export class AdministracijaComponent {
           this.currentPage.update(p => p - 1);
         }
         this.loadData();
+      });
+    }
+  }
+
+  handleEdit(item: any) {
+    this.selectedItem.set({ ...item });
+    this.isEditModalOpen.set(true);
+  }
+
+  closeModal() {
+    this.isEditModalOpen.set(false);
+    this.selectedItem.set(null);
+  }
+
+  saveChanges() {
+    const service = this.activeService();
+    const item = this.selectedItem();
+
+    if (service && item && item.id) {
+      service.update(item.id, item).subscribe({
+        next: () => {
+          this.loadData();
+          this.closeModal();
+          alert('Uspešno sačuvano!');
+        },
+        error: (err) => console.error('Greška pri snimanju:', err)
       });
     }
   }

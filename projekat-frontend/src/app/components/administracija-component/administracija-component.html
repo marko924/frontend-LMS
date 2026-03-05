@@ -31,9 +31,42 @@
       <app-generic-table 
         [data]="data" 
         [columns]="activeColumns"
-        [actions]="{ edit: true, delete: true, view: true }"
+        [actions]="{ edit: true, delete: true }"
+        (edit)="handleEdit($event)"
         (delete)="handleDelete($event)">
       </app-generic-table>
+
+      <div class="modal-overlay" *ngIf="isEditModalOpen()">
+        <div class="modal-content">
+          <h3>Izmena podataka</h3>
+    
+          <div class="edit-form">
+            <div *ngFor="let col of activeColumns" class="form-field">
+              <label>{{ col.label }}:</label>
+
+              <input 
+                *ngIf="col.key === 'id'"
+                [value]="selectedItem()[col.key]"
+                class="admin-input readonly-input"
+                readonly
+              />
+        
+              <input 
+                *ngIf="col.key !== 'id'"
+                [type]="col.type === 'number' ? 'number' : (col.type === 'date' ? 'datetime-local' : 'text')" 
+                [(ngModel)]="selectedItem()[col.key]" 
+                class="admin-input"
+              />
+        
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button (click)="saveChanges()" class="btn-save">Sačuvaj</button>
+            <button (click)="closeModal()" class="btn-cancel">Odustani</button>
+          </div>
+        </div>
+      </div>
 
       <div *ngIf="data.length === 0 && !isLoading()" class="empty-state">
         Trenutno nema podataka u ovoj tabeli.
