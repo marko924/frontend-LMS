@@ -19,6 +19,7 @@ export class AdministracijaComponent {
   activeService = signal<GenericCrudService<any, any> | null>(null);
   activeColumns: ColumnDef<any>[] = [];
   data: any[] = [];
+  foreignKeyOptions: Record<string, any[]> = {};
   
   isLoading = signal(false);
   currentPage = signal(0);
@@ -96,7 +97,27 @@ export class AdministracijaComponent {
 
   handleEdit(item: any) {
     this.selectedItem.set({ ...item });
+    this.foreignKeyOptions = {};
+
+    for (const col of this.activeColumns) {
+      if (col.references) {
+        this.loadReferenceData(col);
+      }
+    }
     this.isEditModalOpen.set(true);
+  }
+
+  loadReferenceData(col: ColumnDef<any>) {
+    if (!col.references) return;
+
+    const refService = this.injector.get(col.references.serviceToken) as GenericCrudService<any, any>;
+
+    refService.getAllWithoutPagination().subscribe({
+      next: (data) => {
+        this.foreignKeyOptions[col.key] = data;
+      },
+      error: (err) => console.error(`Greška pri učitavanju referenci za ${col.key}:`, err)
+    });
   }
 
   closeModal() {

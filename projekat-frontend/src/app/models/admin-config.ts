@@ -103,7 +103,7 @@ export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = {
       { key: 'id', label: 'ID', type: 'number' },
       { key: 'ulica', label: 'Ulica', type: 'text' },
       { key: 'broj', label: 'Broj', type: 'text' },
-      { key: 'mestoId', label: 'ID Mesta', type: 'number' }
+      { key: 'mestoId', label: 'Mesto', references: {serviceToken: MestoService, displayField: 'naziv' } }
     ]
   },
   'mesta': {

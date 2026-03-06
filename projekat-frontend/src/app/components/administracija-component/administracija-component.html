@@ -52,11 +52,21 @@
               />
         
               <input 
-                *ngIf="col.key !== 'id'"
+                *ngIf="!col.references && col.key !== 'id'"
                 [type]="col.type === 'number' ? 'number' : (col.type === 'date' ? 'datetime-local' : 'text')" 
                 [(ngModel)]="selectedItem()[col.key]" 
                 class="admin-input"
               />
+
+              <select 
+                *ngIf="col.references && col.key !== 'id'"
+                [(ngModel)]="selectedItem()[col.key]"
+                class="admin-input">
+                <option [ngValue]="null">-- Izaberite stavku --</option>
+                <option *ngFor="let option of foreignKeyOptions[col.key]" [value]="option.id">
+                  {{ option[col.references.displayField] }} (ID: {{ option.id }})
+                </option>
+              </select>
         
             </div>
           </div>
