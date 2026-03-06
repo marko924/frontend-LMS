@@ -40,11 +40,21 @@
         <td mat-cell *matCellDef="let s"> {{ s.brojIndeksa }} </td>
       </ng-container>
 
+      <ng-container matColumnDef="bodovi">
+        <th mat-header-cell *matHeaderCellDef> Bodovi (0-100) </th>
+        <td mat-cell *matCellDef="let s">
+          <mat-form-field class="small-input" appearance="fill">
+            <input matInput type="number" [(ngModel)]="s.osvojeniBodovi" 
+                   (ngModelChange)="izracunajOcenu(s)" min="0" max="100">
+          </mat-form-field>
+        </td>
+      </ng-container>
+
       <ng-container matColumnDef="ocena">
         <th mat-header-cell *matHeaderCellDef> Ocena </th>
         <td mat-cell *matCellDef="let s">
           <mat-form-field class="small-input" appearance="fill">
-            <input matInput type="number" [(ngModel)]="s.ocena" min="5" max="10">
+            <input matInput type="number" [(ngModel)]="s.ocena" readonly>
           </mat-form-field>
         </td>
       </ng-container>
@@ -52,14 +62,15 @@
       <ng-container matColumnDef="akcija">
         <th mat-header-cell *matHeaderCellDef> Akcija </th>
         <td mat-cell *matCellDef="let s">
-          <button mat-flat-button color="primary" (click)="sacuvajOcenu(s)">
+          <button mat-flat-button color="primary" 
+                  (click)="sacuvajOcenu(s)">
             Potvrdi
           </button>
         </td>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="['student', 'index', 'ocena', 'akcija']"></tr>
-      <tr mat-row *matRowDef="let row; columns: ['student', 'index', 'ocena', 'akcija'];"></tr>
+      <tr mat-header-row *matHeaderRowDef="['student', 'index', 'bodovi', 'ocena', 'akcija']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['student', 'index', 'bodovi', 'ocena', 'akcija'];"></tr>
     </table>
   </mat-card>
 

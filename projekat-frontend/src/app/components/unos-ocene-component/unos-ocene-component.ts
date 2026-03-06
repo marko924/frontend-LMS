@@ -21,11 +21,13 @@ import { StudentNaGodiniService } from '../../services/student-na-godini-service
 import { StudentService } from '../../services/student-service';
 import { EvaluacijaZnanjaService } from '../../services/evaluacija-znanja-service';
 import { PrijaviIspitService } from '../../services/prijavi-ispit-service';
+import { PolaganjeService } from '../../services/polaganje-service';
 
 // Modeli
 import { PohadjanjePredmeta } from '../../models/pohadjanje-predmeta';
 import { RealizacijaPredmeta } from '../../models/realizacija-predmeta';
 import { EvaluacijaZnanja } from '../../models/evaluacija-znanja';
+import { Polaganje } from '../../models/polaganje';
 
 @Component({
   selector: 'app-unos-ocene-component',
@@ -39,13 +41,10 @@ import { EvaluacijaZnanja } from '../../models/evaluacija-znanja';
 })
 export class UnosOceneComponent implements OnInit {
   nastavnikId!: number;
-  
   rokovi: any[] = [];
   mojeRealizacije: any[] = [];
-  
   izabraniRokId: number | null = null;
   izabranaRealizacijaId: number | null = null;
-  
   studentiZaOcenjivanje: any[] = [];
 
   constructor(
@@ -58,6 +57,7 @@ export class UnosOceneComponent implements OnInit {
     private studentService: StudentService,
     private evaluacijaService: EvaluacijaZnanjaService,
     private prijaviIspitService: PrijaviIspitService,
+    private polaganjeService: PolaganjeService,
     private snackBar: MatSnackBar,
     private cdr: ChangeDetectorRef
   ) {}
@@ -69,7 +69,6 @@ export class UnosOceneComponent implements OnInit {
 
   ucitajPocetnePodatke(): void {
     this.ispitniRokService.getAllWithoutPagination().subscribe(res => this.rokovi = res);
-
     this.realizacijaService.getAllWithoutPagination().subscribe((realizacije: RealizacijaPredmeta[]) => {
       this.predmetService.getAllWithoutPagination().subscribe(predmeti => {
         this.mojeRealizacije = realizacije
@@ -82,67 +81,69 @@ export class UnosOceneComponent implements OnInit {
     });
   }
 
+  izracunajOcenu(red: any): void {
+    const p = red.osvojeniBodovi;
+    if (p >= 91) red.ocena = 10;
+    else if (p >= 81) red.ocena = 9;
+    else if (p >= 71) red.ocena = 8;
+    else if (p >= 61) red.ocena = 7;
+    else if (p >= 51) red.ocena = 6;
+    else red.ocena = 5;
+  }
+
   onFilterChange(): void {
-  if (!this.izabraniRokId || !this.izabranaRealizacijaId) return;
+    if (!this.izabraniRokId || !this.izabranaRealizacijaId) return;
 
-  // 1. Prvo nađi evaluaciju za taj rok i predmet
-  this.evaluacijaService.getAllWithoutPagination().subscribe((evaluacije: EvaluacijaZnanja[]) => {
-    const adekvatnaEvaluacija = evaluacije.find(e => 
-      Number(e.ispitniRokId) === Number(this.izabraniRokId) && 
-      Number(e.realizacijaPredmetaId) === Number(this.izabranaRealizacijaId)
-    );
-
-    if (!adekvatnaEvaluacija) {
-      this.studentiZaOcenjivanje = [];
-      this.snackBar.open('Nije definisan ispit za ovaj rok i predmet.', 'Zatvori', { duration: 3000 });
-      return;
-    }
-
-    // 2. Dohvati sve prijave ispita
-    this.prijaviIspitService.getAllWithoutPagination().subscribe(svePrijave => {
-      const prijaveZaOvajIspit = svePrijave.filter(prijava => 
-        Number(prijava.evaluacijaZnanjaId) === Number(adekvatnaEvaluacija.id)
+    this.evaluacijaService.getAllWithoutPagination().subscribe((evaluacije: EvaluacijaZnanja[]) => {
+      const adekvatnaEvaluacija = evaluacije.find(e => 
+        Number(e.ispitniRokId) === Number(this.izabraniRokId) && 
+        Number(e.realizacijaPredmetaId) === Number(this.izabranaRealizacijaId)
       );
 
-      
-      const idStudentaKojiSuPrijavili = prijaveZaOvajIspit.map(p => p.studentNaGodiniId);
+      if (!adekvatnaEvaluacija) {
+        this.studentiZaOcenjivanje = [];
+        this.snackBar.open('Nije definisan ispit za ovaj rok i predmet.', 'Zatvori', { duration: 3000 });
+        return;
+      }
 
-      
-      this.pohadjanjeService.getAllWithoutPagination().subscribe(svaPohadjanja => {
-        const pohadjanjaStudenataSaPrijavom = svaPohadjanja.filter(p => 
-          p.realizacijaId === this.izabranaRealizacijaId && 
-          idStudentaKojiSuPrijavili.includes(p.studentNaGodiniId) &&
-          (p.konacnaOcena === null || p.konacnaOcena === 0) 
-        );
+      this.prijaviIspitService.getAllWithoutPagination().subscribe(svePrijave => {
+        const idStudentaKojiSuPrijavili = svePrijave
+          .filter(p => Number(p.evaluacijaZnanjaId) === Number(adekvatnaEvaluacija.id))
+          .map(p => p.studentNaGodiniId);
 
-        
-        this.sngService.getAllWithoutPagination().subscribe(sveSng => {
-          this.studentService.getAllWithoutPagination().subscribe(sviStudenti => {
-            
-            this.studentiZaOcenjivanje = pohadjanjaStudenataSaPrijavom.map(p => {
-              const sng = sveSng.find(s => s.id === p.studentNaGodiniId);
-              const student = sviStudenti.find(s => s.id === sng?.studentId);
-              
-              return {
-                pohadjanjeId: p.id,
-                imePrezime: student ? `${student.ime} ${student.prezime}` : 'Nepoznat student',
-                brojIndeksa: sng?.brojIndeksa || 'Nema indeksa',
-                ocena: p.konacnaOcena || null,
-                studentNaGodiniId: p.studentNaGodiniId
-              };
+        this.pohadjanjeService.getAllWithoutPagination().subscribe(svaPohadjanja => {
+          const filtrirani = svaPohadjanja.filter(p => 
+            p.realizacijaId === this.izabranaRealizacijaId && 
+            idStudentaKojiSuPrijavili.includes(p.studentNaGodiniId) &&
+            (p.konacnaOcena === null || p.konacnaOcena === 0) 
+          );
+
+          this.sngService.getAllWithoutPagination().subscribe(sveSng => {
+            this.studentService.getAllWithoutPagination().subscribe(sviStudenti => {
+              this.studentiZaOcenjivanje = filtrirani.map(p => {
+                const sng = sveSng.find(s => s.id === p.studentNaGodiniId);
+                const student = sviStudenti.find(s => s.id === sng?.studentId);
+                return {
+                  pohadjanjeId: p.id,
+                  imePrezime: student ? `${student.ime} ${student.prezime}` : 'Nepoznat student',
+                  brojIndeksa: sng?.brojIndeksa || 'Nema indeksa',
+                  ocena: null,
+                  osvojeniBodovi: 0,
+                  studentNaGodiniId: p.studentNaGodiniId,
+                  evaluacijaZnanjaId: adekvatnaEvaluacija.id
+                };
+              });
+              this.cdr.detectChanges();
             });
-            this.cdr.detectChanges();
           });
         });
       });
     });
-  });
-}
+  }
 
   sacuvajOcenu(red: any): void {
     if (!this.izabranaRealizacijaId || !red.pohadjanjeId || !this.izabraniRokId) return;
 
-    
     this.evaluacijaService.getAllWithoutPagination().subscribe((evaluacije: EvaluacijaZnanja[]) => {
       const ispit = evaluacije.find(e => 
         Number(e.ispitniRokId) === Number(this.izabraniRokId) && 
@@ -151,31 +152,39 @@ export class UnosOceneComponent implements OnInit {
 
       if (ispit && ispit.vremePocetka) {
         const datumIspita = new Date(ispit.vremePocetka);
-        const danas = new Date();
-        const razlikaUMilisekundama = danas.getTime() - datumIspita.getTime();
-        const razlikaUDanima = razlikaUMilisekundama / (1000 * 60 * 60 * 24);
+        const razlikaUDanima = (new Date().getTime() - datumIspita.getTime()) / (1000 * 60 * 60 * 24);
 
         if (razlikaUDanima > 15) {
-          this.snackBar.open('Rok za unos ocene je istekao (prošlo je više od 15 dana).', 'Zatvori', { duration: 5000 });
+          this.snackBar.open('Rok za unos ocene je istekao (15 dana).', 'Zatvori', { duration: 5000 });
           return;
         }
       }
 
-      
-      const body: PohadjanjePredmeta = {
-        id: red.pohadjanjeId,
-        konacnaOcena: red.ocena,
-        studentNaGodiniId: red.studentNaGodiniId,
-        realizacijaId: this.izabranaRealizacijaId as number
+      const novoPolaganje: Polaganje = {
+        osvojeniBodovi: red.osvojeniBodovi,
+        napomena: 'Unos ocene',
+        evaluacijaZnanjaId: red.evaluacijaZnanjaId
       };
 
-      this.pohadjanjeService.update(body.id!, body).subscribe({
+      this.polaganjeService.create(novoPolaganje).subscribe({
         next: () => {
-          this.snackBar.open(`Uspešno uneta ocena za: ${red.imePrezime}`, 'OK', { duration: 2000 });
-          this.studentiZaOcenjivanje = this.studentiZaOcenjivanje.filter(s => s.pohadjanjeId !== red.pohadjanjeId);
-          this.cdr.detectChanges();
+          const novoPohadjanje: PohadjanjePredmeta = {
+            id: red.pohadjanjeId,
+            konacnaOcena: red.ocena,
+            studentNaGodiniId: red.studentNaGodiniId,
+            realizacijaId: red.realizacijaId || this.izabranaRealizacijaId 
+          };
+
+          this.pohadjanjeService.update(red.pohadjanjeId, novoPohadjanje).subscribe({
+            next: () => {
+              this.snackBar.open(`Uspešno: Bodovi ${red.osvojeniBodovi}, Ocena ${red.ocena}`, 'OK');
+              this.studentiZaOcenjivanje = this.studentiZaOcenjivanje.filter(s => s.pohadjanjeId !== red.pohadjanjeId);
+              this.cdr.detectChanges();
+            },
+            error: () => this.snackBar.open('Greška pri ažuriranju ocene.', 'Zatvori')
+          });
         },
-        error: () => this.snackBar.open('Greška pri čuvanju na serveru.', 'Zatvori')
+        error: () => this.snackBar.open('Greška pri čuvanju bodova.', 'Zatvori')
       });
     });
   }

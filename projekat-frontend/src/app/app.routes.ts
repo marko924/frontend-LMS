@@ -9,6 +9,7 @@ import { ZahteviStudenata } from './components/zahtevi-studenata/zahtevi-studena
 import { PrijaviIspitComponent } from './components/prijavi-ispit-component/prijavi-ispit-component';
 import { ZakazivanjeIspita } from './components/zakazivanje-ispita/zakazivanje-ispita';
 import { UnosOceneComponent } from './components/unos-ocene-component/unos-ocene-component';
+import { IstorijaIspitaComponent } from './components/istorija-ispita-component/istorija-ispita-component';
 
 export const routes: Routes = [
      // --- JAVNI DEO ---
@@ -38,6 +39,7 @@ export const routes: Routes = [
       { path: 'listaZahteva', component: ZahteviStudenata },
       { path: 'zakazivanjeIspita', component: ZakazivanjeIspita},
       {path: 'unos-ocena', component: UnosOceneComponent},
+      {path: 'istorija-ispita', component: IstorijaIspitaComponent},
       //{ path: 'home', component: DashboardWelcomeComponent }, 
       //{ path: 'administracija', component: AdminTableComponent },
     ]
