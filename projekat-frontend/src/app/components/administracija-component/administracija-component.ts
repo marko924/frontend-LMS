@@ -28,6 +28,7 @@ export class AdministracijaComponent {
 
   isEditModalOpen = signal(false);
   selectedItem = signal<any>(null);
+  isEditMode = signal(false);
 
   constructor(private injector: Injector) {}
 
@@ -95,7 +96,25 @@ export class AdministracijaComponent {
     }
   }
 
+  openCreateModal() {
+    this.isEditMode.set(false);
+    const newItem: any = {};
+    this.activeColumns.forEach(col => newItem[col.key] = null);
+    
+    this.selectedItem.set(newItem);
+    this.foreignKeyOptions = {};
+
+    for (const col of this.activeColumns) {
+      if (col.references) {
+        this.loadReferenceData(col);
+      }
+    }
+
+    this.isEditModalOpen.set(true);
+  }
+
   handleEdit(item: any) {
+    this.isEditMode.set(true);
     this.selectedItem.set({ ...item });
     this.foreignKeyOptions = {};
 
@@ -129,16 +148,29 @@ export class AdministracijaComponent {
     const service = this.activeService();
     const item = this.selectedItem();
 
-    if (service && item && item.id) {
-      service.update(item.id, item).subscribe({
-        next: () => {
-          this.loadData();
-          this.closeModal();
-          alert('Uspešno sačuvano!');
-        },
-        error: (err) => console.error('Greška pri snimanju:', err)
+    if (!service || !item) return;
+
+    if (this.isEditMode()) {
+      // EDIT LOGIKA
+      if (item.id) {
+        service.update(item.id, item).subscribe({
+          next: () => this.afterSaveSuccess('Uspešno sačuvano!'),
+          error: (err) => console.error('Greška pri ažuriranju:', err)
+        });
+      }
+    } else {
+      // CREATE LOGIKA
+      service.create(item).subscribe({
+        next: () => this.afterSaveSuccess('Uspešno kreirano!'),
+        error: (err) => console.error('Greška pri kreiranju:', err)
       });
     }
+  }
+
+  private afterSaveSuccess(message: string) {
+    alert(message);
+    this.loadData();
+    this.closeModal();
   }
 
   private resetState() {

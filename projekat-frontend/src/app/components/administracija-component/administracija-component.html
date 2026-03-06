@@ -27,6 +27,12 @@
       <p>Učitavanje podataka...</p>
     </div>
 
+    <div class="table-actions" style="margin-bottom: 15px;">
+      <button (click)="openCreateModal()" class="btn-create">
+        + Dodaj novi zapis
+      </button>
+    </div>
+
     <div [class.dimmed]="isLoading()">
       <app-generic-table 
         [data]="data" 
@@ -38,14 +44,16 @@
 
       <div class="modal-overlay" *ngIf="isEditModalOpen()">
         <div class="modal-content">
-          <h3>Izmena podataka</h3>
+          <h3>{{ isEditMode() ? 'Izmena podataka' : 'Dodavanje podatka' }}</h3>
     
           <div class="edit-form">
             <div *ngFor="let col of activeColumns" class="form-field">
-              <label>{{ col.label }}:</label>
+              <ng-container *ngIf="col.key !== 'id' || isEditMode()">
+                <label>{{ col.label }}:</label>
+              </ng-container>
 
               <input 
-                *ngIf="col.key === 'id'"
+                *ngIf="col.key === 'id' && isEditMode()"
                 [value]="selectedItem()[col.key]"
                 class="admin-input readonly-input"
                 readonly
@@ -72,7 +80,9 @@
           </div>
 
           <div class="modal-actions">
-            <button (click)="saveChanges()" class="btn-save">Sačuvaj</button>
+            <button (click)="saveChanges()" class="btn-save">
+              {{ isEditMode() ? 'Sačuvaj izmene' : 'Kreiraj' }}
+            </button>
             <button (click)="closeModal()" class="btn-cancel">Odustani</button>
           </div>
         </div>

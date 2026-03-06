@@ -59,7 +59,6 @@ header p {
   box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
 }
 
-/* Loading overlay i Spinner */
 .loading-overlay {
   display: flex;
   flex-direction: column;
@@ -196,6 +195,15 @@ header p {
   padding: 10px 20px; 
   border-radius: 4px; 
   cursor: pointer; 
+}
+
+.btn-create {
+  background: #38a169; 
+  color: white; 
+  border: none; 
+  padding: 10px 20px; 
+  border-radius: 4px; 
+  cursor: pointer;
 }
 
 .btn-cancel { 
