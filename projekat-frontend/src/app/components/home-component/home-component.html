@@ -7,14 +7,6 @@
 
     <span class="spacer"></span>
 
-    <nav class="nav-links">
-      <a mat-button routerLink="/univerzitet">O Univerzitetu</a>
-      <a mat-button routerLink="/fakulteti">Fakulteti</a>
-      <a mat-button routerLink="/studije">Studijski programi</a>
-    </nav>
-
-    <span class="spacer"></span>
-
     <div class="auth-buttons">
       <a mat-button routerLink="/login">Prijava</a>
       <a mat-button routerLink="/register">Registracija</a>
@@ -22,6 +14,27 @@
   </mat-toolbar>
 
   <div class="content-container">
+    <div class="welcome-container" *ngIf="router.url === '/'">
+      <div class="hero-content">
+        <h1>Dobrodošli na Informacioni portal univerziteta</h1>
+        <p>Izaberite neku od opcija iz navigacije kako biste saznali više o našim programima, fakultetima i istorijatu.</p>
+    
+        <div class="features">
+          <div class="feature-item" routerLink="/univerzitet">
+            <h3>O Univerzitetu</h3>
+            <p>Saznajte sve o našem rektoratu, istoriji i lokaciji.</p>
+          </div>
+          <div class="feature-item" routerLink="/fakulteti">
+            <h3>Fakulteti</h3>
+            <p>Pregledajte listu svih fakulteta u sastavu univerziteta.</p>
+          </div>
+          <div class="feature-item" routerLink="/studije">
+            <h3>Studijski programi</h3>
+            <p>Pregledajte listu svih studijskih programa u sastavu univerziteta.</p>
+          </div>
+        </div>
+      </div>
+    </div>  
     <router-outlet></router-outlet> 
     </div>
 

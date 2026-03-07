@@ -18,7 +18,7 @@ export const routes: Routes = [
     component: HomeComponent, 
     children: [
       //{ path: '', component: pocetnaKomponenta },
-      //{ path: 'univerzitet', component: UniversityDetailsComponent },
+      //{ path: 'univerzitet', component: DetaljiUniverzitetaComponent },
       //{ path: 'fakulteti', component: FacultyListComponent },
       //{ path: 'studije', component: someOtherComponent },
     ]
