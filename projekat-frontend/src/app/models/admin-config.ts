@@ -33,7 +33,7 @@ import { ZvanjeService } from "../services/zvanje-service";
 export interface EntityAdminConfig {
   serviceToken: any;
   columns: ColumnDef<any>[];
-  label: string; // Prijateljski naziv za UI (select listu)
+  label: string; //naziv za select listu
 }
 
 export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = { 
@@ -84,7 +84,7 @@ export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = {
       { key: 'id', label: 'ID', type: 'number' },
       { key: 'brojIndeksa', label: 'Indeks', type: 'text' },
       { key: 'datumUpisa', label: 'Datum Upisa', type: 'date' },
-      { key: 'studentId', label: 'ID Studenta', type: 'number' }
+      { key: 'studentId', label: 'ID Studenta', references: {serviceToken: StudentService, displayField: 'id' } }
     ]
   },
   'nastavnici_realizacija': {
@@ -93,7 +93,7 @@ export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = {
     columns: [
       { key: 'id', label: 'ID', type: 'number' },
       { key: 'brojCasova', label: 'Časova', type: 'number' },
-      { key: 'nastavnikId', label: 'ID Nastavnika', type: 'number' }
+      { key: 'nastavnikId', label: 'ID Nastavnika', references: {serviceToken: NastavnikService, displayField: 'id' } }
     ]
   },
   'adrese': {
@@ -112,7 +112,7 @@ export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = {
     columns: [
       { key: 'id', label: 'ID', type: 'number' },
       { key: 'naziv', label: 'Naziv', type: 'text' },
-      { key: 'drzavaId', label: 'ID Države', type: 'number' }
+      { key: 'drzavaId', label: 'ID Države', references: {serviceToken: DrzavaService, displayField: 'naziv' } }
     ]
   },
   'drzave': {
@@ -139,7 +139,7 @@ export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = {
     columns: [
       { key: 'id', label: 'ID', type: 'number' },
       { key: 'naziv', label: 'Naziv', type: 'text' },
-      { key: 'univerzitetId', label: 'ID Univ.', type: 'number' }
+      { key: 'univerzitetId', label: 'ID Univ.', references: {serviceToken: UniverzitetService, displayField: 'naziv' } }
     ]
   },
   'predmeti': {
@@ -157,7 +157,7 @@ export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = {
     serviceToken: RealizacijaPredmetaService,
     columns: [
       { key: 'id', label: 'ID', type: 'number' },
-      { key: 'predmetId', label: 'ID Predmeta', type: 'number' }
+      { key: 'predmetId', label: 'ID Predmeta', references: {serviceToken: PredmetService, displayField: 'naziv' } }
     ]
   },
   'pohadjanja': {
@@ -166,8 +166,8 @@ export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = {
     columns: [
       { key: 'id', label: 'ID', type: 'number' },
       { key: 'konacnaOcena', label: 'Ocena', type: 'number' },
-      { key: 'studentNaGodiniId', label: 'ID Studenta', type: 'number' },
-      { key: 'realizacijaId', label: 'ID Realizacije', type: 'number' }
+      { key: 'studentNaGodiniId', label: 'Student', references: {serviceToken: StudentNaGodiniService, displayField: 'brojIndeksa' } },
+      { key: 'realizacijaId', label: 'ID Realizacije', references: {serviceToken: RealizacijaPredmetaService, displayField: 'id' } }
     ]
   },
   'studijski_programi': {
@@ -176,7 +176,7 @@ export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = {
     columns: [
       { key: 'id', label: 'ID', type: 'number' },
       { key: 'naziv', label: 'Naziv', type: 'text' },
-      { key: 'fakultetId', label: 'ID Fakulteta', type: 'number' }
+      { key: 'fakultetId', label: 'ID Fakulteta', references: {serviceToken: FakultetService, displayField: 'naziv' } }
     ]
   },
   'godine_studija': {
@@ -229,7 +229,7 @@ export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = {
     columns: [
       { key: 'id', label: 'ID', type: 'number' },
       { key: 'opis', label: 'Opis Ishoda', type: 'text' },
-      { key: 'predmetId', label: 'ID Predmeta', type: 'number' }
+      { key: 'predmetId', label: 'ID Predmeta', references: {serviceToken: PredmetService, displayField: 'id' } }
     ]
   },
   'obrazovni_ciljevi': {
@@ -247,7 +247,7 @@ export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = {
       { key: 'id', label: 'ID', type: 'number' },
       { key: 'datumIzbora', label: 'Izbor', type: 'date' },
       { key: 'datumOtkaza', label: 'Otkaz', type: 'date' },
-      { key: 'nastavnikId', label: 'ID Nastavnika', type: 'number' }
+      { key: 'nastavnikId', label: 'ID Nastavnika', references: {serviceToken: NastavnikService, displayField: 'id' } }
     ]
   },
   'tipovi_zvanja': {
@@ -282,7 +282,7 @@ export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = {
       { key: 'id', label: 'ID', type: 'number' },
       { key: 'status', label: 'Status', type: 'text' },
       { key: 'vremePodnosenja', label: 'Podneto', type: 'date' },
-      { key: 'studentId', label: 'ID Studenta', type: 'number' }
+      { key: 'studentId', label: 'ID Studenta', references: {serviceToken: StudentService, displayField: 'id' } }
     ]
   },
   'ispitni_rokovi': {
@@ -302,7 +302,7 @@ export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = {
       { key: 'id', label: 'ID', type: 'number' },
       { key: 'vremePocetka', label: 'Početak', type: 'date' },
       { key: 'vremeZavrsetka', label: 'Kraj', type: 'date' },
-      { key: 'realizacijaId', label: 'ID Realizacije', type: 'number' }
+      { key: 'realizacijaId', label: 'ID Realizacije', references: {serviceToken: RealizacijaPredmetaService, displayField: 'id' } }
     ]
   },
   'tipovi_nastave': {
