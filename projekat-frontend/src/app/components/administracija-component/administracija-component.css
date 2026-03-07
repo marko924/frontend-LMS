@@ -220,3 +220,18 @@ header p {
   cursor: not-allowed;
   border: 1px dashed #cbd5e0;
 }
+
+.btn-disabled {
+  background-color: #cbd5e0 !important;
+  cursor: not-allowed !important;
+  opacity: 0.7;
+}
+
+.invalid-input:focus {
+  box-shadow: 0 0 0 3px rgba(252, 129, 129, 0.2) !important;
+}
+
+.star {
+  color: red; 
+  margin-left: 2px;
+}

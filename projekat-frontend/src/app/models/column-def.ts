@@ -7,4 +7,5 @@ export interface ColumnDef<T> {
     serviceToken: any; //servis za ucitavanje npr. MestoService
     displayField: string; //naziv polja za popunjavanje liste (npr. 'naziv')
   };
+  required?: boolean;
 }

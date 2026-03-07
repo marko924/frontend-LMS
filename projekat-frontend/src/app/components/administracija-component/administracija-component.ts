@@ -173,6 +173,19 @@ export class AdministracijaComponent {
     this.closeModal();
   }
 
+  isFormValid(): boolean {
+    const item = this.selectedItem();
+    if (!item) return false;
+
+    return this.activeColumns.every(col => {
+      if (col.required) {
+        const value = item[col.key];
+        return value !== null && value !== undefined && String(value).trim() !== '';
+      }
+      return true;
+    });
+  }
+
   private resetState() {
     this.activeService.set(null);
     this.data = [];

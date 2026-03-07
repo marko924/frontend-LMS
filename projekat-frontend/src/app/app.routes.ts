@@ -17,8 +17,8 @@ export const routes: Routes = [
     path: '',
     component: HomeComponent, 
     children: [
-      //{ path: '', redirectTo: 'public-home', pathMatch: 'full' },
-      //{ path: 'public-home', component: UniversityDetailsComponent },
+      //{ path: '', component: pocetnaKomponenta },
+      //{ path: 'univerzitet', component: UniversityDetailsComponent },
       //{ path: 'fakulteti', component: FacultyListComponent },
       //{ path: 'studije', component: someOtherComponent },
     ]
