@@ -1,0 +1,53 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Dodavanje novog osoblja</mat-card-title>
+  </mat-card-header>
+  
+  <form [formGroup]="staffForm" (ngSubmit)="onSubmit()">
+    <mat-card-content>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Tip osoblja</mat-label>
+        <mat-select formControlName="uloga">
+          <mat-option value="ROLE_NASTAVNIK">Nastavnik</mat-option>
+          <mat-option value="ROLE_SLUZBA">Studentska Služba</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Ime</mat-label>
+        <input matInput formControlName="ime">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Prezime</mat-label>
+        <input matInput formControlName="prezime">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Korisničko ime</mat-label>
+        <input matInput formControlName="korisnickoIme">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Privremena lozinka</mat-label>
+        <input matInput type="password" formControlName="lozinka">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width" *ngIf="staffForm.get('uloga')?.value === 'ROLE_NASTAVNIK'">
+        <mat-label>Biografija</mat-label>
+        <textarea matInput formControlName="biografija"></textarea>
+      </mat-form-field>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button mat-raised-button color="primary" [disabled]="staffForm.invalid" type="submit">
+        Kreiraj Nalog
+      </button>
+    </mat-card-actions>
+  </form>
+</mat-card>

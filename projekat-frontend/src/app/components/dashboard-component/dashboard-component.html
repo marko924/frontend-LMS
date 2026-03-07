@@ -46,6 +46,10 @@
             <mat-icon matListItemIcon>settings</mat-icon>
             <span matListItemTitle>Administracija</span>
           </a>
+          <a mat-list-item routerLink="/dashboard/dodajOsoblje">
+            <mat-icon matListItemIcon>person</mat-icon>
+            <span matListItemTitle>Dodaj osoblje</span>
+          </a>
         </ng-container>
 
         <ng-container *ngIf="userRole === 'ROLE_SLUZBA'">

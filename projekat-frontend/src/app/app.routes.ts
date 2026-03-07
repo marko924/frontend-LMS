@@ -10,6 +10,7 @@ import { PrijaviIspitComponent } from './components/prijavi-ispit-component/prij
 import { MojiPredmetiComponent } from './components/moji-predmeti-component/moji-predmeti-component';
 import { ZakazivanjeIspita } from './components/zakazivanje-ispita/zakazivanje-ispita';
 import { AdministracijaComponent } from './components/administracija-component/administracija-component';
+import { DodajOsobljeComponent } from './components/dodaj-osoblje-component/dodaj-osoblje-component';
 
 export const routes: Routes = [
      // --- JAVNI DEO ---
@@ -38,11 +39,10 @@ export const routes: Routes = [
       { path: 'upis-na-godinu', component: UpisNaGodinuComponent },
       { path: 'listaZahteva', component: ZahteviStudenata },
       { path: 'zakazivanjeIspita', component: ZakazivanjeIspita},
-      //{ path: 'home', component: DashboardWelcomeComponent }, 
-      //{ path: 'administracija', component: AdminTableComponent },
       { path: 'moji-predmeti', component: MojiPredmetiComponent },
-      { path: 'administracija', component: AdministracijaComponent}
-      // ... ostale rute
+      { path: 'administracija', component: AdministracijaComponent},
+      { path: 'dodajOsoblje', component: DodajOsobljeComponent}
+      
     ]
   },
 
