@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
 @Component({
@@ -10,8 +10,6 @@ import { MatToolbarModule } from '@angular/material/toolbar';
   styleUrl: './home-component.css',
 })
 export class HomeComponent {
-
-  constructor(public router: Router) {}
 
   //Napraviti sledece kompoenente koje ce se ucitavati u ovoj komponenti: 
   //DetaljiUniverzitetaComponent - za prikaz osnovnih informacija o fakultetu
