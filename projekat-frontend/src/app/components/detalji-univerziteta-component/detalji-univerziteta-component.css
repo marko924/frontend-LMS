@@ -1,0 +1,93 @@
+.university-container {
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 0 20px;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.hero-card {
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+  color: white;
+  padding: 40px;
+  border-radius: 16px;
+  text-align: center;
+  margin-bottom: 30px;
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.2);
+}
+
+.badge {
+  background: rgba(255, 255, 255, 0.2);
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 15px;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 30px;
+}
+
+.info-section, .rector-section {
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+}
+
+.description {
+  line-height: 1.7;
+  color: #4b5563;
+  margin-bottom: 25px;
+}
+
+.contact-box {
+  background: #f8fafc;
+  padding: 20px;
+  border-radius: 12px;
+  border-left: 4px solid #3b82f6;
+}
+
+.contact-item {
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+}
+
+.rector-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.rector-avatar {
+  width: 60px;
+  height: 60px;
+  background: #e0e7ff;
+  color: #4338ca;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.rector-name {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0;
+  color: #1f2937;
+}
+
+.rector-bio {
+  font-size: 0.9rem;
+  font-style: italic;
+  color: #6b7280;
+  border-top: 1px solid #f3f4f6;
+  padding-top: 15px;
+}

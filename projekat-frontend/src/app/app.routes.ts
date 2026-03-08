@@ -11,6 +11,7 @@ import { MojiPredmetiComponent } from './components/moji-predmeti-component/moji
 import { ZakazivanjeIspita } from './components/zakazivanje-ispita/zakazivanje-ispita';
 import { AdministracijaComponent } from './components/administracija-component/administracija-component';
 import { DodajOsobljeComponent } from './components/dodaj-osoblje-component/dodaj-osoblje-component';
+import { DetaljiUniverzitetaComponent } from './components/detalji-univerziteta-component/detalji-univerziteta-component';
 
 export const routes: Routes = [
      // --- JAVNI DEO ---
@@ -19,7 +20,7 @@ export const routes: Routes = [
     component: HomeComponent, 
     children: [
       //{ path: '', component: pocetnaKomponenta },
-      //{ path: 'univerzitet', component: DetaljiUniverzitetaComponent },
+      { path: 'univerzitet', component: DetaljiUniverzitetaComponent },
       //{ path: 'fakulteti', component: FacultyListComponent },
       //{ path: 'studije', component: someOtherComponent },
     ]
