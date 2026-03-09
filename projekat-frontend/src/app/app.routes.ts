@@ -13,6 +13,7 @@ import { AdministracijaComponent } from './components/administracija-component/a
 import { DodajOsobljeComponent } from './components/dodaj-osoblje-component/dodaj-osoblje-component';
 import { DetaljiUniverzitetaComponent } from './components/detalji-univerziteta-component/detalji-univerziteta-component';
 import { PocetnaStranicaComponent } from './components/pocetna-stranica-component/pocetna-stranica-component';
+import { ListaFakultetaComponent } from './components/lista-fakulteta-component/lista-fakulteta-component';
 
 export const routes: Routes = [
      // --- JAVNI DEO ---
@@ -22,7 +23,7 @@ export const routes: Routes = [
     children: [
       { path: '', component: PocetnaStranicaComponent },
       { path: 'univerzitet', component: DetaljiUniverzitetaComponent },
-      //{ path: 'fakulteti', component: FacultyListComponent },
+      { path: 'fakulteti', component: ListaFakultetaComponent },
       //{ path: 'studije', component: someOtherComponent },
     ]
   },

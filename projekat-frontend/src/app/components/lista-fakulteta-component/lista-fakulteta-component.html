@@ -1,0 +1,29 @@
+<div class="university-container">
+  <div class="list-header">
+    <h2>Lista fakulteta</h2>
+    <p>Odaberite fakultet za više informacija.</p>
+  </div>
+
+  <div class="cards-grid" *ngIf="fakulteti.length > 0; else emptyState">
+    <div class="fakultet-card" 
+         *ngFor="let f of fakulteti" 
+         [routerLink]="['/fakulteti', f.id]">
+      
+      <div class="card-body">
+        <h3>{{ f.naziv }}</h3>
+        <p class="description">{{ f.opis }}</p>
+      </div>
+
+      <div class="card-footer">
+        <span class="action-text">Detaljnije o fakultetu</span>
+        <i class="arrow-icon">→</i>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #emptyState>
+    <div class="no-data">
+      <p>Trenutno nema dostupnih fakulteta u sistemu.</p>
+    </div>
+  </ng-template>
+</div>
