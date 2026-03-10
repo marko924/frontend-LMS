@@ -14,9 +14,10 @@ import { DodajOsobljeComponent } from './components/dodaj-osoblje-component/doda
 import { DetaljiUniverzitetaComponent } from './components/detalji-univerziteta-component/detalji-univerziteta-component';
 import { PocetnaStranicaComponent } from './components/pocetna-stranica-component/pocetna-stranica-component';
 import { ListaFakultetaComponent } from './components/lista-fakulteta-component/lista-fakulteta-component';
+import { DetaljiFakultetaComponent } from './components/detalji-fakulteta-component/detalji-fakulteta-component';
 
 export const routes: Routes = [
-     // --- JAVNI DEO ---
+  // --- JAVNI DEO ---
   {
     path: '',
     component: HomeComponent, 
@@ -24,6 +25,7 @@ export const routes: Routes = [
       { path: '', component: PocetnaStranicaComponent },
       { path: 'univerzitet', component: DetaljiUniverzitetaComponent },
       { path: 'fakulteti', component: ListaFakultetaComponent },
+      { path: 'fakulteti/:id', component: DetaljiFakultetaComponent },
       //{ path: 'studije', component: someOtherComponent },
     ]
   },

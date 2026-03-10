@@ -1,0 +1,42 @@
+<div class="container" *ngIf="detalji; else loading">
+  <div class="header-card">
+    <nav class="breadcrumb">
+      <a routerLink="/univerzitet">{{ detalji.univerzitetNaziv }}</a> 
+      <span> / {{ detalji.naziv }}</span>
+    </nav>
+    <h1>{{ detalji.naziv }}</h1>
+    <p class="location-tag">
+      <i class="icon-pin"></i> {{ detalji.ulica }} {{ detalji.broj }}, {{ detalji.mestoNaziv }}
+    </p>
+  </div>
+
+  <div class="main-grid">
+    <div class="content-card">
+      <h3>O fakultetu</h3>
+      <p class="description">{{ detalji.opis }}</p>
+    </div>
+
+    <div class="sidebar-card">
+      <div class="dekan-info">
+        <div class="avatar">
+          {{ detalji.dekanIme.charAt(0) }}{{ detalji.dekanPrezime.charAt(0) }}
+        </div>
+        <div class="text">
+          <small>Dekan fakulteta</small>
+          <h4>{{ detalji.dekanIme }} {{ detalji.dekanPrezime }}</h4>
+          <p>{{ detalji.dekanEmail }}</p>
+        </div>
+      </div>
+      
+      <div class="action-buttons">
+        <button class="btn-primary" [routerLink]="['/fakulteti']">
+          Nazad na fakultete
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="loading-state">Učitavanje detalja fakulteta...</div>
+</ng-template>
