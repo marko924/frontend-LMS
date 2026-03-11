@@ -4,4 +4,5 @@ export interface TerminNastave {
   vremeZavrsetka: Date;
   realizacijaId: number;
   tipNastaveId: number;
+  ishodiId: number[];
 }

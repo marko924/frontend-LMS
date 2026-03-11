@@ -4,5 +4,5 @@ export interface StudijskiProgram {
   opis: string;
   fakultetId: number;
   rukovodilacId: number;
-  predmetiId: number[];
+  godineStudijaId: number[];
 }

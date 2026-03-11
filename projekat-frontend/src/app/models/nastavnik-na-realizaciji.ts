@@ -4,4 +4,5 @@ export interface NastavnikNaRealizaciji {
   nastavnikId: number;
   realizacijaId: number;
   tipNastaveId: number;
+  obavestenjaId?: number[];
 }
