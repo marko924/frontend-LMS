@@ -1,0 +1,125 @@
+<div class="admin-panel">
+  <header>
+    <h1>Administracija sistema</h1>
+  </header>
+
+  <section class="selection-area">
+    <div class="form-group">
+      <label for="entity-picker">Izaberite tabelu za rad:</label>
+      <select 
+        id="entity-picker" 
+        (change)="onEntitySelect($event)" 
+        class="admin-select">
+        <option value="">-- Izaberite entitet --</option>
+        <option *ngFor="let entity of ADMIN_ENTITIES | keyvalue" [value]="entity.key">
+          {{ entity.value.label }}
+        </option>
+      </select>
+    </div>
+  </section>
+
+  <hr />
+
+  <main class="content-area" *ngIf="activeService()">
+    
+    <div *ngIf="isLoading()" class="loading-overlay">
+      <div class="spinner"></div>
+      <p>Učitavanje podataka...</p>
+    </div>
+
+    <div class="table-actions" style="margin-bottom: 15px;">
+      <button (click)="openCreateModal()" class="btn-create">
+        + Dodaj novi zapis
+      </button>
+    </div>
+
+    <div [class.dimmed]="isLoading()">
+      <app-generic-table 
+        [data]="data" 
+        [columns]="activeColumns"
+        [actions]="{ edit: true, delete: true }"
+        (edit)="handleEdit($event)"
+        (delete)="handleDelete($event)">
+      </app-generic-table>
+
+      <div class="modal-overlay" *ngIf="isEditModalOpen()">
+        <div class="modal-content">
+          <h3>{{ isEditMode() ? 'Izmena podataka' : 'Dodavanje podatka' }}</h3>
+    
+          <div class="edit-form">
+            <div *ngFor="let col of activeColumns" class="form-field">
+              <ng-container *ngIf="col.key !== 'id' || isEditMode()">
+                <label>
+                  {{ col.label }}:
+                  <span *ngIf="col.required" class="star">*</span>
+                </label>
+              </ng-container>
+
+              <input 
+                *ngIf="col.key === 'id' && isEditMode()"
+                [value]="selectedItem()[col.key]"
+                class="admin-input readonly-input"
+                readonly
+              />
+        
+              <input 
+                *ngIf="!col.references && col.key !== 'id'"
+                [type]="col.type === 'number' ? 'number' : (col.type === 'date' ? 'datetime-local' : 'text')" 
+                [(ngModel)]="selectedItem()[col.key]" 
+                class="admin-input"
+                [class.invalid-input]="col.required && (selectedItem()[col.key] === null || selectedItem()[col.key] === undefined || selectedItem()[col.key] === '')"
+              />
+
+              <select 
+                *ngIf="col.references && col.key !== 'id'"
+                [(ngModel)]="selectedItem()[col.key]"
+                class="admin-input"
+                [class.invalid-input]="col.required && (selectedItem()[col.key] === null || selectedItem()[col.key] === undefined || selectedItem()[col.key] === '')">
+                <option [ngValue]="null">-- Izaberite stavku --</option>
+                <option *ngFor="let option of foreignKeyOptions[col.key]" [value]="option.id">
+                  {{ option[col.references.displayField] }} (ID: {{ option.id }})
+                </option>
+              </select>
+        
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button (click)="saveChanges()" [disabled]="!isFormValid()" [class.btn-disabled]="!isFormValid()" class="btn-save">
+              {{ isEditMode() ? 'Sačuvaj izmene' : 'Kreiraj' }}
+            </button>
+            <button (click)="closeModal()" class="btn-cancel">Odustani</button>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="data.length === 0 && !isLoading()" class="empty-state">
+        Trenutno nema podataka u ovoj tabeli.
+      </div>
+    </div>
+
+    <footer class="pagination" *ngIf="totalPages() > 0">
+      <button 
+        [disabled]="currentPage() === 0 || isLoading()" 
+        (click)="changePage(-1)"
+        class="btn-nav">
+        &laquo; Prethodna
+      </button>
+
+      <span class="page-counter">
+        Stranica <strong>{{ currentPage() + 1 }}</strong> od <strong>{{ totalPages() }}</strong>
+      </span>
+
+      <button 
+        [disabled]="currentPage() === totalPages() - 1 || isLoading()" 
+        (click)="changePage(1)"
+        class="btn-nav">
+        Sledeća &raquo;
+      </button>
+    </footer>
+  </main>
+
+  <aside *ngIf="!activeService()" class="welcome-screen">
+    <p>Molimo izaberite entitet iz liste iznad kako biste videli podatke.</p>
+  </aside>
+</div>

@@ -5,4 +5,6 @@ export interface RealizacijaPredmeta {
   terminiId: number[];
   nastavniciId: number[];
   pohadjanjaId: number[];
+  evaluacijeId: number[];
+  obavestenjaId: number[];
 }

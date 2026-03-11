@@ -10,16 +10,23 @@ import { PrijaviIspitComponent } from './components/prijavi-ispit-component/prij
 import { ZakazivanjeIspita } from './components/zakazivanje-ispita/zakazivanje-ispita';
 import { UnosOceneComponent } from './components/unos-ocene-component/unos-ocene-component';
 import { IstorijaIspitaComponent } from './components/istorija-ispita-component/istorija-ispita-component';
+import { AdministracijaComponent } from './components/administracija-component/administracija-component';
+import { DodajOsobljeComponent } from './components/dodaj-osoblje-component/dodaj-osoblje-component';
+import { DetaljiUniverzitetaComponent } from './components/detalji-univerziteta-component/detalji-univerziteta-component';
+import { PocetnaStranicaComponent } from './components/pocetna-stranica-component/pocetna-stranica-component';
+import { ListaFakultetaComponent } from './components/lista-fakulteta-component/lista-fakulteta-component';
+import { DetaljiFakultetaComponent } from './components/detalji-fakulteta-component/detalji-fakulteta-component';
 
 export const routes: Routes = [
-     // --- JAVNI DEO ---
+  // --- JAVNI DEO ---
   {
     path: '',
     component: HomeComponent, 
     children: [
-      //{ path: '', redirectTo: 'public-home', pathMatch: 'full' },
-      //{ path: 'public-home', component: UniversityDetailsComponent },
-      //{ path: 'fakulteti', component: FacultyListComponent },
+      { path: '', component: PocetnaStranicaComponent },
+      { path: 'univerzitet', component: DetaljiUniverzitetaComponent },
+      { path: 'fakulteti', component: ListaFakultetaComponent },
+      { path: 'fakulteti/:id', component: DetaljiFakultetaComponent },
       //{ path: 'studije', component: someOtherComponent },
     ]
   },
@@ -42,6 +49,8 @@ export const routes: Routes = [
       {path: 'istorija-ispita', component: IstorijaIspitaComponent},
       //{ path: 'home', component: DashboardWelcomeComponent }, 
       //{ path: 'administracija', component: AdminTableComponent },
+      { path: 'administracija', component: AdministracijaComponent},
+      { path: 'dodajOsoblje', component: DodajOsobljeComponent}
     ]
   },
 

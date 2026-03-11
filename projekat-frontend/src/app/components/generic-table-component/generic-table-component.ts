@@ -30,13 +30,10 @@ export class GenericTableComponent<T extends Record<string, any>> {
   @Output() view = new EventEmitter<T>();
   @Output() customEvent = new EventEmitter<{ row: T; event: string }>();
 
-
-  // 🔹 Proverava da li neka kolona ima custom action button
   hasActionButtons(): boolean {
     return this.columns?.some(col => !!col.actionButton) ?? false;
   }
 
-  // 🔹 Proverava da li treba prikazati kolonu "Akcije"
   hasAnyActions(): boolean {
     return (
       !!this.actions?.view ||
@@ -50,7 +47,13 @@ export class GenericTableComponent<T extends Record<string, any>> {
     if (value == null) return '-';
 
     if (type === 'date') {
-      return new Date(value as string | number | Date).toLocaleDateString();
+      return new Date(value as string | number | Date).toLocaleString('sr-RS', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+    });
     }
 
     if (type === 'number') {
@@ -70,9 +73,5 @@ export class GenericTableComponent<T extends Record<string, any>> {
 
   onDelete(row: T) {
     this.delete.emit(row);
-  }
-
-  onView(row: T) {
-    this.view.emit(row);
   }
 }

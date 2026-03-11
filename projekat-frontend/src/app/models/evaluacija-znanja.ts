@@ -8,4 +8,6 @@ export interface EvaluacijaZnanja {
     realizacijaPredmetaId: number;
     instrumentEvaluacijeId: number;
     ispitniRokId: number;
+    polaganjaId?: number[];
+    ishodi?: number[]; 
 }

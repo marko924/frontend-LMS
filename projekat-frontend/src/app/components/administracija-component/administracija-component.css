@@ -1,0 +1,237 @@
+.admin-panel {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+header {
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #f0f2f5;
+  padding-bottom: 1rem;
+}
+
+header h1 {
+  color: #1a202c;
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+header p {
+  color: #718096;
+  margin: 0.5rem 0 0;
+}
+
+.selection-area {
+  background-color: #f8fafc;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #4a5568;
+}
+
+.admin-select {
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #cbd5e0;
+  border-radius: 6px;
+  background-color: white;
+  color: #2d3748;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.admin-select:focus {
+  outline: none;
+  border-color: #4299e1;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+}
+
+.loading-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  gap: 1rem;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #edf2f7;
+  border-top: 4px solid #4299e1;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.dimmed {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.content-area {
+  position: relative;
+  min-height: 400px;
+}
+
+.pagination {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  padding: 1rem;
+  background-color: #f8fafc;
+  border-radius: 8px;
+}
+
+.btn-nav {
+  padding: 0.6rem 1.2rem;
+  background-color: #4299e1;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn-nav:hover:not(:disabled) {
+  background-color: #3182ce;
+}
+
+.btn-nav:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.btn-nav:disabled {
+  background-color: #cbd5e0;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.page-counter {
+  color: #4a5568;
+  font-size: 0.95rem;
+}
+
+.empty-state, .welcome-screen {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #a0aec0;
+  background: #fdfdfd;
+  border: 2px dashed #edf2f7;
+  border-radius: 8px;
+}
+
+.welcome-screen p {
+  font-size: 1.1rem;
+  font-style: italic;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-input {
+  padding: 8px;
+  border: 1px solid #cbd5e0;
+  border-radius: 4px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn-save { 
+  background: #38a169; 
+  color: white; 
+  border: none; 
+  padding: 10px 20px; 
+  border-radius: 4px; 
+  cursor: pointer; 
+}
+
+.btn-create {
+  background: #38a169; 
+  color: white; 
+  border: none; 
+  padding: 10px 20px; 
+  border-radius: 4px; 
+  cursor: pointer;
+}
+
+.btn-cancel { 
+  background: #e2e8f0; 
+  border: none; 
+  padding: 10px 20px; 
+  border-radius: 4px; 
+  cursor: pointer; 
+}
+
+.readonly-input {
+  background-color: #edf2f7;
+  color: #718096;
+  cursor: not-allowed;
+  border: 1px dashed #cbd5e0;
+}
+
+.btn-disabled {
+  background-color: #cbd5e0 !important;
+  cursor: not-allowed !important;
+  opacity: 0.7;
+}
+
+.invalid-input:focus {
+  box-shadow: 0 0 0 3px rgba(252, 129, 129, 0.2) !important;
+}
+
+.star {
+  color: red; 
+  margin-left: 2px;
+}
