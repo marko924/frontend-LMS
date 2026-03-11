@@ -1,0 +1,43 @@
+<div class="university-container" *ngIf="detalji">
+  <div class="hero-card">
+    <div class="badge">Univerzitet</div>
+    <h1>{{ detalji.naziv }}</h1>
+    <p class="foundation-date">Osnovan: {{ detalji.datumOsnivanja | date:'yyyy.' }}godine</p>
+  </div>
+
+  <div class="details-grid">
+    <div class="info-section">
+      <h3><i class="icon-info"></i> O nama</h3>
+      <p class="description">{{ detalji.opis }}</p>
+      
+      <div class="contact-box">
+        <h4>Kontakt podaci</h4>
+        <div class="contact-item">
+          <strong>Telefon:</strong> {{ detalji.kontakt || 'nije unet' }}
+        </div>
+        <div class="contact-item">
+          <strong>Lokacija:</strong> {{ detalji.ulica }} {{ detalji.broj }}, {{ detalji.mestoNaziv }}
+        </div>
+      </div>
+    </div>
+
+    <div class="rector-section">
+      <div class="rector-header">
+        <div class="rector-avatar">
+          {{ detalji.rektorIme.charAt(0) }}{{ detalji.rektorPrezime.charAt(0) }}
+        </div>
+        <div>
+          <h3>Rektor</h3>
+          <p class="rector-name">{{ detalji.rektorIme }} {{ detalji.rektorPrezime }}</p>
+        </div>
+      </div>
+      <p class="rector-bio">
+        {{ detalji.rektorBiografija }}
+      </p>
+      <div class="rector-contact">
+        <small>Kontakt rektora:</small>
+        <p>{{ detalji.rektorEmail }}</p>
+      </div>
+    </div>
+  </div>
+</div>

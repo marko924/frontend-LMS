@@ -4,4 +4,5 @@ export interface Polaganje {
     osvojeniBodovi: number;
     napomena: string;
     evaluacijaZnanjaId: number;
+    studentNaGodiniId: number;
 }

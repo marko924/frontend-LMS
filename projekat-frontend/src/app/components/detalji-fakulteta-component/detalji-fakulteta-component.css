@@ -1,0 +1,72 @@
+.container {
+  max-width: 1000px;
+  margin: 30px auto;
+  padding: 0 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.header-card {
+  background: #f8fafc;
+  padding: 30px;
+  border-radius: 12px;
+  border-bottom: 4px solid #1e3a8a;
+  margin-bottom: 25px;
+}
+
+.breadcrumb {
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+  color: #64748b;
+}
+
+.breadcrumb a {
+  color: #1e3a8a;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.main-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 25px;
+}
+
+.content-card, .sidebar-card {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.dekan-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  background: #1e3a8a;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 10px;
+  background: #1e3a8a;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background: #2563eb;
+}

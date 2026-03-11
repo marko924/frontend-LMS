@@ -16,16 +16,26 @@ import { MatListModule } from '@angular/material/list';
 })
 export class DashboardComponent implements OnInit {
   userRole: string = '';
-  currentUsername: string = 'Korisnik';
+  currentUsername: string = 'Student';
 
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
-    // Uzimamo ulogu iz servisa (koji dekodira JWT)
     this.userRole = this.authService.getRole();
-    
-    // Opciono: mozes dodati metodu u AuthService da izvuče i username iz tokena
-    // this.currentUsername = this.authService.getUsername();
+    switch (this.userRole) {
+      case 'ROLE_NASTAVNIK':
+        this.currentUsername = 'Nastavnik'
+        break;
+      case 'ROLE_ADMIN':
+        this.currentUsername = 'Administrator'
+        break;
+      case 'ROLE_SLUZBA':
+        this.currentUsername = 'Osoblje sluzbe'
+        break;
+      default:
+        this.currentUsername = 'Student';
+        break;
+    }
   }
 
   onLogout() {

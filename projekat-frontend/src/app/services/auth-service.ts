@@ -28,7 +28,6 @@ export class AuthService {
 
     try {
       const decoded: any = jwtDecode(token);
-      // 'userId' je ključ koji smo definisali u Javi u JwtUtil klasi
       return decoded.userId ? Number(decoded.userId) : 0;
     } catch (error) {
       console.error("Greška pri dekodiranju tokena:", error);

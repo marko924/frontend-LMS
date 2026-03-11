@@ -1,43 +1,29 @@
-<table class="generic-table">
-  <thead>
-    <tr>
-      <th *ngFor="let col of columns">
-        {{ col.label }}
-      </th>
-
-      <th *ngIf="hasAnyActions()">
-        Akcije
-      </th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <tr *ngFor="let row of data">
-
-      <td *ngFor="let col of columns">
-        {{ formatCell(row[col.key], col.type) }}
-
-        <button
-          *ngIf="col.actionButton"
-          (click)="onCustomEvent(row, col.actionButton.event)">
-          {{ col.actionButton.label }}
-        </button>
-      </td>
-
-      <td *ngIf="hasAnyActions()">
-        <button *ngIf="actions.view" (click)="onView(row)">
-          Pogledaj
-        </button>
-
-        <button *ngIf="actions.edit" (click)="onEdit(row)">
-          Izmeni
-        </button>
-
-        <button *ngIf="actions.delete" (click)="onDelete(row)">
-          Obriši
-        </button>
-      </td>
-
-    </tr>
-  </tbody>
-</table>
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th *ngFor="let col of columns">{{ col.label }}</th>
+        <th *ngIf="hasAnyActions()">Akcije</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let row of data">
+        <td *ngFor="let col of columns">
+          {{ formatCell(row[col.key], col.type) }}
+          <button *ngIf="col.actionButton" 
+                  (click)="onCustomEvent(row, col.actionButton.event)"
+                  class="btn-table btn-view">
+            {{ col.actionButton.label }}
+          </button>
+        </td>
+        
+        <td *ngIf="hasAnyActions()">
+          <div class="actions-cell">
+            <button *ngIf="actions.edit" (click)="onEdit(row)" class="btn-table btn-edit">Izmeni</button>
+            <button *ngIf="actions.delete" (click)="onDelete(row)" class="btn-table btn-delete">Obriši</button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

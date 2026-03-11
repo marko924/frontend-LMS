@@ -4,5 +4,6 @@ export interface StudentNaGodini {
   datumUpisa: Date;
   studentId: number;
   godinaStudijaId: number;
-  pohadjanjaId: number[];
+  pohadjanjaId?: number[];
+  polaganjaId?: number[];
 }

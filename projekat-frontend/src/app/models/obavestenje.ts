@@ -5,6 +5,6 @@ export interface Obavestenje {
     sadrzaj: string;
     datumObjave: Date | string;
     fajloviId: number[];
-    realizacijaPredmetaId: number;
-    nastavniMaterijalId: number;
+    realizacijaPredmetaId?: number;
+    nastavnikNaRealizacijiId?: number;
 }
