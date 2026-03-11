@@ -127,10 +127,11 @@ export class UnosOceneComponent implements OnInit {
                   pohadjanjeId: p.id,
                   imePrezime: student ? `${student.ime} ${student.prezime}` : 'Nepoznat student',
                   brojIndeksa: sng?.brojIndeksa || 'Nema indeksa',
-                  ocena: null,
+                  ocena: 5,
                   osvojeniBodovi: 0,
                   studentNaGodiniId: p.studentNaGodiniId,
-                  evaluacijaZnanjaId: adekvatnaEvaluacija.id
+                  evaluacijaZnanjaId: adekvatnaEvaluacija.id,
+                  realizacijaId: p.realizacijaId 
                 };
               });
               this.cdr.detectChanges();
@@ -150,9 +151,12 @@ export class UnosOceneComponent implements OnInit {
         Number(e.realizacijaPredmetaId) === Number(this.izabranaRealizacijaId)
       );
 
+      // Provera roka od 15 dana
       if (ispit && ispit.vremePocetka) {
         const datumIspita = new Date(ispit.vremePocetka);
-        const razlikaUDanima = (new Date().getTime() - datumIspita.getTime()) / (1000 * 60 * 60 * 24);
+        const danas = new Date();
+        const razlikaUMs = danas.getTime() - datumIspita.getTime();
+        const razlikaUDanima = razlikaUMs / (1000 * 60 * 60 * 24);
 
         if (razlikaUDanima > 15) {
           this.snackBar.open('Rok za unos ocene je istekao (15 dana).', 'Zatvori', { duration: 5000 });
@@ -160,31 +164,36 @@ export class UnosOceneComponent implements OnInit {
         }
       }
 
+      
       const novoPolaganje: Polaganje = {
         osvojeniBodovi: red.osvojeniBodovi,
         napomena: 'Unos ocene',
-        evaluacijaZnanjaId: red.evaluacijaZnanjaId
+        evaluacijaZnanjaId: red.evaluacijaZnanjaId,
+        studentNaGodiniId: red.studentNaGodiniId 
       };
 
+      
       this.polaganjeService.create(novoPolaganje).subscribe({
         next: () => {
+          
           const novoPohadjanje: PohadjanjePredmeta = {
             id: red.pohadjanjeId,
             konacnaOcena: red.ocena,
             studentNaGodiniId: red.studentNaGodiniId,
-            realizacijaId: red.realizacijaId || this.izabranaRealizacijaId 
+            realizacijaId: red.realizacijaId
           };
 
           this.pohadjanjeService.update(red.pohadjanjeId, novoPohadjanje).subscribe({
             next: () => {
-              this.snackBar.open(`Uspešno: Bodovi ${red.osvojeniBodovi}, Ocena ${red.ocena}`, 'OK');
+              this.snackBar.open(`Uspešno evidentirano: ${red.imePrezime}`, 'OK', { duration: 3000 });
+              
               this.studentiZaOcenjivanje = this.studentiZaOcenjivanje.filter(s => s.pohadjanjeId !== red.pohadjanjeId);
               this.cdr.detectChanges();
             },
-            error: () => this.snackBar.open('Greška pri ažuriranju ocene.', 'Zatvori')
+            error: () => this.snackBar.open('Greška pri ažuriranju ocene u pohađanju.', 'Zatvori')
           });
         },
-        error: () => this.snackBar.open('Greška pri čuvanju bodova.', 'Zatvori')
+        error: () => this.snackBar.open('Greška pri upisu bodova u polaganje.', 'Zatvori')
       });
     });
   }

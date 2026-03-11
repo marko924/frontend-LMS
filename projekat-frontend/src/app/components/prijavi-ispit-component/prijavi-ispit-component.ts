@@ -58,7 +58,7 @@ export class PrijaviIspitComponent implements OnInit {
     private predmetService: PredmetService,
     private nastavnikService: NastavnikService,
     private ispitniRokService: IspitniRokService,
-    private pohadjanjeService: PohadjanjePredmetaService, // DODATO
+    private pohadjanjeService: PohadjanjePredmetaService, 
     private cdr: ChangeDetectorRef
   ) {}
 

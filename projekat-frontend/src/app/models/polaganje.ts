@@ -1,7 +1,7 @@
 export interface Polaganje {
-
-    id?: number;
-    osvojeniBodovi: number;
-    napomena: string;
-    evaluacijaZnanjaId: number;
+  id?: number;
+  osvojeniBodovi: number;
+  napomena: string;
+  evaluacijaZnanjaId: number;
+  studentNaGodiniId: number; 
 }

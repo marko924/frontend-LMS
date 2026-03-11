@@ -9,11 +9,11 @@ import { Observable } from 'rxjs';
 })
 export class PrijaviIspitService extends GenericCrudService<PrijaviIspit, number> {
   
-  private readonly apiUrl = `http://localhost:8080/api/prijave-ispita`;
+  private readonly apiUrl = `http://localhost:8080/api/prijaveIspita`;
 
   constructor(protected override http: HttpClient) {
     
-    super(http, `http://localhost:8080/api/prijave-ispita`);
+    super(http, `http://localhost:8080/api/prijaveIspita`);
   }
 
 

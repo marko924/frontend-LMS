@@ -47,10 +47,8 @@ export class IstorijaIspitaComponent implements OnInit {
   ucitajIstoriju(): void {
     this.sngService.getAllWithoutPagination().subscribe(sveSng => {
       const mojaSngIds = sveSng.filter(s => s.studentId === this.studentId).map(s => s.id);
-
       this.pohadjanjeService.getAllWithoutPagination().subscribe(svaPohadjanja => {
         const mojaPohadjanja = svaPohadjanja.filter(p => mojaSngIds.includes(p.studentNaGodiniId));
-
         this.realizacijaService.getAllWithoutPagination().subscribe(realizacije => {
           this.predmetService.getAllWithoutPagination().subscribe(predmeti => {
             this.polaganjeService.getAllWithoutPagination().subscribe(svaPolaganja => {
@@ -58,31 +56,43 @@ export class IstorijaIspitaComponent implements OnInit {
                 this.rokService.getAllWithoutPagination().subscribe(rokovi => {
                   this.nastavnikService.getAllWithoutPagination().subscribe(nastavnici => {
                     
-                    const procesuiraniPodaci = mojaPohadjanja.map(p => {
+                    
+                    const obradjeniPodaci = mojaPohadjanja.map(p => {
                       const realizacija = realizacije.find(r => r.id === p.realizacijaId);
                       const predmet = predmeti.find(pr => pr.id === realizacija?.predmetId);
                       
-                     
-                      const evaluacija = evaluacije.find(e => e.realizacijaPredmetaId === p.realizacijaId);
-                      const polaganje = svaPolaganja.find(pol => pol.evaluacijaZnanjaId === evaluacija?.id);
-                      const rok = rokovi.find(r => r.id === evaluacija?.ispitniRokId);
                       
+                      const evIdsZaOvajPredmet = evaluacije
+                        .filter(ev => ev.realizacijaPredmetaId === p.realizacijaId)
+                        .map(ev => ev.id);
+
                      
-                      const nastavnikId = realizacija?.nastavniciId?.[0];
-                      const n = nastavnici.find(nas => nas.id === nastavnikId);
+                      const polaganje = svaPolaganja.find(pol => 
+                        evIdsZaOvajPredmet.includes(pol.evaluacijaZnanjaId) &&
+                        pol.studentNaGodiniId === p.studentNaGodiniId
+                      );
+
+                      
+                      const konkretnaEv = evaluacije.find(e => e.id === polaganje?.evaluacijaZnanjaId);
+                      const rok = rokovi.find(r => r.id === konkretnaEv?.ispitniRokId);
+                      
+                      
+                      const nId = realizacija?.nastavniciId?.[0];
+                      const n = nastavnici.find(nas => nas.id === nId);
 
                       return {
                         nazivPredmeta: predmet?.naziv || 'Nepoznat predmet',
-                        brojPoena: polaganje?.osvojeniBodovi || 0,
+                        brojPoena: polaganje ? polaganje.osvojeniBodovi : 0,
                         ocena: p.konacnaOcena || 5,
-                        nastavnik: n ? `${n.ime} ${n.prezime}` : 'Nema nastavnika',
-                        ispitniRok: rok?.naziv || 'Nema roka',
-                        datum: evaluacija?.vremePocetka ? new Date(evaluacija.vremePocetka).toLocaleDateString('sr-RS') : 'Nema datuma'
+                        nastavnik: n ? `${n.ime} ${n.prezime}` : 'Nema podataka',
+                        ispitniRok: rok?.naziv || 'Nije polagano',
+                        datum: konkretnaEv?.vremePocetka ? new Date(konkretnaEv.vremePocetka).toLocaleDateString('sr-RS') : '/'
                       };
                     });
 
-                    this.polozeniIspiti = procesuiraniPodaci.filter(i => i.ocena >= 6);
-                    this.neuspesnaPolaganja = procesuiraniPodaci.filter(i => i.ocena < 6);
+                    
+                    this.polozeniIspiti = obradjeniPodaci.filter(i => i.ocena >= 6);
+                    this.neuspesnaPolaganja = obradjeniPodaci.filter(i => i.ocena < 6);
                   });
                 });
               });

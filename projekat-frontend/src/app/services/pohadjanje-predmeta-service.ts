@@ -9,6 +9,6 @@ import { HttpClient } from '@angular/common/http';
 export class PohadjanjePredmetaService extends GenericCrudService<PohadjanjePredmeta, number> {
 
   constructor(protected override http: HttpClient) {
-    super(http, `http://localhost:8080/api/pohadjanja-predmeta`);
+    super(http, `http://localhost:8080/api/pohadjanjaPredmeta`);
   }
 }
