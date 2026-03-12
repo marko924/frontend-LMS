@@ -30,7 +30,6 @@ import { PohadjanjePredmeta } from '../../models/pohadjanje-predmeta';
 
 @Component({
   selector: 'app-prijavi-ispit',
-  standalone: true,
   imports: [
     CommonModule, FormsModule, MatCardModule, MatButtonModule, 
     MatTableModule, MatIconModule, MatListModule, MatSelectModule, MatFormFieldModule

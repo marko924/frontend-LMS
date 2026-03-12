@@ -31,7 +31,6 @@ import { Polaganje } from '../../models/polaganje';
 
 @Component({
   selector: 'app-unos-ocene-component',
-  standalone: true,
   imports: [
     CommonModule, FormsModule, MatCardModule, MatFormFieldModule, 
     MatSelectModule, MatTableModule, MatInputModule, MatButtonModule, MatSnackBarModule

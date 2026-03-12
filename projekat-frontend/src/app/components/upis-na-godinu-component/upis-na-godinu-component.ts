@@ -20,7 +20,6 @@ import { AuthService } from '../../services/auth-service';
 
 @Component({
   selector: 'app-upis-na-godinu-component',
-  standalone: true,
   imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatSelectModule, MatInputModule, MatButtonModule],
   templateUrl: './upis-na-godinu-component.html',
   styleUrl: './upis-na-godinu-component.css',

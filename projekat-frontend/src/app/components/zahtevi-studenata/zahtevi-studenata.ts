@@ -19,7 +19,7 @@ export class ZahteviStudenata implements OnInit{
   zahtevZaOdobrenjeId: number | null = null;
   brojIndeksaTekst: string = '';
 
-  constructor(private zahtevService: ZahtevZaUpisService) {}
+  constructor(private zahtevService: ZahtevZaUpisService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.ucitajZahteve();
@@ -30,6 +30,7 @@ export class ZahteviStudenata implements OnInit{
     this.zahtevService.getAllWithoutPagination().subscribe(page => {
       this.zahtevi = page.filter(z => z.status === StatusZahteva.NA_CEKANJU);
       console.log(this.zahtevi);
+      this.cdr.detectChanges();
     });
   }
 

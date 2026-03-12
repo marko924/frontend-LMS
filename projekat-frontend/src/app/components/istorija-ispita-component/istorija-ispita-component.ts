@@ -17,7 +17,6 @@ import { NastavnikService } from '../../services/nastavnik-service';
 
 @Component({
   selector: 'app-istorija-ispita',
-  standalone: true,
   imports: [CommonModule, MatCardModule, MatTableModule, MatTabsModule],
   templateUrl: './istorija-ispita-component.html',
   styleUrl: './istorija-ispita-component.css'

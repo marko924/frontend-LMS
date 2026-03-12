@@ -18,7 +18,7 @@ export class DetaljiUniverzitetaComponent implements OnInit{
   ) {}
 
   ngOnInit(): void {
-    this.univerzitetService.getDetalji(1).subscribe({
+    this.univerzitetService.getDetalji(2).subscribe({
       next: (data) => {
         this.detalji = data;
         this.cdr.detectChanges();

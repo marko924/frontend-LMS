@@ -1,8 +1,7 @@
 <div class="container" *ngIf="detalji; else loading">
   <div class="header-card">
-    <nav class="breadcrumb">
+    <nav class="nav-item">
       <a routerLink="/univerzitet">{{ detalji.univerzitetNaziv }}</a> 
-      <span> / {{ detalji.naziv }}</span>
     </nav>
     <h1>{{ detalji.naziv }}</h1>
     <p class="location-tag">
