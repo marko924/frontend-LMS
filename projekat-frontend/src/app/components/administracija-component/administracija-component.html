@@ -61,7 +61,7 @@
                 class="admin-input readonly-input"
                 readonly
               />
-        
+              <!--Moram dodati input polje za boolean podatak-->
               <input 
                 *ngIf="!col.references && col.key !== 'id'"
                 [type]="col.type === 'number' ? 'number' : (col.type === 'date' ? 'datetime-local' : 'text')" 

@@ -43,6 +43,24 @@ export class DodajOsobljeComponent implements OnInit {
     this.authService.register(values).subscribe({
         next: () => {
           alert('Uspešno ste registrovali osoblje!');
+
+          this.staffForm.reset({
+            uloga: 'ROLE_NASTAVNIK',
+            korisnickoIme: '',
+            email: '',
+            lozinka: '',
+            ime: '',
+            prezime: '',
+            biografija: ''
+          });
+
+          //Resetovanje validacije - da polja ne bi bila crvena
+          Object.keys(this.staffForm.controls).forEach(key => {
+            const control = this.staffForm.get(key);
+            control?.setErrors(null);
+            control?.markAsPristine();
+            control?.markAsUntouched();
+          });
         },
         error: (err) => alert('Greška pri registraciji osoblja: ' + err.error)
       });
