@@ -56,19 +56,26 @@ mat-form-field {
   line-height: 1.6;
 }
 
-.info { background: #e3f2fd; color: #0d47a1; border: 1px solid #bbdefb; }
-.success { background: #e8f5e9; color: #1b5e20; border: 1px solid #c8e6c9; }
-.danger { background: #ffebee; color: #b71c1c; border: 1px solid #ffcdd2; }
+.info { 
+  background: #e3f2fd; 
+  color: #0d47a1; 
+  border: 1px solid #bbdefb; 
+}
+
+.success { 
+  background: #e8f5e9; 
+  color: #1b5e20; 
+  border: 1px solid #c8e6c9; 
+}
+
+.danger { 
+  background: #ffebee; 
+  color: #b71c1c; 
+  border: 1px solid #ffcdd2; 
+}
+
 
 .btn-refresh {
   margin-top: 15px !important;
 }
 
-/* Responsivnost za telefone */
-@media (max-width: 480px) {
-  .upis-card {
-    padding: 1.5rem;
-    box-shadow: none;
-    background: transparent;
-  }
-}

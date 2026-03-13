@@ -1,9 +1,43 @@
-.container { padding: 25px; max-width: 1200px; margin: 0 auto; }
-.history-card { border-top: 4px solid #3f51b5; }
-.shadow-card { box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important; }
-.full-width { width: 100%; margin-top: 15px; }
-.pass { color: #2e7d32; }
-.fail { color: #d32f2f; }
-.empty-msg { padding: 30px; text-align: center; color: #888; font-style: italic; }
-th.mat-header-cell { background-color: #f4f6f8; font-weight: bold; padding: 12px 8px; }
-td.mat-cell { padding: 8px; }
+.container { 
+    padding: 25px; 
+    max-width: 1200px; 
+    margin: 0 auto; 
+}
+
+.history-card { 
+    border-top: 4px solid #3f51b5; 
+}
+
+.shadow-card { 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important; 
+}
+
+.full-width { 
+    width: 100%;
+    margin-top: 15px; 
+}
+
+.pass { 
+    color: #2e7d32; 
+}
+
+.fail { 
+    color: #d32f2f; 
+}
+
+.empty-msg { 
+    padding: 30px; 
+    text-align: center; 
+    color: #888; 
+    font-style: italic; 
+}
+
+th.mat-header-cell { 
+    background-color: #f4f6f8;
+    font-weight: bold; 
+    padding: 12px 8px; 
+}
+
+td.mat-cell { 
+    padding: 8px; 
+}

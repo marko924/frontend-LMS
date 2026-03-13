@@ -2,7 +2,6 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-// Material
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
@@ -11,7 +10,6 @@ import { MatListModule } from '@angular/material/list';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
-// Servisi
 import { PrijaviIspitService } from '../../services/prijavi-ispit-service';
 import { StudentNaGodiniService } from '../../services/student-na-godini-service';
 import { AuthService } from '../../services/auth-service';
@@ -20,9 +18,9 @@ import { EvaluacijaZnanjaService } from '../../services/evaluacija-znanja-servic
 import { PredmetService } from '../../services/predmet-service'; 
 import { NastavnikService } from '../../services/nastavnik-service';
 import { IspitniRokService } from '../../services/ispitni-rok-service';
-import { PohadjanjePredmetaService } from '../../services/pohadjanje-predmeta-service'; // NOVO
+import { PohadjanjePredmetaService } from '../../services/pohadjanje-predmeta-service';
+import { PolaganjeService } from '../../services/polaganje-service'; // DODATO
 
-// Modeli
 import { EvaluacijaZnanja } from '../../models/evaluacija-znanja';
 import { PrijaviIspit } from '../../models/prijavi-ispit';
 import { RealizacijaPredmeta } from '../../models/realizacija-predmeta';
@@ -30,11 +28,7 @@ import { PohadjanjePredmeta } from '../../models/pohadjanje-predmeta';
 
 @Component({
   selector: 'app-prijavi-ispit',
-  standalone: true,
-  imports: [
-    CommonModule, FormsModule, MatCardModule, MatButtonModule, 
-    MatTableModule, MatIconModule, MatListModule, MatSelectModule, MatFormFieldModule
-  ],
+  imports: [CommonModule, FormsModule, MatCardModule, MatButtonModule, MatTableModule, MatIconModule, MatListModule, MatSelectModule, MatFormFieldModule],
   templateUrl: './prijavi-ispit-component.html',
   styleUrls: ['./prijavi-ispit-component.css']
 })
@@ -58,7 +52,8 @@ export class PrijaviIspitComponent implements OnInit {
     private predmetService: PredmetService,
     private nastavnikService: NastavnikService,
     private ispitniRokService: IspitniRokService,
-    private pohadjanjeService: PohadjanjePredmetaService, 
+    private pohadjanjeService: PohadjanjePredmetaService,
+    private polaganjeService: PolaganjeService, 
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -78,7 +73,7 @@ export class PrijaviIspitComponent implements OnInit {
 
   proveriStatusIUpis(): void {
     this.sngService.getAllWithoutPagination().subscribe((listaSng: any[]) => {
-      const mojSng = listaSng.find(s => (s.studentId || s.student?.id) === this.studentId);
+      const mojSng = listaSng.find(s => Number(s.studentId || s.student?.id) === Number(this.studentId));
       if (mojSng) {
         this.studentNaGodiniId = mojSng.id;
         this.isUpisan = true;
@@ -93,24 +88,34 @@ export class PrijaviIspitComponent implements OnInit {
     this.realizacijaService.getAllWithoutPagination().subscribe((realizacije: RealizacijaPredmeta[]) => {
       this.predmetService.getAllWithoutPagination().subscribe((predmeti: any[]) => {
         this.nastavnikService.getAllWithoutPagination().subscribe((nastavnici: any[]) => {
-          
-          this.predmetiZaPracenje = realizacije.map(r => {
-            const p = predmeti.find(item => item.id === r.predmetId);
-            let nInfo = 'Nije dodeljen';
-            if (r.nastavniciId && r.nastavniciId.length > 0) {
-              const n = nastavnici.find(item => item.id === r.nastavniciId[0]);
-              if (n) nInfo = `${n.ime} ${n.prezime}`;
-            }
+          this.pohadjanjeService.getAllWithoutPagination().subscribe((pohadjanja: any[]) => {
+            
+           
+            const polozeneRealizacijeIds = pohadjanja
+              .filter(p => Number(p.studentNaGodiniId) === Number(this.studentNaGodiniId) && Number(p.konacnaOcena) > 5)
+              .map(p => Number(p.realizacijaId));
 
-            return {
-              id: r.id, 
-              nazivPredmeta: p?.naziv || 'Nepoznat',
-              espb: p?.espb || 0,
-              nastavnik: nInfo
-            };
+            
+            this.predmetiZaPracenje = realizacije
+              .filter(r => !polozeneRealizacijeIds.includes(Number(r.id)))
+              .map(r => {
+                const p = predmeti.find(item => Number(item.id) === Number(r.predmetId));
+                let nInfo = 'Nije dodeljen';
+                if (r.nastavniciId && r.nastavniciId.length > 0) {
+                  const n = nastavnici.find(item => Number(item.id) === Number(r.nastavniciId[0]));
+                  if (n) nInfo = `${n.ime} ${n.prezime}`;
+                }
+
+                return {
+                  id: r.id, 
+                  nazivPredmeta: p?.naziv || 'Nepoznat',
+                  espb: p?.espb || 0,
+                  nastavnik: nInfo
+                };
+              });
+
+            this.osveziPrijavljeneIspite();
           });
-
-          this.osveziPrijavljeneIspite();
         });
       });
     });
@@ -122,28 +127,39 @@ export class PrijaviIspitComponent implements OnInit {
         this.nastavnikService.getAllWithoutPagination().subscribe((sviNastavnici: any[]) => {
           this.realizacijaService.getAllWithoutPagination().subscribe((sveRealizacije: RealizacijaPredmeta[]) => {
             this.prijaviIspitService.getAllWithoutPagination().subscribe((svePrijave: any[]) => {
-              
-              const moje = svePrijave.filter(p => Number(p.studentNaGodiniId) === Number(this.studentNaGodiniId));
-
-              this.prijavljeniIspiti = moje.map(p => {
-                const ev = sveEv.find(e => e.id === p.evaluacijaZnanjaId);
-                const realizacija = sveRealizacije.find(r => r.id === ev?.realizacijaPredmetaId);
-                const predmet = sviPredmeti.find(pr => pr.id === realizacija?.predmetId);
+              this.polaganjeService.getAllWithoutPagination().subscribe((svaPolaganja: any[]) => {
                 
-                let nInfo = 'Nije dodeljen';
-                if (realizacija?.nastavniciId && realizacija.nastavniciId.length > 0) {
-                  const n = sviNastavnici.find(nast => nast.id === realizacija.nastavniciId[0]);
-                  if (n) nInfo = `${n.ime} ${n.prezime}`;
-                }
+                
+                const ocenjeneEvaluacijeIds = svaPolaganja
+                  .filter(pol => Number(pol.studentNaGodiniId) === Number(this.studentNaGodiniId))
+                  .map(pol => Number(pol.evaluacijaZnanjaId));
 
-                return {
-                  nazivPredmeta: predmet?.naziv || 'Nepoznat',
-                  espb: predmet?.espb || 0,
-                  nastavnik: nInfo,
-                  datum: ev?.vremePocetka
-                };
+                
+                const mojeAktivnePrijave = svePrijave.filter(p => 
+                  Number(p.studentNaGodiniId) === Number(this.studentNaGodiniId) &&
+                  !ocenjeneEvaluacijeIds.includes(Number(p.evaluacijaZnanjaId))
+                );
+
+                this.prijavljeniIspiti = mojeAktivnePrijave.map(p => {
+                  const ev = sveEv.find(e => Number(e.id) === Number(p.evaluacijaZnanjaId));
+                  const realizacija = sveRealizacije.find(r => Number(r.id) === Number(ev?.realizacijaPredmetaId));
+                  const predmet = sviPredmeti.find(pr => Number(pr.id) === Number(realizacija?.predmetId));
+                  
+                  let nInfo = 'Nije dodeljen';
+                  if (realizacija?.nastavniciId && realizacija.nastavniciId.length > 0) {
+                    const n = sviNastavnici.find(nast => Number(nast.id) === Number(realizacija.nastavniciId[0]));
+                    if (n) nInfo = `${n.ime} ${n.prezime}`;
+                  }
+
+                  return {
+                    nazivPredmeta: predmet?.naziv || 'Nepoznat',
+                    espb: predmet?.espb || 0,
+                    nastavnik: nInfo,
+                    datum: ev?.vremePocetka
+                  };
+                });
+                this.cdr.detectChanges();
               });
-              this.cdr.detectChanges();
             });
           });
         });
@@ -153,7 +169,7 @@ export class PrijaviIspitComponent implements OnInit {
 
   proveriIPrijavi(realizacija: any): void {
     if (!this.izabraniRokId) {
-      alert("Molimo vas da prvo izaberete ispitni rok u meniju iznad!");
+      alert("Molimo vas da prvo izaberete ispitni rok!");
       return;
     }
 
@@ -168,24 +184,36 @@ export class PrijaviIspitComponent implements OnInit {
         return;
       }
 
-      this.prijaviIspitService.getAllWithoutPagination().subscribe(prijave => {
-        const vecPrijavljen = prijave.some(p => 
-          Number(p.evaluacijaZnanjaId) === Number(adekvatna.id) && 
-          Number(p.studentNaGodiniId) === Number(this.studentNaGodiniId)
+      
+      this.polaganjeService.getAllWithoutPagination().subscribe(polaganja => {
+        const vecIzlazio = polaganja.some(pol => 
+          Number(pol.evaluacijaZnanjaId) === Number(adekvatna.id) && 
+          Number(pol.studentNaGodiniId) === Number(this.studentNaGodiniId)
         );
 
-        if (vecPrijavljen) {
-          alert("Već ste prijavili ovaj ispit u ovom roku!");
-        } else {
-          this.izvrsiPrijavu(adekvatna, realizacija.nazivPredmeta);
+        if (vecIzlazio) {
+          alert("Već ste izlazili na ovaj ispit u ovom roku i ne možete ga ponovo prijaviti!");
+          return;
         }
+
+        
+        this.prijaviIspitService.getAllWithoutPagination().subscribe(prijave => {
+          const vecPrijavljen = prijave.some(p => 
+            Number(p.evaluacijaZnanjaId) === Number(adekvatna.id) && 
+            Number(p.studentNaGodiniId) === Number(this.studentNaGodiniId)
+          );
+
+          if (vecPrijavljen) {
+            alert("Već ste prijavili ovaj ispit u ovom roku!");
+          } else {
+            this.izvrsiPrijavu(adekvatna, realizacija.nazivPredmeta);
+          }
+        });
       });
     });
   }
 
- private izvrsiPrijavu(ev: EvaluacijaZnanja, naziv: string): void {
-    
-    // Kreiramo objekte bez ID polja - TypeScript dozvoljava jer smo stavili 'id?' u modelu
+  private izvrsiPrijavu(ev: EvaluacijaZnanja, naziv: string): void {
     const body: PrijaviIspit = {
       studentNaGodiniId: this.studentNaGodiniId,
       evaluacijaZnanjaId: ev.id
@@ -197,29 +225,18 @@ export class PrijaviIspitComponent implements OnInit {
       konacnaOcena: 0
     };
 
-    // 1. Šaljemo prijavu ispita
     this.prijaviIspitService.create(body).subscribe({
-      next: (odgovorPrijave: PrijaviIspit) => {
-        console.log("Prijava ispita uspešna. Generisani ID:", odgovorPrijave.id);
-
-        // 2. Šaljemo pohađanje predmeta
+      next: () => {
+        
         this.pohadjanjeService.create(pohadjanjeBody).subscribe({
-          next: (odgovorPohadjanja: PohadjanjePredmeta) => {
-            console.log("Pohađanje kreirano. Generisani ID:", odgovorPohadjanja.id);
-            
+          next: () => {
             alert(`Uspešno prijavljen ispit: ${naziv}`);
             this.osveziPrijavljeneIspite();
           },
-          error: (err) => {
-            console.error("Greška kod pohađanja:", err);
-            alert("Ispit prijavljen, ali nije kreiran zapis o pohađanju.");
-          }
+          error: () => alert("Ispit prijavljen, ali je došlo do greške kod evidencije pohađanja.")
         });
       },
-      error: (err) => {
-        console.error("Greška kod prijave:", err);
-        alert("Greška na serveru.");
-      }
+      error: () => alert("Greška pri prijavi ispita.")
     });
   }
 }

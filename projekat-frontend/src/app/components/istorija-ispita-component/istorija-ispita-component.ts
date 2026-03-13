@@ -4,20 +4,19 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 
-// Servisi
+
 import { AuthService } from '../../services/auth-service';
-import { PohadjanjePredmetaService } from '../../services/pohadjanje-predmeta-service';
+import { PolaganjeService } from '../../services/polaganje-service';
+import { EvaluacijaZnanjaService } from '../../services/evaluacija-znanja-service';
 import { RealizacijaPredmetaService } from '../../services/realizacija-predmeta-service';
 import { PredmetService } from '../../services/predmet-service';
 import { StudentNaGodiniService } from '../../services/student-na-godini-service';
-import { PolaganjeService } from '../../services/polaganje-service';
-import { EvaluacijaZnanjaService } from '../../services/evaluacija-znanja-service';
 import { IspitniRokService } from '../../services/ispitni-rok-service';
 import { NastavnikService } from '../../services/nastavnik-service';
+import { PohadjanjePredmetaService } from '../../services/pohadjanje-predmeta-service';
 
 @Component({
   selector: 'app-istorija-ispita',
-  standalone: true,
   imports: [CommonModule, MatCardModule, MatTableModule, MatTabsModule],
   templateUrl: './istorija-ispita-component.html',
   styleUrl: './istorija-ispita-component.css'
@@ -29,14 +28,14 @@ export class IstorijaIspitaComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private pohadjanjeService: PohadjanjePredmetaService,
+    private polaganjeService: PolaganjeService,
+    private evaluacijaService: EvaluacijaZnanjaService,
     private realizacijaService: RealizacijaPredmetaService,
     private predmetService: PredmetService,
     private sngService: StudentNaGodiniService,
-    private polaganjeService: PolaganjeService,
-    private evaluacijaService: EvaluacijaZnanjaService,
     private rokService: IspitniRokService,
-    private nastavnikService: NastavnikService
+    private nastavnikService: NastavnikService,
+    private pohadjanjeService: PohadjanjePredmetaService
   ) {}
 
   ngOnInit(): void {
@@ -47,52 +46,58 @@ export class IstorijaIspitaComponent implements OnInit {
   ucitajIstoriju(): void {
     this.sngService.getAllWithoutPagination().subscribe(sveSng => {
       const mojaSngIds = sveSng.filter(s => s.studentId === this.studentId).map(s => s.id);
-      this.pohadjanjeService.getAllWithoutPagination().subscribe(svaPohadjanja => {
-        const mojaPohadjanja = svaPohadjanja.filter(p => mojaSngIds.includes(p.studentNaGodiniId));
-        this.realizacijaService.getAllWithoutPagination().subscribe(realizacije => {
-          this.predmetService.getAllWithoutPagination().subscribe(predmeti => {
-            this.polaganjeService.getAllWithoutPagination().subscribe(svaPolaganja => {
-              this.evaluacijaService.getAllWithoutPagination().subscribe(evaluacije => {
-                this.rokService.getAllWithoutPagination().subscribe(rokovi => {
-                  this.nastavnikService.getAllWithoutPagination().subscribe(nastavnici => {
-                    
-                    
-                    const obradjeniPodaci = mojaPohadjanja.map(p => {
-                      const realizacija = realizacije.find(r => r.id === p.realizacijaId);
-                      const predmet = predmeti.find(pr => pr.id === realizacija?.predmetId);
-                      
-                      
-                      const evIdsZaOvajPredmet = evaluacije
-                        .filter(ev => ev.realizacijaPredmetaId === p.realizacijaId)
-                        .map(ev => ev.id);
 
-                     
-                      const polaganje = svaPolaganja.find(pol => 
-                        evIdsZaOvajPredmet.includes(pol.evaluacijaZnanjaId) &&
-                        pol.studentNaGodiniId === p.studentNaGodiniId
+      this.polaganjeService.getAllWithoutPagination().subscribe(svaPolaganja => {
+        const mojaPolaganja = svaPolaganja.filter(p => mojaSngIds.includes(p.studentNaGodiniId));
+
+        this.evaluacijaService.getAllWithoutPagination().subscribe(evaluacije => {
+          this.realizacijaService.getAllWithoutPagination().subscribe(realizacije => {
+            this.predmetService.getAllWithoutPagination().subscribe(predmeti => {
+              this.rokService.getAllWithoutPagination().subscribe(rokovi => {
+                this.nastavnikService.getAllWithoutPagination().subscribe(nastavnici => {
+                  this.pohadjanjeService.getAllWithoutPagination().subscribe(svaPohadjanja => {
+                    
+                    const privremenaLista: any[] = [];
+
+                    for (let pol of mojaPolaganja) {
+                      const ev = evaluacije.find(e => e.id === pol.evaluacijaZnanjaId);
+                      const rok = rokovi.find(r => r.id === ev?.ispitniRokId);
+                      const rel = realizacije.find(r => r.id === ev?.realizacijaPredmetaId);
+                      const pred = predmeti.find(pr => pr.id === rel?.predmetId);
+                      
+                      
+                      const poh = svaPohadjanja.find(p => 
+                        p.studentNaGodiniId === pol.studentNaGodiniId && 
+                        p.realizacijaId === rel?.id
                       );
 
                       
-                      const konkretnaEv = evaluacije.find(e => e.id === polaganje?.evaluacijaZnanjaId);
-                      const rok = rokovi.find(r => r.id === konkretnaEv?.ispitniRokId);
-                      
-                      
-                      const nId = realizacija?.nastavniciId?.[0];
+                      let ocenaZaOvajRed = 5;
+                      const bodovi = pol.osvojeniBodovi;
+
+                      if (bodovi >= 51) {
+                        if (bodovi >= 91) ocenaZaOvajRed = 10;
+                        else if (bodovi >= 81) ocenaZaOvajRed = 9;
+                        else if (bodovi >= 71) ocenaZaOvajRed = 8;
+                        else if (bodovi >= 61) ocenaZaOvajRed = 7;
+                        else ocenaZaOvajRed = 6;
+                      }
+
+                      const nId = rel?.nastavniciId?.[0];
                       const n = nastavnici.find(nas => nas.id === nId);
 
-                      return {
-                        nazivPredmeta: predmet?.naziv || 'Nepoznat predmet',
-                        brojPoena: polaganje ? polaganje.osvojeniBodovi : 0,
-                        ocena: p.konacnaOcena || 5,
+                      privremenaLista.push({
+                        nazivPredmeta: pred?.naziv || 'Nepoznat predmet',
+                        brojPoena: bodovi,
+                        ocena: ocenaZaOvajRed,
                         nastavnik: n ? `${n.ime} ${n.prezime}` : 'Nema podataka',
-                        ispitniRok: rok?.naziv || 'Nije polagano',
-                        datum: konkretnaEv?.vremePocetka ? new Date(konkretnaEv.vremePocetka).toLocaleDateString('sr-RS') : '/'
-                      };
-                    });
+                        ispitniRok: rok?.naziv || 'Nepoznat rok',
+                        datum: ev?.vremePocetka ? new Date(ev.vremePocetka).toLocaleDateString('sr-RS') : '/'
+                      });
+                    }
 
-                    
-                    this.polozeniIspiti = obradjeniPodaci.filter(i => i.ocena >= 6);
-                    this.neuspesnaPolaganja = obradjeniPodaci.filter(i => i.ocena < 6);
+                    this.polozeniIspiti = privremenaLista.filter(i => i.ocena >= 6);
+                    this.neuspesnaPolaganja = privremenaLista.filter(i => i.ocena < 6);
                   });
                 });
               });

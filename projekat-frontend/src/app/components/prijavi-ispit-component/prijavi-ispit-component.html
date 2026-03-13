@@ -33,12 +33,18 @@
         <ng-container matColumnDef="akcija">
           <th mat-header-cell *matHeaderCellDef> Akcija </th>
           <td mat-cell *matCellDef="let r">
-            <button mat-raised-button color="primary" (click)="proveriIPrijavi(r)">Prijavi</button>
+            <button mat-raised-button color="primary" 
+                    [disabled]="!izabraniRokId"
+                    (click)="proveriIPrijavi(r)">Prijavi</button>
           </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="['predmet', 'espb', 'nastavnik', 'akcija']"></tr>
         <tr mat-row *matRowDef="let row; columns: ['predmet', 'espb', 'nastavnik', 'akcija'];"></tr>
       </table>
+      
+      <div *ngIf="predmetiZaPracenje.length === 0" class="no-data-msg">
+        Nema dostupnih predmeta za prijavu (svi predmeti su položeni).
+      </div>
     </mat-card-content>
   </mat-card>
 
@@ -50,10 +56,7 @@
       <table mat-table [dataSource]="prijavljeniIspiti" class="full-width">
         <ng-container matColumnDef="predmet">
           <th mat-header-cell *matHeaderCellDef> Naziv Predmeta </th>
-          <td mat-cell *matCellDef="let p"> 
-            <mat-icon color="primary" class="check-icon">check_circle</mat-icon>
-            {{ p.nazivPredmeta }} 
-          </td>
+          <td mat-cell *matCellDef="let p"> {{ p.nazivPredmeta }} </td>
         </ng-container>
         <ng-container matColumnDef="espb">
           <th mat-header-cell *matHeaderCellDef> ESPB </th>
@@ -65,7 +68,9 @@
         </ng-container>
         <ng-container matColumnDef="datum">
           <th mat-header-cell *matHeaderCellDef> Datum Ispita </th>
-          <td mat-cell *matCellDef="let p"> {{ p.datum | date:'dd.MM.yyyy HH:mm' }} </td>
+          <td mat-cell *matCellDef="let p"> 
+            {{ p.datum ? (p.datum | date:'dd.MM.yyyy HH:mm') : 'Datum nije zakazan' }} 
+          </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="['predmet', 'espb', 'nastavnik', 'datum']"></tr>
         <tr mat-row *matRowDef="let row; columns: ['predmet', 'espb', 'nastavnik', 'datum'];"></tr>
@@ -74,4 +79,14 @@
     </mat-card-content>
   </mat-card>
 
+</div>
+
+<div class="main-container" *ngIf="isUpisan === false">
+  <mat-card class="table-card mt-3 shadow-card">
+    <mat-card-content>
+      <p style="color: red; text-align: center; padding: 20px;">
+        Student nije upisan na  godinu studija. Prijava ispita nije moguća.
+      </p>
+    </mat-card-content>
+  </mat-card>
 </div>
