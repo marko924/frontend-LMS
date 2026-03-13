@@ -3,7 +3,6 @@ import { LoginComponent } from './components/login-component/login-component';
 import { RegisterComponent } from './components/register-component/register-component';
 import { HomeComponent } from './components/home-component/home-component';
 import { DashboardComponent } from './components/dashboard-component/dashboard-component';
-import { UpisNaGodinuComponent } from './components/upis-na-godinu-component/upis-na-godinu-component';
 import { RoleGuard } from './guard/role.guard';
 import { ZahteviStudenata } from './components/zahtevi-studenata/zahtevi-studenata';
 import { PrijaviIspitComponent } from './components/prijavi-ispit-component/prijavi-ispit-component';
@@ -46,7 +45,6 @@ export const routes: Routes = [
     canActivate: [RoleGuard],
     children: [
       {path: 'prijavi-ispit', component:PrijaviIspitComponent},
-      { path: 'upis-na-godinu', component: UpisNaGodinuComponent },
       { path: 'listaZahteva', component: ZahteviStudenata },
       { path: 'zakazivanjeIspita', component: ZakazivanjeIspita},
       {path: 'unos-ocena', component: UnosOceneComponent},

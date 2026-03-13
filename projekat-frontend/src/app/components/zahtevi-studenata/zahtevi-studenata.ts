@@ -1,9 +1,8 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { ZahtevZaUpis } from '../../models/zahtev-za-upis';
 import { ZahtevZaUpisService } from '../../services/zahtev-za-upis-service';
-import { StatusZahteva } from '../../models/status-zahteva.enum';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ZahtevZaUpisDetalji } from '../../models/zahtev-za-upis-detalji';
 
 @Component({
   selector: 'app-zahtevi-studenata',
@@ -13,7 +12,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class ZahteviStudenata implements OnInit{
   
-  zahtevi: ZahtevZaUpis[] = [];
+  zahtevi: ZahtevZaUpisDetalji[] = [];
   zahtevZaOdbijanjeId: number | null = null;
   napomenaTekst: string = '';
   zahtevZaOdobrenjeId: number | null = null;
@@ -26,11 +25,12 @@ export class ZahteviStudenata implements OnInit{
   }
 
   ucitajZahteve() {
-    // Uzimamo sve neobrađene zahteve (status NA_CEKANJU)
-    this.zahtevService.getAllWithoutPagination().subscribe(page => {
-      this.zahtevi = page.filter(z => z.status === StatusZahteva.NA_CEKANJU);
-      console.log(this.zahtevi);
-      this.cdr.detectChanges();
+    this.zahtevService.getSviNaCekanjuDetalji().subscribe({
+      next: (data) => {
+        this.zahtevi = data;
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error('Greška pri učitavanju zahteva', err)
     });
   }
 
