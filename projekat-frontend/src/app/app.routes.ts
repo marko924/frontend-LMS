@@ -17,6 +17,7 @@ import { ListaFakultetaComponent } from './components/lista-fakulteta-component/
 import { DetaljiFakultetaComponent } from './components/detalji-fakulteta-component/detalji-fakulteta-component';
 import { ListaStudijskihProgramaComponent } from './components/lista-studijskih-programa-component/lista-studijskih-programa-component';
 import { DetaljiStudijskogProgramaComponent } from './components/detalji-studijskog-programa-component/detalji-studijskog-programa-component';
+import { UpisNaGodinuComponent } from './components/upis-na-godinu-component/upis-na-godinu-component';
 
 export const routes: Routes = [
   // --- JAVNI DEO ---
@@ -44,7 +45,8 @@ export const routes: Routes = [
     component: DashboardComponent,
     canActivate: [RoleGuard],
     children: [
-      { path: 'prijavi-ispit', component:PrijaviIspitComponent},
+      {path: 'prijavi-ispit', component:PrijaviIspitComponent},
+      {path: 'upis-na-godinu', component: UpisNaGodinuComponent},
       { path: 'listaZahteva', component: ZahteviStudenata },
       { path: 'zakazivanjeIspita', component: ZakazivanjeIspita},
       { path: 'unos-ocena', component: UnosOceneComponent},
