@@ -1,0 +1,26 @@
+<div class="container">
+  <div class="list-header">
+    <h2>Studijski programi</h2>
+    <p>Odaberite studijski program za više informacija.</p>
+  </div>
+  <div class="cards-grid" *ngIf="programi.length > 0; else emptyState">
+
+    <div class="card" *ngFor="let p of programi" [routerLink]="['/programi', p.id]">
+      
+      <div class="card-body">
+        <h3>{{ p.naziv }}</h3>
+        <p>{{ p.opis }}</p>
+      </div>
+      
+      <div class="card-footer">
+        <span class="action-text">Detalji o programu</span>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #emptyState>
+    <div class="no-data">
+      <p>Trenutno nema dostupnih fakulteta u sistemu.</p>
+    </div>
+  </ng-template>
+</div>

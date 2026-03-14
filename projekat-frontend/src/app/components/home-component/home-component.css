@@ -68,13 +68,14 @@ a {
   padding: 12px;
   border: none;
   border-radius: 12px;
-  background: #303030a4;
+  background: #1a237e;
   color: white;
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
+  text-decoration: none;
 }
 
 a:hover {
-  background: #2f2f2f;
+  background: #2563eb;
 }

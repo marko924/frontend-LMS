@@ -29,6 +29,16 @@ import { TipZvanjaService } from "../services/tip-zvanja-service";
 import { UniverzitetService } from "../services/univerzitet-service";
 import { ZahtevZaUpisService } from "../services/zahtev-za-upis-service";
 import { ZvanjeService } from "../services/zvanje-service";
+import { ForumService } from "../services/forum-service";
+import { KorisnikNaForumuService } from "../services/korisnik-na-forumu-service";
+import { NastavniMaterijalService } from "../services/nastavni-materijal-service";
+import { ObjavaService } from "../services/objava-service";
+import { ObavestenjeService } from "../services/obavestenje-service";
+import { PorukaService } from "../services/poruka-service";
+import { PrijaviIspitComponent } from "../components/prijavi-ispit-component/prijavi-ispit-component";
+import { TemaService } from "../services/tema-service";
+import { UlogaService } from "../services/uloga-service";
+import { IshodObrazovniCiljService } from "../services/ishod-obrazovni-cilj-service";
 
 export interface EntityAdminConfig {
   serviceToken: any;
@@ -37,7 +47,8 @@ export interface EntityAdminConfig {
 }
 
 export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = { 
-  'korisnici': {
+
+  'registrovani_korisnici': {
     label: 'Registrovani korisnici',
     serviceToken: RegistrovaniKorisnikService,
     columns: [
@@ -54,7 +65,7 @@ export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = {
       { key: 'ime', label: 'Ime', type: 'text', required: true },
       { key: 'prezime', label: 'Prezime', type: 'text', required: true },
       { key: 'jmbg', label: 'JMBG', type: 'text', required: true },
-      { key: 'email', label: 'Email', type: 'text', required: true }
+      { key: 'adresaId', label: 'ID Adrese', references: {serviceToken: AdresaService, displayField: 'ulica' }, required: true }
     ]
   },
   'nastavnici': {
@@ -64,7 +75,8 @@ export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = {
       { key: 'id', label: 'ID', type: 'number' },
       { key: 'ime', label: 'Ime', type: 'text', required: true },
       { key: 'prezime', label: 'Prezime', type: 'text', required: true },
-      { key: 'biografija', label: 'Biografija', type: 'text', required: true }
+      { key: 'biografija', label: 'Biografija', type: 'text', required: true },
+      { key: 'adresaId', label: 'ID Adrese', references: {serviceToken: AdresaService, displayField: 'ulica' }, required: true }
     ]
   },
   'osoblje': {
@@ -73,8 +85,15 @@ export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = {
     columns: [
       { key: 'id', label: 'ID', type: 'number' },
       { key: 'ime', label: 'Ime', type: 'text', required: true },
-      { key: 'prezime', label: 'Prezime', type: 'text', required: true },
-      { key: 'email', label: 'Email', type: 'text', required: true }
+      { key: 'prezime', label: 'Prezime', type: 'text', required: true }
+    ]
+  },
+  'uloge': {
+    label: 'Uloga',
+    serviceToken: UlogaService,
+    columns: [
+      { key: 'id', label: 'ID', type: 'number' },
+      { key: 'naziv', label: 'Naziv', type: 'text', required: true }
     ]
   },
   'studenti_na_godini': {
@@ -84,16 +103,19 @@ export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = {
       { key: 'id', label: 'ID', type: 'number' },
       { key: 'brojIndeksa', label: 'Indeks', type: 'text', required: true },
       { key: 'datumUpisa', label: 'Datum Upisa', type: 'datetime', required: true },
-      { key: 'studentId', label: 'ID Studenta', references: {serviceToken: StudentService, displayField: 'id' }, required: true }
+      { key: 'studentId', label: 'ID Studenta', references: {serviceToken: StudentService, displayField: 'id' }, required: true },
+      { key: 'godinaStudijaId', label: 'ID Godine studija', references: {serviceToken: GodinaStudijaService, displayField: 'godina' }, required: true }
     ]
   },
-  'nastavnici_realizacija': {
+  'nastavnici_na_realizacija': {
     label: 'Nastavnici na realizaciji',
     serviceToken: NastavnikNaRealizacijiService,
     columns: [
       { key: 'id', label: 'ID', type: 'number' },
       { key: 'brojCasova', label: 'Broj časova', type: 'number', required: true },
-      { key: 'nastavnikId', label: 'ID Nastavnika', references: {serviceToken: NastavnikService, displayField: 'id' }, required: true }
+      { key: 'nastavnikId', label: 'ID Nastavnika', references: {serviceToken: NastavnikService, displayField: 'id' }, required: true },
+      { key: 'realizacijaId', label: 'ID Realizacije', references: {serviceToken: RealizacijaPredmetaService, displayField: 'id' }, required: true },
+      { key: 'tipNastaveId', label: 'ID Tipa Nastave', references: {serviceToken: TipNastaveService, displayField: 'naziv' }, required: true }
     ]
   },
   'adrese': {
@@ -103,7 +125,7 @@ export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = {
       { key: 'id', label: 'ID', type: 'number' },
       { key: 'ulica', label: 'Ulica', type: 'text', required: true },
       { key: 'broj', label: 'Broj', type: 'text', required: true },
-      { key: 'mestoId', label: 'Mesto', references: {serviceToken: MestoService, displayField: 'naziv' }, required: true }
+      { key: 'mestoId', label: 'ID Mesta', references: {serviceToken: MestoService, displayField: 'naziv' }, required: true }
     ]
   },
   'mesta': {
@@ -129,8 +151,11 @@ export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = {
     columns: [
       { key: 'id', label: 'ID', type: 'number' },
       { key: 'naziv', label: 'Naziv', type: 'text', required: true },
+      { key: 'opis', label: 'Opis', type: 'text', required: true },
       { key: 'datumOsnivanja', label: 'Osnivanje', type: 'datetime', required: true },
-      { key: 'kontakt', label: 'Kontakt', type: 'text', required: true }
+      { key: 'kontakt', label: 'Kontakt', type: 'text', required: true },
+      { key: 'rektorId', label: 'ID Rektora', references: {serviceToken: NastavnikService, displayField: 'id' }, required: true },
+      { key: 'adresaId', label: 'ID Adrese', references: {serviceToken: AdresaService, displayField: 'ulica' }, required: true }
     ]
   },
   'fakulteti': {
@@ -139,7 +164,10 @@ export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = {
     columns: [
       { key: 'id', label: 'ID', type: 'number' },
       { key: 'naziv', label: 'Naziv', type: 'text', required: true },
-      { key: 'univerzitetId', label: 'ID Univ.', references: {serviceToken: UniverzitetService, displayField: 'naziv' }, required: true }
+      { key: 'opis', label: 'Opis', type: 'text', required: true },
+      { key: 'univerzitetId', label: 'ID Univ.', references: {serviceToken: UniverzitetService, displayField: 'naziv' }, required: true },
+      { key: 'dekanId', label: 'ID Dekana', references: {serviceToken: NastavnikService, displayField: 'id' }, required: true },
+      { key: 'adresaId', label: 'ID Adrese', references: {serviceToken: AdresaService, displayField: 'ulica' }, required: true }
     ]
   },
   'predmeti': {
@@ -149,7 +177,15 @@ export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = {
       { key: 'id', label: 'ID', type: 'number' },
       { key: 'naziv', label: 'Naziv Predmeta', type: 'text', required: true },
       { key: 'espb', label: 'ESPB', type: 'number', required: true },
-      { key: 'opis', label: 'Opis', type: 'text', required: true }
+      { key: 'opis', label: 'Opis', type: 'text', required: true },
+      { key: 'brojPredavanja', label: 'Broj predavanja', type: 'number', required: true },
+      { key: 'brojVezbi', label: 'Broj vezbi', type: 'number', required: true },
+      { key: 'obavezan', label: 'Obavezan', type: 'boolean', required: true },
+      { key: 'ostaliCasovi', label: 'Ostali casovi', type: 'number', required: true },
+      { key: 'drugiObliciNastave', label: 'Drugi oblici nastave', type: 'number', required: true },
+      { key: 'istrazivackiRad', label: 'Istrazivacki rad', type: 'number', required: true },
+      { key: 'godinaStudijaId', label: 'ID Godine studija', references: {serviceToken: GodinaStudijaService, displayField: 'godina' }, required: true },
+      { key: 'preduslovId', label: 'ID Preduslova', references: {serviceToken: PredmetService, displayField: 'naziv' }, required: true }
     ]
   },
   'realizacije': {
@@ -176,7 +212,9 @@ export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = {
     columns: [
       { key: 'id', label: 'ID', type: 'number' },
       { key: 'naziv', label: 'Naziv', type: 'text', required: true },
-      { key: 'fakultetId', label: 'ID Fakulteta', references: {serviceToken: FakultetService, displayField: 'naziv' }, required: true }
+      { key: 'opis', label: 'Opis', type: 'text', required: true },
+      { key: 'fakultetId', label: 'ID Fakulteta', references: {serviceToken: FakultetService, displayField: 'naziv' }, required: true },
+      { key: 'rukovodilacId', label: 'ID Rukovodioca', references: {serviceToken: NastavnikService, displayField: 'id' }, required: true }
     ]
   },
   'godine_studija': {
@@ -184,7 +222,10 @@ export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = {
     serviceToken: GodinaStudijaService,
     columns: [
       { key: 'id', label: 'ID', type: 'number' },
-      { key: 'godina', label: 'Godina', type: 'number', required: true }
+      { key: 'godina', label: 'Godina', type: 'number', required: true },
+      { key: 'pocetak', label: 'Početak', type: 'date', required: true },
+      { key: 'kraj', label: 'Kraj', type: 'date', required: true },
+      { key: 'studijskiProgramId', label: 'ID Studijskog programa', references: {serviceToken: StudijskiProgramService, displayField: 'naziv' }, required: true }
     ]
   },
   'evaluacije_znanja': {
@@ -194,7 +235,11 @@ export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = {
       { key: 'id', label: 'ID', type: 'number' },
       { key: 'vremePocetka', label: 'Početak', type: 'datetime', required: true },
       { key: 'vremeZavrsetka', label: 'Završetak', type: 'datetime', required: true },
-      { key: 'maksimalniBodovi', label: 'Max Bodovi', type: 'number', required: true }
+      { key: 'maksimalniBodovi', label: 'Max Bodovi', type: 'number', required: true },
+      { key: 'tipEvaluacijeId', label: 'ID Tipa evaluacije', references: {serviceToken: TipEvaluacijeService, displayField: 'naziv' }, required: true },
+      { key: 'realizacijaPredmetaId', label: 'ID Realizacije', references: {serviceToken: RealizacijaPredmetaService, displayField: 'id' }, required: true },
+      { key: 'ispitniRokId', label: 'ID Ispitnog roka', references: {serviceToken: IspitniRokService, displayField: 'naziv' }, required: true },
+      { key: 'instrumentEvaluacijeId', label: 'ID Instrumenta eval.', references: {serviceToken: InstrumentEvaluacijeService, displayField: 'naziv' }, required: true }
     ]
   },
   'tipovi_evaluacije': {
@@ -220,16 +265,23 @@ export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = {
     columns: [
       { key: 'id', label: 'ID', type: 'number' },
       { key: 'opis', label: 'Opis', type: 'text', required: true },
-      { key: 'url', label: 'URL', type: 'text', required: true }
+      { key: 'url', label: 'URL', type: 'text', required: true },
+      { key: 'nastavniMaterijalId', label: 'ID Nastavnog mate.', references: {serviceToken: NastavniMaterijalService, displayField: 'naziv' }, required: true },
+      { key: 'instrumentEvaluacijeId', label: 'ID Instrumenta eval.', references: {serviceToken: InstrumentEvaluacijeService, displayField: 'naziv' }, required: true },
+      { key: 'obavestenjeId', label: 'ID Obavestenja', references: {serviceToken: ObavestenjeService, displayField: 'naslov' } },
+      { key: 'objavaId', label: 'ID Objave', references: {serviceToken: ObjavaService, displayField: 'id' } },
+      { key: 'porukaId', label: 'ID Poruke', references: {serviceToken: PorukaService, displayField: 'naslov' } },
     ]
   },
   'ishodi': {
-    label: 'Ishodi učenja',
+    label: 'Ishodi',
     serviceToken: IshodService,
     columns: [
       { key: 'id', label: 'ID', type: 'number' },
-      { key: 'opis', label: 'Opis Ishoda', type: 'text', required: true },
-      { key: 'predmetId', label: 'ID Predmeta', references: {serviceToken: PredmetService, displayField: 'id' }, required: true }
+      { key: 'opis', label: 'Opis', type: 'text', required: true },
+      { key: 'predmetId', label: 'ID Predmeta', references: {serviceToken: PredmetService, displayField: 'naziv' }, required: true },
+      { key: 'evaluacijaId', label: 'ID Evaluacije znanja', references: {serviceToken: EvaluacijaZnanjaService, displayField: 'id' }, required: true },
+      { key: 'terminNastaveId', label: 'ID Termina nastave', references: {serviceToken: TerminNastaveService, displayField: 'id' }, required: true }
     ]
   },
   'obrazovni_ciljevi': {
@@ -237,7 +289,16 @@ export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = {
     serviceToken: ObrazovniCiljService,
     columns: [
       { key: 'id', label: 'ID', type: 'number' },
-      { key: 'opis', label: 'Opis Cilja', type: 'text', required: true }
+      { key: 'opis', label: 'Opis', type: 'text', required: true }
+    ]
+  },
+  'ishodi_obrazovni_ciljevi': {
+    label: 'Ishodi - Obrazovni ciljevi',
+    serviceToken: IshodObrazovniCiljService,
+    columns: [
+      { key: 'id', label: 'ID', type: 'number' },
+      { key: 'ishodId', label: 'ID Isoda', references: {serviceToken: IshodService, displayField: 'id' }, required: true },
+      { key: 'obrazovniCiljId', label: 'ID Obrazovnog cilja', references: {serviceToken: ObrazovniCiljService, displayField: 'id' }, required: true }
     ]
   },
   'zvanja': {
@@ -247,7 +308,9 @@ export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = {
       { key: 'id', label: 'ID', type: 'number' },
       { key: 'datumIzbora', label: 'Izbor', type: 'datetime', required: true },
       { key: 'datumOtkaza', label: 'Otkaz', type: 'datetime', required: true },
-      { key: 'nastavnikId', label: 'ID Nastavnika', references: {serviceToken: NastavnikService, displayField: 'id' }, required: true }
+      { key: 'nastavnikId', label: 'ID Nastavnika', references: {serviceToken: NastavnikService, displayField: 'id' }, required: true },
+      { key: 'naucnaOblastId', label: 'ID Naucne oblasti', references: {serviceToken: NaucnaOblastService, displayField: 'naziv' }, required: true },
+      { key: 'tipZvanjaId', label: 'ID Tipa zvanja', references: {serviceToken: TipZvanjaService, displayField: 'naziv' }, required: true }
     ]
   },
   'tipovi_zvanja': {
@@ -263,7 +326,7 @@ export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = {
     serviceToken: NaucnaOblastService,
     columns: [
       { key: 'id', label: 'ID', type: 'number' },
-      { key: 'naziv', label: 'Naziv Oblasti', type: 'text', required: true }
+      { key: 'naziv', label: 'Naziv', type: 'text', required: true }
     ]
   },
   'polaganja': {
@@ -272,7 +335,18 @@ export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = {
     columns: [
       { key: 'id', label: 'ID', type: 'number' },
       { key: 'osvojeniBodovi', label: 'Bodovi', type: 'number', required: true },
-      { key: 'napomena', label: 'Napomena', type: 'text', required: true }
+      { key: 'napomena', label: 'Napomena', type: 'text', required: true },
+      { key: 'studentNaGodiniId', label: 'ID Studenta na godini', references: {serviceToken: StudentNaGodiniService, displayField: 'brojIndeksa' }, required: true },
+      { key: 'evaluacijaZnanjaId', label: 'ID Evaluacije', references: {serviceToken: EvaluacijaZnanjaService, displayField: 'id' }, required: true }
+    ]
+  },
+  'prijave_ispita': {
+    label: 'Prijava ispita',
+    serviceToken: PrijaviIspitComponent,
+    columns: [
+      { key: 'id', label: 'ID', type: 'number' },
+      { key: 'studentNaGodiniId', label: 'ID Studenta na godini', references: {serviceToken: StudentNaGodiniService, displayField: 'brojIndeksa' }, required: true },
+      { key: 'evaluacijaZnanjaId', label: 'ID Evaluacije', references: {serviceToken: EvaluacijaZnanjaService, displayField: 'id' }, required: true }
     ]
   },
   'zahtevi_za_upis': {
@@ -282,7 +356,11 @@ export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = {
       { key: 'id', label: 'ID', type: 'number' },
       { key: 'status', label: 'Status', type: 'text', required: true },
       { key: 'vremePodnosenja', label: 'Podneto', type: 'datetime', required: true },
-      { key: 'studentId', label: 'ID Studenta', references: {serviceToken: StudentService, displayField: 'id' }, required: true }
+      { key: 'napomena', label: 'Napomena', type: 'text', required: true },
+      { key: 'studentId', label: 'ID Studenta', references: {serviceToken: StudentService, displayField: 'korisnickoIme' }, required: true },
+      { key: 'studijskiProgramId', label: 'ID Studijskog programa', references: {serviceToken: StudijskiProgramService, displayField: 'naziv' }, required: true },
+      { key: 'godinaStudijaId', label: 'ID Godine studija', references: {serviceToken: GodinaStudijaService, displayField: 'godina' }, required: true },
+      { key: 'fakultetId', label: 'ID Fakulteta', references: {serviceToken: FakultetService, displayField: 'naziv' }, required: true }
     ]
   },
   'ispitni_rokovi': {
@@ -290,7 +368,7 @@ export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = {
     serviceToken: IspitniRokService,
     columns: [
       { key: 'id', label: 'ID', type: 'number' },
-      { key: 'naziv', label: 'Naziv Roka', type: 'text', required: true },
+      { key: 'naziv', label: 'Naziv', type: 'text', required: true },
       { key: 'datumPocetka', label: 'Od', type: 'datetime', required: true },
       { key: 'datumZavrsetka', label: 'Do', type: 'datetime', required: true }
     ]
@@ -302,7 +380,8 @@ export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = {
       { key: 'id', label: 'ID', type: 'number' },
       { key: 'vremePocetka', label: 'Početak', type: 'datetime', required: true },
       { key: 'vremeZavrsetka', label: 'Kraj', type: 'datetime', required: true },
-      { key: 'realizacijaId', label: 'ID Realizacije', references: {serviceToken: RealizacijaPredmetaService, displayField: 'id' }, required: true }
+      { key: 'realizacijaId', label: 'ID Realizacije', references: {serviceToken: RealizacijaPredmetaService, displayField: 'id' }, required: true },
+      { key: 'tipNastaveId', label: 'ID Tipa nastave', references: {serviceToken: TipNastaveService, displayField: 'naziv' }, required: true }
     ]
   },
   'tipovi_nastave': {
@@ -312,5 +391,79 @@ export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = {
       { key: 'id', label: 'ID', type: 'number' },
       { key: 'naziv', label: 'Tip Nastave', type: 'text', required: true }
     ]
-  }    
+  },
+  'forumi': {
+    label: 'Forum',
+    serviceToken: ForumService,
+    columns: [
+      { key: 'id', label: 'ID', type: 'number'},
+      { key: 'javni', label: 'Javni', type: 'boolean', required: true}
+    ]
+  },
+  'korisnici_na_forumima': {
+    label: 'Korisnik na forumu',
+    serviceToken: KorisnikNaForumuService,
+    columns: [
+      { key: 'id', label: 'ID', type: 'number'},
+      { key: 'korisnikId', label: 'ID Korisnika', references: {serviceToken: RegistrovaniKorisnikService, displayField: 'korisnickoIme' }, required: true },
+      { key: 'forumId', label: 'ID Foruma', references: {serviceToken: ForumService, displayField: 'id' }, required: true },
+      { key: 'ulogaId', label: 'ID Uloge', references: {serviceToken: UlogaService, displayField: 'naziv' }, required: true }
+    ]
+  },
+  'nastavni_materijali': {
+    label: 'Nastavni materijal',
+    serviceToken: NastavniMaterijalService,
+    columns: [
+      { key: 'id', label: 'ID', type: 'number'},
+      { key: 'naziv', label: 'Naziv', type: 'text', required: true},
+      { key: 'opis', label: 'Opis', type: 'text', required: true},
+      { key: 'ishodId', label: 'ID Ishoda', references: {serviceToken: IshodService, displayField: 'id' }, required: true }
+    ]
+  },
+  'objave': {
+    label: 'Objava',
+    serviceToken: ObjavaService,
+    columns: [
+      { key: 'id', label: 'ID', type: 'number'},
+      { key: 'sadrzaj', label: 'Sadrzaj', type: 'text', required: true},
+      { key: 'vremeObjave', label: 'Vreme', type: 'datetime', required: true},
+      { key: 'autorId', label: 'ID Autora', references: {serviceToken: KorisnikNaForumuService, displayField: 'id' } },
+      { key: 'temaId', label: 'ID Teme', references: {serviceToken: TemaService, displayField: 'naslov' }, required: true }
+    ]
+  },
+  'obavestenja': {
+    label: 'Obavestenje',
+    serviceToken: ObavestenjeService,
+    columns: [
+      { key: 'id', label: 'ID', type: 'number'},
+      { key: 'naslov', label: 'Naslov', type: 'text', required: true},
+      { key: 'sadrzaj', label: 'Sadrzaj', type: 'text', required: true},
+      { key: 'datumObjave', label: 'Datum', type: 'datetime', required: true},
+      { key: 'nastavnikNaRealizacijiId', label: 'ID Nastavnika', references: {serviceToken: NastavnikNaRealizacijiService, displayField: 'id' }, required: true },
+      { key: 'realizacijaPredmetaId', label: 'ID Realizacije', references: {serviceToken: RealizacijaPredmetaService, displayField: 'id' }, required: true }
+    ]
+  },
+  'poruke': {
+    label: 'Poruka',
+    serviceToken: PorukaService,
+    columns: [
+      { key: 'id', label: 'ID', type: 'number'},
+      { key: 'naslov', label: 'Naslov', type: 'text', required: true},
+      { key: 'sadrzaj', label: 'Sadrzaj', type: 'text', required: true},
+      { key: 'vremeSlanja', label: 'Vreme slanja', type: 'datetime', required: true},
+      { key: 'posiljalacId', label: 'ID Posiljaoca', references: {serviceToken: RegistrovaniKorisnikService, displayField: 'korisnickoIme' }, required: true },
+      { key: 'primalacId', label: 'ID Primalac', references: {serviceToken: RegistrovaniKorisnikService, displayField: 'korisnickoIme' }, required: true }
+    ]
+  },
+  'teme': {
+    label: 'Tema',
+    serviceToken: TemaService,
+    columns: [
+      { key: 'id', label: 'ID', type: 'number'},
+      { key: 'naslov', label: 'Naslov', type: 'text', required: true},
+      { key: 'vremeKreiranja', label: 'Vreme kreiranja', type: 'datetime', required: true},
+      { key: 'autorId', label: 'ID Autora', references: {serviceToken: KorisnikNaForumuService, displayField: 'id' } },
+      { key: 'forumId', label: 'ID Foruma', references: {serviceToken: ForumService, displayField: 'id' }, required: true }
+    ]
+  }
 }

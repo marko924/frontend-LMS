@@ -99,7 +99,13 @@ export class AdministracijaComponent {
   openCreateModal() {
     this.isEditMode.set(false);
     const newItem: any = {};
-    this.activeColumns.forEach(col => newItem[col.key] = null);
+    this.activeColumns.forEach(col => {
+      if (col.type === 'boolean') {
+        newItem[col.key] = false;
+      } else {
+        newItem[col.key] = null;
+      }
+    });
     
     this.selectedItem.set(newItem);
     this.foreignKeyOptions = {};

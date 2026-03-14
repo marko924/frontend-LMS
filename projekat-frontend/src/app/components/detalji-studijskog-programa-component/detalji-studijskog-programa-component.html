@@ -1,0 +1,75 @@
+<div class="container" *ngIf="detalji; else loading">
+  <div class="header-card">
+    <nav class="nav-item">
+      <a routerLink="/fakulteti">{{ detalji.fakultetNaziv }}</a>
+    </nav>
+    <h1>{{ detalji.naziv }}</h1>
+    <div class="description-box">
+      <h3>O programu</h3>
+      <p class="opis">{{ detalji.opis }}</p>
+    </div>
+  </div>
+
+  <div class="main-grid">
+    <div class="content-area">
+
+      <div class="tabs-container">
+        <button 
+          *ngFor="let god of detalji.godineStudija" 
+          class="tab-btn" 
+          [class.active]="aktivnaGodina?.id === god.id"
+          (click)="promeniGodinu(god)">
+          {{ uRimski(god.godina) }} godina
+        </button>
+      </div>
+
+      <div class="predmeti-lista" *ngIf="aktivnaGodina">
+        <div class="predmet-item" *ngFor="let predmet of aktivnaGodina.predmeti">
+          <div class="predmet-header" 
+               [class.open]="otvorenPredmetId === predmet.id"
+               (click)="togglePredmet(predmet.id)">
+            <div class="status-icon">
+              <span *ngIf="otvorenPredmetId === predmet.id" class="icon-open">●</span>
+              <span *ngIf="otvorenPredmetId !== predmet.id" class="icon-closed">○</span>
+            </div>
+            <span class="predmet-naziv">{{ predmet.naziv }}</span>
+          </div>
+
+          <div class="predmet-body" *ngIf="otvorenPredmetId === predmet.id">
+            <p class="predmet-opis">{{ predmet.opis }}</p>
+            <div class="predmet-meta">
+              <span class="espb-badge">Broj ESPB: {{ predmet.espb }}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div *ngIf="aktivnaGodina.predmeti.length === 0" class="nema-predmeta">
+          Nema unetih predmeta za ovu godinu studija.
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-card">
+      <div class="rukovodilac-info-new">
+        <div class="avatar">
+          {{ detalji.rukovodilacIme.charAt(0) }}{{ detalji.rukovodilacPrezime.charAt(0) }}
+        </div>
+        <div class="text">
+          <small>Rukovodilac programa</small>
+          <h4>{{ detalji.rukovodilacIme }} {{ detalji.rukovodilacPrezime }}</h4>
+          <p class="email">{{ detalji.rukovodilacEmail }}</p>
+        </div>
+      </div>
+      
+      <div class="action-buttons">
+        <button class="btn-primary" [routerLink]="['/programi']">
+          Nazad na listu
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="loading-state">Učitavanje...</div>
+</ng-template>

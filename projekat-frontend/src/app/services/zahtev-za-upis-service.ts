@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { GenericCrudService } from './generic-crud-service';
 import { OdobravanjeZahteva } from '../models/odobravanje-zahteva';
 import { Observable } from 'rxjs';
+import { ZahtevZaUpisDetalji } from '../models/zahtev-za-upis-detalji';
 
 @Injectable({
   providedIn: 'root',
@@ -27,5 +28,9 @@ export class ZahtevZaUpisService extends GenericCrudService<ZahtevZaUpis, number
 
   odbij(id: number, napomena: string): Observable<void> {
     return this.http.put<void>(`${this.url}/${id}/odbij`, napomena);
+  }
+
+  getSviNaCekanjuDetalji(): Observable<ZahtevZaUpisDetalji[]> {
+    return this.http.get<ZahtevZaUpisDetalji[]>(`${this.url}/naCekanju`);
   }
 }

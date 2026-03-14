@@ -61,25 +61,37 @@
                 class="admin-input readonly-input"
                 readonly
               />
-        
-              <input 
-                *ngIf="!col.references && col.key !== 'id'"
-                [type]="col.type === 'number' ? 'number' : (col.type === 'date' ? 'datetime-local' : 'text')" 
-                [(ngModel)]="selectedItem()[col.key]" 
-                class="admin-input"
-                [class.invalid-input]="col.required && (selectedItem()[col.key] === null || selectedItem()[col.key] === undefined || selectedItem()[col.key] === '')"
-              />
 
               <select 
                 *ngIf="col.references && col.key !== 'id'"
                 [(ngModel)]="selectedItem()[col.key]"
                 class="admin-input"
-                [class.invalid-input]="col.required && (selectedItem()[col.key] === null || selectedItem()[col.key] === undefined || selectedItem()[col.key] === '')">
-                <option [ngValue]="null">-- Izaberite stavku --</option>
-                <option *ngFor="let option of foreignKeyOptions[col.key]" [value]="option.id">
-                  {{ option[col.references.displayField] }} (ID: {{ option.id }})
-                </option>
+                [class.invalid-input]="col.required && !selectedItem()[col.key]">
+                  <option [ngValue]="null">-- Izaberite stavku --</option>
+                  <option *ngFor="let option of foreignKeyOptions[col.key]" [value]="option.id">
+                    {{ option[col.references.displayField] }} (ID: {{ option.id }})
+                  </option>
               </select>
+
+              <div *ngIf="col.type === 'boolean' && col.key !== 'id'" class="checkbox-wrapper">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="selectedItem()[col.key]" 
+                  id="check-{{col.key}}"
+                  class="admin-checkbox"
+                />
+                <label for="check-{{col.key}}" class="checkbox-label">
+                  {{ selectedItem()[col.key] ? 'Da' : 'Ne' }}
+                </label>
+              </div>
+
+              <input 
+                *ngIf="!col.references && col.key !== 'id' && col.type !== 'boolean'"
+                [type]="col.type === 'date' ? 'date' : (col.type === 'datetime' ? 'datetime-local' : (col.type === 'number' ? 'number' : 'text'))" 
+                [(ngModel)]="selectedItem()[col.key]" 
+                class="admin-input"
+                [class.invalid-input]="col.required && (selectedItem()[col.key] === null || selectedItem()[col.key] === '')"
+              />
         
             </div>
           </div>

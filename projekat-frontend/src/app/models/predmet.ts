@@ -10,6 +10,7 @@ export interface Predmet {
   istrazivackiRad: number;
   ostaliCasovi: number;
   preduslovId?: number;
+  godinaStudijaId: number;
   ishodiId: number[];
   realizacijeId: number[];
 }

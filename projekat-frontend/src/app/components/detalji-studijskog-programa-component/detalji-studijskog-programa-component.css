@@ -1,0 +1,174 @@
+.container {
+  max-width: 1000px;
+  margin: 30px auto;
+  padding: 0 20px;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+.header-card {
+  background: #f8fafc;
+  padding: 30px;
+  border-radius: 12px;
+  border-bottom: 4px solid #1e3a8a;
+  margin-bottom: 25px;
+}
+
+.main-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 25px;
+}
+
+.sidebar-card {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  align-self: start;
+}
+
+.rukovodilac-info-new {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.avatar {
+  width: 50px; height: 50px;
+  background: #1e3a8a; color: white;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: bold;
+}
+
+.btn-primary {
+  width: 100%; padding: 10px;
+  background: #1e3a8a; color: white;
+  border: none; border-radius: 6px; cursor: pointer;
+}
+
+.btn-primary:hover {
+  background: #2563eb;
+}
+
+.tabs-container {
+  margin-bottom: 20px;
+  display: flex; gap: 5px;
+}
+
+.tab-btn {
+  padding: 8px 15px; border: 1px solid #ccc;
+  background: #f9f9f9; cursor: pointer;
+}
+
+.tab-btn.active {
+  background: #ddd; font-weight: bold;
+}
+
+.predmet-item {
+  border: 1px solid #eee; margin-bottom: 5px;
+}
+
+.predmet-header {
+  padding: 10px; background: #fafafa; cursor: pointer;
+  display: flex; align-items: center; gap: 10px;
+}
+
+.predmet-header.open {
+  background: #f0f0f0;
+}
+
+.predmet-body {
+  padding: 15px; border-top: 1px solid #eee;
+}
+
+.espb-badge {
+  display: inline-block; padding: 2px 8px;
+  background: #e9ecef; border-radius: 4px; font-size: 0.85rem;
+}
+
+.description-box {
+  margin-bottom: 5px;
+  margin-top: 30px;
+}
+
+.tabs-container {
+  display: flex;
+  border-bottom: 1px solid #ddd;
+  background: #f4f5f7;
+}
+
+.tab-btn {
+  padding: 15px 30px;
+  background: transparent;
+  border: none;
+  font-size: 1rem;
+  color: #555;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+}
+
+.tab-btn:hover { background: #eaeaec; }
+
+.tab-btn.active {
+  background: white;
+  border-bottom: 3px solid #1e3a8a;
+  color: #1e3a8a;
+  font-weight: bold;
+}
+
+.predmeti-lista {
+  background: white;
+  border: 1px solid #eee;
+  border-top: none;
+  padding: 20px;
+}
+
+.predmet-item {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.predmet-header {
+  display: flex;
+  align-items: center;
+  padding: 15px 10px;
+  cursor: pointer;
+}
+
+.predmet-header:hover { background: #fdfdfd; }
+
+.predmet-header.open .predmet-naziv {
+  color: #1e3a8a;
+}
+
+.status-icon {
+  margin-right: 15px;
+  font-size: 1.2rem;
+}
+
+.icon-open { color: #1e3a8a; } 
+.icon-closed { color: #ccc; } 
+
+.predmet-naziv {
+  font-size: 1.05rem;
+  color: #333;
+}
+
+.predmet-body {
+  padding: 0 10px 20px 45px;
+  color: #555;
+  line-height: 1.6;
+}
+
+.espb-badge {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 5px 10px;
+  background: #e8e8f4;
+  color: #1e3a8a;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: bold;
+}
