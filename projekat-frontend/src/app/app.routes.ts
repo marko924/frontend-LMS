@@ -44,11 +44,11 @@ export const routes: Routes = [
     component: DashboardComponent,
     canActivate: [RoleGuard],
     children: [
-      {path: 'prijavi-ispit', component:PrijaviIspitComponent},
+      { path: 'prijavi-ispit', component:PrijaviIspitComponent},
       { path: 'listaZahteva', component: ZahteviStudenata },
       { path: 'zakazivanjeIspita', component: ZakazivanjeIspita},
-      {path: 'unos-ocena', component: UnosOceneComponent},
-      {path: 'istorija-ispita', component: IstorijaIspitaComponent},
+      { path: 'unos-ocena', component: UnosOceneComponent},
+      { path: 'istorija-ispita', component: IstorijaIspitaComponent},
       { path: 'administracija', component: AdministracijaComponent},
       { path: 'dodajOsoblje', component: DodajOsobljeComponent}
     ]
