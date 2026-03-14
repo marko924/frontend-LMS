@@ -17,8 +17,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
-  hidePassword = true;
-  errorMessage = '';
 
   constructor(
     private fb: FormBuilder,
@@ -40,10 +38,7 @@ export class LoginComponent implements OnInit {
           // Nakon uspešnog logina, proveravamo ulogu i preusmeravamo
           this.router.navigate(['/dashboard']);
         },
-        error: (err) => {
-          this.errorMessage = 'Neispravno korisničko ime ili lozinka.';
-          console.error(err);
-        }
+        error: (err) => alert('Greška pri prijavi: Neispravno korisničko ime ili lozinka.')
       });
     }
   }
