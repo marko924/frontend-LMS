@@ -19,7 +19,7 @@ import { PredmetService } from '../../services/predmet-service';
 import { NastavnikService } from '../../services/nastavnik-service';
 import { IspitniRokService } from '../../services/ispitni-rok-service';
 import { PohadjanjePredmetaService } from '../../services/pohadjanje-predmeta-service';
-import { PolaganjeService } from '../../services/polaganje-service'; // DODATO
+import { PolaganjeService } from '../../services/polaganje-service'; // DODATO 
 
 import { EvaluacijaZnanja } from '../../models/evaluacija-znanja';
 import { PrijaviIspit } from '../../models/prijavi-ispit';
