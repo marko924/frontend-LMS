@@ -20,6 +20,7 @@ export class AdministracijaComponent {
   activeColumns: ColumnDef<any>[] = [];
   data: any[] = [];
   foreignKeyOptions: Record<string, any[]> = {};
+  currentEntityKey = signal<string | null>(null); 
   
   isLoading = signal(false);
   currentPage = signal(0);
@@ -34,6 +35,8 @@ export class AdministracijaComponent {
 
   onEntitySelect(event: any) {
     const entityKey = event.target.value;
+
+    this.currentEntityKey.set(entityKey);
     
     if (!entityKey) {
       this.resetState();
@@ -194,6 +197,7 @@ export class AdministracijaComponent {
 
   private resetState() {
     this.activeService.set(null);
+    this.currentEntityKey.set(null);
     this.data = [];
     this.currentPage.set(0);
     this.totalPages.set(0);

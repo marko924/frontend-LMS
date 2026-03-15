@@ -42,4 +42,14 @@ export class DashboardComponent implements OnInit {
     this.authService.logout();
     this.router.navigate(['']);
   }
+
+  goToProfile() {
+    const userId = this.authService.getLoggedInUserId();
+    this.router.navigate(['/dashboard/profil'], {
+      queryParams: { 
+        id: userId, 
+        uloga: this.userRole 
+      }
+    });
+  }
 }

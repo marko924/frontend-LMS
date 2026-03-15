@@ -27,8 +27,8 @@
       <p>Učitavanje podataka...</p>
     </div>
 
-    <div class="table-actions" style="margin-bottom: 15px;">
-      <button (click)="openCreateModal()" class="btn-create">
+    <div class="table-actions">
+      <button (click)="openCreateModal()" *ngIf="currentEntityKey() && !ADMIN_ENTITIES[currentEntityKey()!].disableCreate" class="btn-create">
         + Dodaj novi zapis
       </button>
     </div>

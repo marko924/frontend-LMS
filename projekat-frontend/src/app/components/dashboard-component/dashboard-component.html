@@ -7,7 +7,9 @@
     <span class="spacer"></span>
     
     <div class="header-right">
-      <span class="user-info">{{ currentUsername }}</span>
+      <button mat-button class="user-info" (click)="goToProfile()" title="Prikaži profil">
+        {{ currentUsername }}
+      </button>
       <button mat-icon-button (click)="onLogout()" title="Odjavi se">
         <mat-icon>power_settings_new</mat-icon>
       </button>

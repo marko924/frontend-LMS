@@ -18,6 +18,7 @@ import { DetaljiFakultetaComponent } from './components/detalji-fakulteta-compon
 import { ListaStudijskihProgramaComponent } from './components/lista-studijskih-programa-component/lista-studijskih-programa-component';
 import { DetaljiStudijskogProgramaComponent } from './components/detalji-studijskog-programa-component/detalji-studijskog-programa-component';
 import { UpisNaGodinuComponent } from './components/upis-na-godinu-component/upis-na-godinu-component';
+import { ProfilComponent } from './components/profil-component/profil-component';
 
 export const routes: Routes = [
   // --- JAVNI DEO ---
@@ -52,7 +53,8 @@ export const routes: Routes = [
       { path: 'unos-ocena', component: UnosOceneComponent},
       { path: 'istorija-ispita', component: IstorijaIspitaComponent},
       { path: 'administracija', component: AdministracijaComponent},
-      { path: 'dodajOsoblje', component: DodajOsobljeComponent}
+      { path: 'dodajOsoblje', component: DodajOsobljeComponent},
+      { path: 'profil', component: ProfilComponent}
     ]
   },
 

@@ -16,6 +16,12 @@
   gap: 15px;
 }
 
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
 .univ-logo {
   height: 40px;
 }
@@ -27,6 +33,11 @@
 .user-info {
   font-size: 14px;
   margin-right: 10px;
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+  outline: none;
+  cursor: pointer;
 }
 
 .sidenav-container {
