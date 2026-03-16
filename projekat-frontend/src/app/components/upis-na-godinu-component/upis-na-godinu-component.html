@@ -1,58 +1,58 @@
 <div class="upis-container">
   <div class="upis-card">
-    
+   
     <h2 class="title">Upis na godinu</h2>
-
+ 
     <form [formGroup]="forma" (ngSubmit)="sacuvaj()" class="upis-form" *ngIf="!podaciZaPrikaz || podaciZaPrikaz.status === 'ODBIJEN'">
-      
+     
       <mat-form-field appearance="outline">
         <mat-label>Fakultet</mat-label>
         <mat-select formControlName="fakultetId" (selectionChange)="onFakultetChange()">
           <mat-option *ngFor="let f of fakulteti$ | async" [value]="f.id">{{f.naziv}}</mat-option>
         </mat-select>
       </mat-form-field>
-
+ 
       <mat-form-field appearance="outline">
         <mat-label>Studijski program</mat-label>
-        <mat-select formControlName="studijskiProgramId">
+        <mat-select formControlName="studijskiProgramId" (selectionChange)="onStudijskiProgramChange()">
           <mat-option *ngFor="let p of filtriraniProgrami" [value]="p.id">{{p.naziv}}</mat-option>
         </mat-select>
       </mat-form-field>
-
+ 
       <mat-form-field appearance="outline">
         <mat-label>Godina studija</mat-label>
         <mat-select formControlName="godinaStudijaId">
-          <mat-option *ngFor="let g of sveGodine" [value]="g.id">{{g.godina}}. godina</mat-option>
+          <mat-option *ngFor="let g of filtriraneGodine" [value]="g.id">{{g.godina}}. godina</mat-option>
         </mat-select>
       </mat-form-field>
-
+ 
       <div class="button-row">
         <button mat-raised-button color="primary" type="submit" [disabled]="forma.invalid">
           PODNESI ZAHTEV
         </button>
       </div>
     </form>
-
+ 
     <hr *ngIf="podaciZaPrikaz" />
-
+ 
     <div *ngIf="podaciZaPrikaz" class="status-izvestaj">
-      
+     
       <div *ngIf="podaciZaPrikaz.status === 'NA_CEKANJU'" class="status-msg info">
-        <p>Vaš zahtev za upis u <strong>{{ podaciZaPrikaz.godinaBroj }}. godinu</strong> 
+        <p>Vaš zahtev za upis u <strong>{{ podaciZaPrikaz.godinaBroj }}. godinu</strong>
         na studijski program <strong>{{ podaciZaPrikaz.smerNaziv }}</strong> je trenutno <strong>na čekanju</strong>.</p>
       </div>
-
+ 
       <div *ngIf="podaciZaPrikaz.status === 'ODOBREN'" class="status-msg success">
-        <p>Uspešno ste upisani u <strong>{{ podaciZaPrikaz.godinaBroj }}. godinu</strong> 
+        <p>Uspešno ste upisani u <strong>{{ podaciZaPrikaz.godinaBroj }}. godinu</strong>
         studijskog programa <strong>{{ podaciZaPrikaz.smerNaziv }}</strong>.</p>
       </div>
-
+ 
       <div *ngIf="podaciZaPrikaz.status === 'ODBIJEN'" class="status-msg danger">
         <p>Vaš zahtev je odbijen. Pokušajte ponovo.</p>
         <button mat-raised-button color="warn" (click)="pokusajPonovo()">PONOVO PODNESI</button>
       </div>
-
+ 
     </div>
-
+ 
   </div>
 </div>
