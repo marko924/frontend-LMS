@@ -22,7 +22,7 @@ export class RoleGuard implements CanActivate {
 
     if (!hasRequiredRole) {
       alert('Nemate ovlašćenje za pristup ovoj stranici.');
-      this.router.navigate(['']); 
+      this.router.navigate(['/dashboard']); 
       return false;
     }
 
