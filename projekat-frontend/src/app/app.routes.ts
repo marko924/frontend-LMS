@@ -18,6 +18,7 @@ import { DetaljiFakultetaComponent } from './components/detalji-fakulteta-compon
 import { ListaStudijskihProgramaComponent } from './components/lista-studijskih-programa-component/lista-studijskih-programa-component';
 import { DetaljiStudijskogProgramaComponent } from './components/detalji-studijskog-programa-component/detalji-studijskog-programa-component';
 import { UpisNaGodinuComponent } from './components/upis-na-godinu-component/upis-na-godinu-component';
+import { ProfilComponent } from './components/profil-component/profil-component';
 
 export const routes: Routes = [
   // --- JAVNI DEO ---
@@ -44,15 +45,17 @@ export const routes: Routes = [
     path: 'dashboard',
     component: DashboardComponent,
     canActivate: [RoleGuard],
+    data: { expectedRoles: ['ROLE_STUDENT', 'ROLE_NASTAVNIK', 'ROLE_SLUZBA', 'ROLE_ADMIN'] },
     children: [
-      {path: 'prijavi-ispit', component:PrijaviIspitComponent},
-      {path: 'upis-na-godinu', component: UpisNaGodinuComponent},
-      { path: 'listaZahteva', component: ZahteviStudenata },
-      { path: 'zakazivanjeIspita', component: ZakazivanjeIspita},
-      { path: 'unos-ocena', component: UnosOceneComponent},
-      { path: 'istorija-ispita', component: IstorijaIspitaComponent},
-      { path: 'administracija', component: AdministracijaComponent},
-      { path: 'dodajOsoblje', component: DodajOsobljeComponent}
+      {path: 'prijavi-ispit', component:PrijaviIspitComponent, canActivate: [RoleGuard], data: { expectedRoles: ['ROLE_STUDENT', 'ROLE_ADMIN']}},
+      {path: 'upis-na-godinu', component: UpisNaGodinuComponent, canActivate: [RoleGuard], data: { expectedRoles: ['ROLE_STUDENT', 'ROLE_ADMIN']}},
+      { path: 'listaZahteva', component: ZahteviStudenata, canActivate: [RoleGuard], data: { expectedRoles: ['ROLE_SLUZBA', 'ROLE_ADMIN'] }},
+      { path: 'zakazivanjeIspita', component: ZakazivanjeIspita, canActivate: [RoleGuard], data: { expectedRoles: ['ROLE_SLUZBA', 'ROLE_ADMIN']}},
+      { path: 'unos-ocena', component: UnosOceneComponent, canActivate: [RoleGuard], data: { expectedRoles: ['ROLE_NASTAVNIK', 'ROLE_ADMIN']}},
+      { path: 'istorija-ispita', component: IstorijaIspitaComponent, canActivate: [RoleGuard], data: { expectedRoles: ['ROLE_STUDENT', 'ROLE_ADMIN']}},
+      { path: 'administracija', component: AdministracijaComponent, canActivate: [RoleGuard], data: { expectedRoles: ['ROLE_ADMIN'] }},
+      { path: 'dodajOsoblje', component: DodajOsobljeComponent, canActivate: [RoleGuard], data: { expectedRoles: ['ROLE_ADMIN'] }},
+      { path: 'profil', component: ProfilComponent}
     ]
   },
 

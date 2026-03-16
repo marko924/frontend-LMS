@@ -7,19 +7,25 @@ export class RoleGuard implements CanActivate {
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot): boolean {
-  const expectedRoles: string[] = route.data['expectedRoles'] || [];
-  const currentRole = this.authService.getRole();
+    if (!this.authService.isLoggedIn()) {
+      this.router.navigate(['/login']);
+      return false;
+    }
 
-  if (!this.authService.isLoggedIn()) {
-    this.router.navigate(['/login']);
-    return false;
+    const expectedRoles: string[] = route.data['expectedRoles'] || [];
+
+    if (expectedRoles.length === 0) {
+      return true;
+    }
+
+    const hasRequiredRole = expectedRoles.some(role => this.authService.hasRole(role));
+
+    if (!hasRequiredRole) {
+      alert('Nemate ovlašćenje za pristup ovoj stranici.');
+      this.router.navigate(['/dashboard']); 
+      return false;
+    }
+
+    return true;
   }
-
-  if (expectedRoles.length > 0 && !expectedRoles.includes(currentRole)) {
-    this.router.navigate(['/login']);
-    return false;
-  }
-
-  return true;
-}
 }

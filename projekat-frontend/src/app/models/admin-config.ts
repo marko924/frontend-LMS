@@ -39,11 +39,13 @@ import { PrijaviIspitComponent } from "../components/prijavi-ispit-component/pri
 import { TemaService } from "../services/tema-service";
 import { UlogaService } from "../services/uloga-service";
 import { IshodObrazovniCiljService } from "../services/ishod-obrazovni-cilj-service";
+import { KorisnikUlogaService } from "../services/korisnik-uloga-service";
 
 export interface EntityAdminConfig {
   serviceToken: any;
   columns: ColumnDef<any>[];
   label: string; //naziv za select listu
+  disableCreate?: boolean;
 }
 
 export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = { 
@@ -55,7 +57,8 @@ export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = {
       { key: 'id', label: 'ID', type: 'number' },
       { key: 'korisnickoIme', label: 'Korisničko Ime', type: 'text', required: true },
       { key: 'email', label: 'Email', type: 'text', required: true }
-    ]
+    ],
+    disableCreate: true
   },
   'studenti': {
     label: 'Studenti',
@@ -66,7 +69,8 @@ export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = {
       { key: 'prezime', label: 'Prezime', type: 'text', required: true },
       { key: 'jmbg', label: 'JMBG', type: 'text', required: true },
       { key: 'adresaId', label: 'ID Adrese', references: {serviceToken: AdresaService, displayField: 'ulica' }, required: true }
-    ]
+    ],
+    disableCreate: true
   },
   'nastavnici': {
     label: 'Nastavnici',
@@ -77,7 +81,8 @@ export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = {
       { key: 'prezime', label: 'Prezime', type: 'text', required: true },
       { key: 'biografija', label: 'Biografija', type: 'text', required: true },
       { key: 'adresaId', label: 'ID Adrese', references: {serviceToken: AdresaService, displayField: 'ulica' }, required: true }
-    ]
+    ],
+    disableCreate: true
   },
   'osoblje': {
     label: 'Osoblje studentske službe',
@@ -86,7 +91,8 @@ export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = {
       { key: 'id', label: 'ID', type: 'number' },
       { key: 'ime', label: 'Ime', type: 'text', required: true },
       { key: 'prezime', label: 'Prezime', type: 'text', required: true }
-    ]
+    ],
+    disableCreate: true
   },
   'uloge': {
     label: 'Uloga',
@@ -94,6 +100,15 @@ export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = {
     columns: [
       { key: 'id', label: 'ID', type: 'number' },
       { key: 'naziv', label: 'Naziv', type: 'text', required: true }
+    ]
+  },
+  'korisnici_uloge': {
+    label: 'Korisnici - Uloge',
+    serviceToken: KorisnikUlogaService,
+    columns: [
+      { key: 'id', label: 'ID', type: 'number' },
+      { key: 'korisnikId', label: 'ID Registrovanog kori.', references: {serviceToken: RegistrovaniKorisnikService, displayField: 'korisnickoIme' }, required: true },
+      { key: 'ulogaId', label: 'ID Uloge', references: {serviceToken: UlogaService, displayField: 'naziv' }, required: true }
     ]
   },
   'studenti_na_godini': {
@@ -185,7 +200,7 @@ export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = {
       { key: 'drugiObliciNastave', label: 'Drugi oblici nastave', type: 'number', required: true },
       { key: 'istrazivackiRad', label: 'Istrazivacki rad', type: 'number', required: true },
       { key: 'godinaStudijaId', label: 'ID Godine studija', references: {serviceToken: GodinaStudijaService, displayField: 'godina' }, required: true },
-      { key: 'preduslovId', label: 'ID Preduslova', references: {serviceToken: PredmetService, displayField: 'naziv' }, required: true }
+      { key: 'preduslovId', label: 'ID Preduslova', references: {serviceToken: PredmetService, displayField: 'naziv' } }
     ]
   },
   'realizacije': {

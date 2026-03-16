@@ -1,0 +1,68 @@
+<div class="profile-container">
+  <mat-card class="profile-card">
+    <mat-card-header>
+      <mat-card-title>Moj Profil</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="profileForm" (ngSubmit)="sacuvajIzmene()">
+        
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Korisničko ime</mat-label>
+          <input matInput formControlName="korisnickoIme">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email adresa</mat-label>
+          <input matInput type="email" formControlName="email">
+        </mat-form-field>
+
+        <ng-container *ngIf="userRole !== 'ROLE_ADMIN'">
+          <div class="row">
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>Ime</mat-label>
+              <input matInput formControlName="ime">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>Prezime</mat-label>
+              <input matInput formControlName="prezime">
+            </mat-form-field>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="userRole === 'ROLE_STUDENT'">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>JMBG</mat-label>
+            <input matInput formControlName="jmbg">
+          </mat-form-field>
+        </ng-container>
+
+        <ng-container *ngIf="userRole === 'ROLE_NASTAVNIK'">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Biografija</mat-label>
+            <textarea matInput formControlName="biografija" rows="4"></textarea>
+          </mat-form-field>
+        </ng-container>
+
+        <ng-container *ngIf="userRole === 'ROLE_STUDENT' || userRole === 'ROLE_NASTAVNIK'">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Izaberi adresu stanovanja</mat-label>
+            <mat-select formControlName="adresaId">
+              <mat-option *ngFor="let adresa of adrese" [value]="adresa.id">
+                {{ adresa.ulica }} {{ adresa.broj }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </ng-container>
+
+        <div class="form-actions">
+          <button mat-raised-button color="primary" type="submit" [disabled]="profileForm.invalid || !profileForm.dirty">
+            Sačuvaj izmene
+          </button>
+        </div>
+
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

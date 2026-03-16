@@ -35,15 +35,16 @@ export class AuthService {
     }
   }
 
-  getRole(): string {
+  hasRole(targetRole: string): boolean {
     const token = localStorage.getItem('token');
-    if (!token) return '';
-    try {
-      const decoded: any = jwtDecode(token);
-      return decoded.roles ? decoded.roles[0] : '';
-    } catch (error) {
-      return '';
-    }
+    if (!token) return false;
+      try {
+        const decoded: any = jwtDecode(token);
+        const roles: string[] = decoded.roles || [];
+        return roles.includes(targetRole);
+      } catch {
+        return false;
+      }
   }
 
   isLoggedIn(): boolean {
