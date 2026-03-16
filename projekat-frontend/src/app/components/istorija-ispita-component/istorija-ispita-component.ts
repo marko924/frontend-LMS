@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; // DODATO
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
-
 
 import { AuthService } from '../../services/auth-service';
 import { PolaganjeService } from '../../services/polaganje-service';
@@ -17,6 +16,7 @@ import { PohadjanjePredmetaService } from '../../services/pohadjanje-predmeta-se
 
 @Component({
   selector: 'app-istorija-ispita',
+  standalone: true,
   imports: [CommonModule, MatCardModule, MatTableModule, MatTabsModule],
   templateUrl: './istorija-ispita-component.html',
   styleUrl: './istorija-ispita-component.css'
@@ -35,7 +35,8 @@ export class IstorijaIspitaComponent implements OnInit {
     private sngService: StudentNaGodiniService,
     private rokService: IspitniRokService,
     private nastavnikService: NastavnikService,
-    private pohadjanjeService: PohadjanjePredmetaService
+    private pohadjanjeService: PohadjanjePredmetaService,
+    private cdr: ChangeDetectorRef 
   ) {}
 
   ngOnInit(): void {
@@ -45,7 +46,9 @@ export class IstorijaIspitaComponent implements OnInit {
 
   ucitajIstoriju(): void {
     this.sngService.getAllWithoutPagination().subscribe(sveSng => {
-      const mojaSngIds = sveSng.filter(s => s.studentId === this.studentId).map(s => s.id);
+      const mojaSngIds = sveSng
+        .filter(s => Number(s.studentId) === Number(this.studentId))
+        .map(s => s.id);
 
       this.polaganjeService.getAllWithoutPagination().subscribe(svaPolaganja => {
         const mojaPolaganja = svaPolaganja.filter(p => mojaSngIds.includes(p.studentNaGodiniId));
@@ -60,18 +63,14 @@ export class IstorijaIspitaComponent implements OnInit {
                     const privremenaLista: any[] = [];
 
                     for (let pol of mojaPolaganja) {
-                      const ev = evaluacije.find(e => e.id === pol.evaluacijaZnanjaId);
-                      const rok = rokovi.find(r => r.id === ev?.ispitniRokId);
-                      const rel = realizacije.find(r => r.id === ev?.realizacijaPredmetaId);
-                      const pred = predmeti.find(pr => pr.id === rel?.predmetId);
+                      const ev = evaluacije.find(e => Number(e.id) === Number(pol.evaluacijaZnanjaId));
+                      const rok = rokovi.find(r => Number(r.id) === Number(ev?.ispitniRokId));
+                      const rel = realizacije.find(r => Number(r.id) === Number(ev?.realizacijaPredmetaId));
+                      const pred = predmeti.find(pr => Number(pr.id) === Number(rel?.predmetId));
                       
-                      
-                      const poh = svaPohadjanja.find(p => 
-                        p.studentNaGodiniId === pol.studentNaGodiniId && 
-                        p.realizacijaId === rel?.id
-                      );
+                      const nId = rel?.nastavniciId?.[0];
+                      const n = nastavnici.find(nas => Number(nas.id) === Number(nId));
 
-                      
                       let ocenaZaOvajRed = 5;
                       const bodovi = pol.osvojeniBodovi;
 
@@ -82,9 +81,6 @@ export class IstorijaIspitaComponent implements OnInit {
                         else if (bodovi >= 61) ocenaZaOvajRed = 7;
                         else ocenaZaOvajRed = 6;
                       }
-
-                      const nId = rel?.nastavniciId?.[0];
-                      const n = nastavnici.find(nas => nas.id === nId);
 
                       privremenaLista.push({
                         nazivPredmeta: pred?.naziv || 'Nepoznat predmet',
@@ -98,6 +94,9 @@ export class IstorijaIspitaComponent implements OnInit {
 
                     this.polozeniIspiti = privremenaLista.filter(i => i.ocena >= 6);
                     this.neuspesnaPolaganja = privremenaLista.filter(i => i.ocena < 6);
+                    
+                    
+                    this.cdr.detectChanges(); 
                   });
                 });
               });
