@@ -1,10 +1,6 @@
 <div class="container">
   <h1>Zakazivanje termina ispitnog roka i ispita</h1>
 
-  <div *ngIf="uspesnaPoruka" class="alert alert-success">
-    {{ uspesnaPoruka }}
-  </div>
-
   <div class="row">
     <div>
       <div class="card">
@@ -26,10 +22,6 @@
             <div>
               <label class="form-label">Datum završetka</label>
               <input type="datetime-local" class="form-control" formControlName="datumZavrsetka">
-            </div>
-
-            <div *ngIf="datumRokaGreska" class="text-danger">
-              <strong>{{ datumRokaGreska }}</strong>
             </div>
 
             <button type="submit" class="btn btn-primary" [disabled]="rokForm.invalid">
@@ -54,7 +46,7 @@
                 <select class="form-select" formControlName="ispitniRokId">
                   <option value="" disabled selected>Izaberi rok...</option>
                   <option *ngFor="let rok of ispitniRokovi" [value]="rok.id">
-                    {{ rok.naziv }}
+                    {{ rok.naziv }} ({{ rok.datumPocetka | date:'dd.MM.yyyy' }} - {{ rok.datumZavrsetka | date:'dd.MM.yyyy' }})
                   </option>
                 </select>
               </div>
@@ -96,10 +88,6 @@
                 <label class="form-label">Završetak ispita</label>
                 <input type="datetime-local" class="form-control" formControlName="vremeZavrsetka">
               </div>
-            </div>
-
-            <div *ngIf="backendGreska" class="alert alert-danger">
-              {{ backendGreska }}
             </div>
 
             <button type="submit" class="btn btn-success" [disabled]="ispitForm.invalid">

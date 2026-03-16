@@ -29,10 +29,6 @@ export class ZakazivanjeIspita implements OnInit {
   instrumenti: InstrumentEvaluacije[] = [];
   predmeti: Predmet[] = [];
 
-  uspesnaPoruka: string | null = null;
-  backendGreska: string | null = null;
-  datumRokaGreska: string | null = null;
-
   constructor(
     private fb: FormBuilder,
     private evaluacijaService: EvaluacijaZnanjaService,
@@ -78,31 +74,25 @@ export class ZakazivanjeIspita implements OnInit {
   }
 
   dodajIspitniRok(): void {
-    this.datumRokaGreska = null;
-    this.uspesnaPoruka = null;
 
     if (this.rokForm.valid) {
       const pocetak = new Date(this.rokForm.value.datumPocetka);
       const kraj = new Date(this.rokForm.value.datumZavrsetka);
 
       if (pocetak >= kraj) {
-        this.datumRokaGreska = "Greška: Datum početka mora biti pre datuma završetka!";
+        alert("Greška: Datum početka mora biti pre datuma završetka!");
         return;
       }
 
       this.ispitniRokService.create(this.rokForm.value).subscribe({
         next: (response) => {
-          this.uspesnaPoruka = "Ispitni rok uspešno kreiran!";
+          alert("Ispitni rok uspešno kreiran!");
           this.rokForm.reset();
           console.log('Kreirano:', response);
           this.ispitniRokovi.push(response);
-
-          setTimeout(() => {
-            this.uspesnaPoruka = null;
-          }, 1000);
         },
         error: (err) => {
-          this.datumRokaGreska = "Došlo je do greške prilikom čuvanja na serveru.";
+          alert("Došlo je do greške prilikom čuvanja na serveru.");
           console.error(err);
         }
       });
@@ -110,14 +100,12 @@ export class ZakazivanjeIspita implements OnInit {
   }
 
   zakaziIspit(): void {
-    this.backendGreska = null;
-    this.uspesnaPoruka = null;
 
     if (this.ispitForm.valid) {
       this.evaluacijaService.zakaziIspit(this.ispitForm.value).subscribe({
         next: (res: EvaluacijaZnanja) => {
           console.log('Sacuvan ispit:', res);
-          this.uspesnaPoruka = "Ispit je uspešno zakazan u sistemu!";
+          alert("Ispit je uspešno zakazan u sistemu!");
 
           this.ispitForm.reset({
             maksimalniBodovi: 100,
@@ -128,13 +116,9 @@ export class ZakazivanjeIspita implements OnInit {
             instrumentEvaluacijeId: '',
             ispitniRokId: ''
           });
-
-          setTimeout(() => {
-            this.uspesnaPoruka = null;
-          }, 1000);
         },
         error: (err: HttpErrorResponse) => {
-          this.backendGreska = err.error?.message || "Došlo je do greške na serveru.";
+          alert(err.error || "Došlo je do greške na serveru.");
         }
       });
     } else {

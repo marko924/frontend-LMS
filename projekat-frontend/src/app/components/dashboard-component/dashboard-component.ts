@@ -15,27 +15,29 @@ import { MatListModule } from '@angular/material/list';
   styleUrls: ['./dashboard-component.css']
 })
 export class DashboardComponent implements OnInit {
-  userRole: string = '';
+  userRole: string = 'ROLE_STUDENT';
   currentUsername: string = 'Student';
 
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
-    this.userRole = this.authService.getRole();
-    switch (this.userRole) {
-      case 'ROLE_NASTAVNIK':
-        this.currentUsername = 'Nastavnik'
-        break;
-      case 'ROLE_ADMIN':
-        this.currentUsername = 'Administrator'
-        break;
-      case 'ROLE_SLUZBA':
-        this.currentUsername = 'Osoblje sluzbe'
-        break;
-      default:
-        this.currentUsername = 'Student';
-        break;
+    if (this.authService.hasRole('ROLE_ADMIN')) {
+      this.currentUsername = 'Administrator';
+      this.userRole = 'ROLE_ADMIN';
+    } else if (this.authService.hasRole('ROLE_SLUZBA')) {
+      this.currentUsername = 'Osoblje sluzbe';
+      this.userRole = 'ROLE_SLUZBA';
+    } else if (this.authService.hasRole('ROLE_NASTAVNIK')) {
+      this.currentUsername = 'Nastavnik';
+      this.userRole = 'ROLE_NASTAVNIK';
+    } else {
+      this.currentUsername = 'Student';
+      this.userRole = 'ROLE_STUDENT';
     }
+  }
+
+  canAccess(roles: string[]): boolean {
+    return roles.some(role => this.authService.hasRole(role));
   }
 
   onLogout() {
