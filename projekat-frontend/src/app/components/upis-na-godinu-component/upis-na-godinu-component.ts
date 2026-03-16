@@ -2,22 +2,22 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
-
+ 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-
+ 
 import { StatusZahteva } from '../../models/status-zahteva.enum';
 import { Fakultet } from '../../models/fakultet';
 import { StudijskiProgram } from '../../models/studijski-program';
-import { GodinaStudija } from '../../models/godina-studija'; 
+import { GodinaStudija } from '../../models/godina-studija';
 import { FakultetService } from '../../services/fakultet-service';
 import { StudijskiProgramService } from '../../services/studijski-program-service';
 import { ZahtevZaUpisService } from '../../services/zahtev-za-upis-service';
-import { GodinaStudijaService } from '../../services/godina-studija-service'; 
+import { GodinaStudijaService } from '../../services/godina-studija-service';
 import { AuthService } from '../../services/auth-service';
-
+ 
 @Component({
   selector: 'app-upis-na-godinu-component',
   imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatSelectModule, MatInputModule, MatButtonModule],
@@ -25,15 +25,19 @@ import { AuthService } from '../../services/auth-service';
   styleUrl: './upis-na-godinu-component.css',
 })
 export class UpisNaGodinuComponent implements OnInit {
+ 
   forma!: FormGroup;
   fakulteti$!: Observable<Fakultet[]>;
-  sveGodine: GodinaStudija[] = []; 
+ 
+  sveGodine: GodinaStudija[] = [];
+  filtriraneGodine: GodinaStudija[] = [];
+ 
   sviProgrami: StudijskiProgram[] = [];
   filtriraniProgrami: StudijskiProgram[] = [];
-  
+ 
   podaciZaPrikaz: any = null;
   studentId!: number;
-
+ 
   constructor(
     private fb: FormBuilder,
     private fakultetService: FakultetService,
@@ -42,14 +46,14 @@ export class UpisNaGodinuComponent implements OnInit {
     private godinaStudijaService: GodinaStudijaService,
     private authService: AuthService
   ) {}
-
+ 
   ngOnInit(): void {
     this.studentId = this.authService.getLoggedInUserId();
     this.inicijalizujFormu(this.studentId);
     this.ucitajPodatke();
     this.proveriStatus();
   }
-
+ 
   private inicijalizujFormu(id: number): void {
     this.forma = this.fb.group({
       fakultetId: ['', Validators.required],
@@ -59,7 +63,7 @@ export class UpisNaGodinuComponent implements OnInit {
       napomena: ['']
     });
   }
-
+ 
   private ucitajPodatke(): void {
     this.fakulteti$ = this.fakultetService.getAllWithoutPagination();
     this.godinaStudijaService.getAllWithoutPagination().subscribe(res => this.sveGodine = res);
@@ -68,38 +72,45 @@ export class UpisNaGodinuComponent implements OnInit {
       if (this.podaciZaPrikaz) this.proveriStatus();
     });
   }
-
+ 
   proveriStatus(): void {
     this.zahtevService.getAllWithoutPagination().subscribe(zahtevi => {
       const mojZahtev = zahtevi
         .filter(z => z.studentId === this.studentId)
         .sort((a, b) => b.id - a.id)[0];
-
+ 
       if (mojZahtev) {
         this.azurirajPrikaz(mojZahtev);
       }
     });
   }
-
+ 
   private azurirajPrikaz(zahtev: any): void {
-  
-
+ 
+ 
   const god = this.sveGodine.find(g => Number(g.id) === Number(zahtev.godinaStudijaId));
   const smer = this.sviProgrami.find(p => Number(p.id) === Number(zahtev.studijskiProgramId));
-
+ 
   this.podaciZaPrikaz = {
     status: zahtev.status,
     godinaBroj: god ? god.godina : '',
-    smerNaziv: smer ? smer.naziv : 'Smer nije pronađen' 
+    smerNaziv: smer ? smer.naziv : 'Smer nije pronađen'
   };
 }
-
+ 
   onFakultetChange(): void {
     const fId = Number(this.forma.value.fakultetId);
     this.filtriraniProgrami = this.sviProgrami.filter(p => p.fakultetId === fId);
-    this.forma.patchValue({ studijskiProgramId: '' });
+    this.forma.patchValue({ studijskiProgramId: '', godinaStudijaId: '' });
+    this.filtriraneGodine = [];
   }
-
+ 
+  onStudijskiProgramChange(): void {
+    const spId = Number(this.forma.value.studijskiProgramId);
+    this.filtriraneGodine = this.sveGodine.filter(g => g.studijskiProgramId === spId);
+    this.forma.patchValue({ godinaStudijaId: '' });
+  }
+ 
   sacuvaj(): void {
     if (this.forma.valid) {
       const dto = {
@@ -110,10 +121,10 @@ export class UpisNaGodinuComponent implements OnInit {
         status: StatusZahteva.NA_CEKANJU,
         vremePodnosenja: new Date().toISOString()
       };
-
+ 
       console.log('Slanje zahteva:', dto);
      
-
+ 
       this.zahtevService.postaviZahtev(dto).subscribe({
         next: (res) => {
           this.azurirajPrikaz(res);
@@ -122,10 +133,11 @@ export class UpisNaGodinuComponent implements OnInit {
       });
     }
   }
-
+ 
   pokusajPonovo(): void {
     this.podaciZaPrikaz = null;
     this.forma.reset({ studentId: this.studentId });
     this.filtriraniProgrami = [];
+    this.filtriraneGodine = [];
   }
 }
