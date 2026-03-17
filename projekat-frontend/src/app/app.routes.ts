@@ -32,7 +32,6 @@ export const routes: Routes = [
       { path: 'fakulteti/:id', component: DetaljiFakultetaComponent },
       { path: 'programi', component: ListaStudijskihProgramaComponent},
       { path: 'programi/:id', component: DetaljiStudijskogProgramaComponent}
-      //{ path: 'studije', component: someOtherComponent },
     ]
   },
 
