@@ -15,6 +15,7 @@ import { MatListModule } from '@angular/material/list';
   styleUrls: ['./dashboard-component.css']
 })
 export class DashboardComponent implements OnInit {
+  
   userRole: string = 'ROLE_STUDENT';
   currentUsername: string = 'Student';
 

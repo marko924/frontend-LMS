@@ -3,8 +3,10 @@ import { Observable } from 'rxjs';
 import { Page } from '../models/page';
 
 
-export class GenericCrudService<T, ID> {
+export class GenericCrudService<T, ID> { //Ovoje moj genricki servis koji ima da parametra jedan je T, a drugi ID
+                                         //Pri nasledjivanju za podatak T se unosi naziv modela, a za ID tip primarnog kljuca
 
+  //Posto sam ja ovaj servis zamislio kao baznu klasu onda sam za njegov konstruktor napisao protected
   protected constructor(
     protected http: HttpClient,
     protected baseUrl: string
@@ -16,7 +18,7 @@ export class GenericCrudService<T, ID> {
   }
 
   // GET (sa paginacijom)
-  // pageParams može biti objekat npr. { page: 0, size: 10, sort: 'ime,asc' }
+  // Vracam objekat tipa Page koji cu koristiti za moju genericku tabelu
   getAll(pageParams?: any): Observable<Page<T>> {
     let params = new HttpParams();
     if (pageParams) {

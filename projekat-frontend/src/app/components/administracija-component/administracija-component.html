@@ -6,13 +6,17 @@
   <section class="selection-area">
     <div class="form-group">
       <label for="entity-picker">Izaberite tabelu za rad:</label>
+      <!--Ovde nudim opdajuci listu svih dostupnih tabela iz ADMIN_ENTITIES konstanti-->
+      <!--Sa ovim change povezivanjem dogadjaj hvatam ono sta je admin izabrao kako bih znao sta se ucitava -->
       <select 
         id="entity-picker" 
-        (change)="onEntitySelect($event)" 
+        (change)="onEntitySelect($event)"
         class="admin-select">
         <option value="">-- Izaberite entitet --</option>
+        <!--Ovde sam koristio pipe kako bih prikazao moj map objekat u niz parova gde entity.key postaje kljuc iz
+        objekta (npr. studenti), a entity.value postaje ceo onaj konfiguracioni objekat iz koga izvlacim naziv-->
         <option *ngFor="let entity of ADMIN_ENTITIES | keyvalue" [value]="entity.key">
-          {{ entity.value.label }}
+          {{ entity.value.label }}  <!--Interpolacija da se umesto studenti (sto je vrednost kljuca) prikaze Studenti iz labele-->
         </option>
       </select>
     </div>
@@ -20,6 +24,7 @@
 
   <hr />
 
+  <!--Ovaj deo sluzi za glavni prikaz i ne prikazuje se sve dok admin iz liste ne izabere neki entitet-->
   <main class="content-area" *ngIf="activeService()">
     
     <div *ngIf="isLoading()" class="loading-overlay">
@@ -28,12 +33,19 @@
     </div>
 
     <div class="table-actions">
+      <!--Ovo dugme sluzi za otvaranje forme za dodavanje-->
+      <!--Proverava da li je nesto uopste izabrano (neki entitet iz liste) i ako neki entitet ima podesavanje za disableCreate 
+      onda ovo dugme treba da bude disable-ovano-->
       <button (click)="openCreateModal()" *ngIf="currentEntityKey() && !ADMIN_ENTITIES[currentEntityKey()!].disableCreate" class="btn-create">
         + Dodaj novi zapis
       </button>
     </div>
 
+    <!--Ovde sam dodao css klasu .dimmed kako bi napravio da tabela bude siva dok se podaci ne ucitaju prilikom 
+    neke izmene ili dodavanja novih podataka-->
     <div [class.dimmed]="isLoading()">
+      <!--Ovde ucitavam genericku tabelu i saljem joj sve potrebne input-e: podatke sa backenda, difiniciju kolona, 
+      akcije koje trebaju biti dostupne i da event emmiter-e za osluskivanje dogadjaj-->
       <app-generic-table 
         [data]="data" 
         [columns]="activeColumns"
@@ -42,19 +54,27 @@
         (delete)="handleDelete($event)">
       </app-generic-table>
 
+      <!--Ovaj deo mi sluzi za ispisivanje genricke forme i on ne postoji sve dok signal za isEditModalOpen() ne postane true-->
       <div class="modal-overlay" *ngIf="isEditModalOpen()">
         <div class="modal-content">
-          <h3>{{ isEditMode() ? 'Izmena podataka' : 'Dodavanje podatka' }}</h3>
+          <h3>{{ isEditMode() ? 'Izmena podataka' : 'Dodavanje podatka' }}</h3> <!--Naslov se menja (true = izmena)-->
     
           <div class="edit-form">
+            <!--Prolazim kroz listu definicija kolona i za svaku generise polje-->
             <div *ngFor="let col of activeColumns" class="form-field">
+              <!--Sa ovim kazem da uvek prikaze labelu osim ako je u pitanju id prilikom dodavanja novog reda - 
+              nema smisla traziti od korisnika da doda id-->
               <ng-container *ngIf="col.key !== 'id' || isEditMode()">
                 <label>
                   {{ col.label }}:
-                  <span *ngIf="col.required" class="star">*</span>
+                  <span *ngIf="col.required" class="star">*</span> <!--Crta zvezdu za reguired kolonu-->
                 </label>
               </ng-container>
 
+              <!--U zavisnosti od toga sta pise u col.typ angular bira koja ce od ova 4 bloka da prikaze: -->
+
+              <!--Ove polje je kada program naleti na id u modu za izmenu gde sam naglasio da se njegova vrednost ne
+              sme menjati (zbog jednosmernog vezivanja sam stavio [value])-->
               <input 
                 *ngIf="col.key === 'id' && isEditMode()"
                 [value]="selectedItem()[col.key]"
@@ -62,6 +82,10 @@
                 readonly
               />
 
+              <!--Ovo se prikazuje kada je u pitanju kolona koja je referenca i koja je razlicita od id-->
+              <!--Ovde koristim dvosmerno vezivanje [(ngModel)] sto mi daje mogucnost da se promena u fromi odmah odrazi
+              u kodu i obrnuto cime sam izbegao rucno citanje vrednosti iz svakog polja pre slanja na server-->
+              <!--Ovde se dinamicki bira koje polje u objektu (iz signala selectedItem()) popunjavam u input polju-->
               <select 
                 *ngIf="col.references && col.key !== 'id'"
                 [(ngModel)]="selectedItem()[col.key]"
@@ -73,6 +97,8 @@
                   </option>
               </select>
 
+              <!--Ako je tip kolone boolean onda se prave checkbox elementi-->
+              <!--Ovde koristim dinamicko dodeljivanje id-a kako bi mogao moj kod da zna na koju labelu se odnosi-->
               <div *ngIf="col.type === 'boolean' && col.key !== 'id'" class="checkbox-wrapper">
                 <input 
                   type="checkbox" 
@@ -80,11 +106,19 @@
                   id="check-{{col.key}}"
                   class="admin-checkbox"
                 />
+                <!--for="check-{{col.key}}": Povezuje labelu sa inputom. To znaci da korisnik moze da klikne na tekst 
+                "Da" ili "Ne", a checkbox će se sam stiklirati/odstiklirati-->
                 <label for="check-{{col.key}}" class="checkbox-label">
                   {{ selectedItem()[col.key] ? 'Da' : 'Ne' }}
                 </label>
               </div>
 
+              <!--Ovaj deo sluzi za prikaz vise tipova i proverava ako je tip date stavlja za tip 'date', 
+              a ako je tip datetime onda stavlja 'datetime-local', a ako je broj onda stavi 'number' i na kraju
+              ako nije nista od toga onda je obicno tekstualno polje-->
+              <!--Da bih ovo postigao koristio sam ternarni operator [type]-->
+              <!--Ovde ima jos jedan provera ako je polje required a nije se unela vrednost onda se dodaje dinamicka
+              klas .invalid-input koja boji ivice polja u crveno-->
               <input 
                 *ngIf="!col.references && col.key !== 'id' && col.type !== 'boolean'"
                 [type]="col.type === 'date' ? 'date' : (col.type === 'datetime' ? 'datetime-local' : (col.type === 'number' ? 'number' : 'text'))" 
@@ -97,6 +131,10 @@
           </div>
 
           <div class="modal-actions">
+            <!--U ovom delu se proverava sve dok forma nije validna dugme je disabled gde mu se preko dinamicke klase
+            .btn-disabled dodeljuje odgovarajuci stil-->
+            <!--A na kraju se klikom na dugme pokrece funkcija saveChanges() koja dodaje ili menja podatak u zavisnosti od
+            toga da li je mod za dodavanje ili izmenu-->
             <button (click)="saveChanges()" [disabled]="!isFormValid()" [class.btn-disabled]="!isFormValid()" class="btn-save">
               {{ isEditMode() ? 'Sačuvaj izmene' : 'Kreiraj' }}
             </button>
@@ -105,12 +143,18 @@
         </div>
       </div>
 
+      <!--Ovde proveravam da li je stvarno tabela prazna tako sto pored provere da li je lista data prazna 
+      proveravam i da li je zavrsen proces ucitavanja podataka-->
       <div *ngIf="data.length === 0 && !isLoading()" class="empty-state">
         Trenutno nema podataka u ovoj tabeli.
       </div>
     </div>
 
+    <!--Ovaj deo je za prikaz trake za paginaciju i ucitava se samo ako je broj stranica koji se ucitao veci od 0-->
     <footer class="pagination" *ngIf="totalPages() > 0">
+      <!--Dugme je disabled sve dok se podaci ne ucitaju ili ako ima samo toliko podataka da se prikazu na prvoj strani-->
+      <!--Akcija changePage(-1) smanjuje trenutnu stranicu za 1-->
+      <!--Znak &laquo; pokazuje duplu strelicu ulevo <<-->
       <button 
         [disabled]="currentPage() === 0 || isLoading()" 
         (click)="changePage(-1)"
@@ -118,10 +162,14 @@
         &laquo; Prethodna
       </button>
 
+      <!--Ovo sam dodao da ne bi smo kretali od 0 strane vec od prve-->
       <span class="page-counter">
         Stranica <strong>{{ currentPage() + 1 }}</strong> od <strong>{{ totalPages() }}</strong>
       </span>
 
+      <!--Uslov ne dozvoljava prelazak napred ako si na poslednjoj stranici (npr. ako imaš 5 stranica, totalPages je 5, 
+      a poslednji currentPage indeks je 4)-->
+      <!--Znak &raquo; pokazuje duplu strelicu udeson >>-->
       <button 
         [disabled]="currentPage() === totalPages() - 1 || isLoading()" 
         (click)="changePage(1)"
@@ -131,6 +179,8 @@
     </footer>
   </main>
 
+  <!--Ovo je ono sto se odmah prikaze kada se ucita komponenta za administraciju-->
+  <!--Kada se podaci ucitaju sa servera za izabran objekat ona nestaje-->
   <aside *ngIf="!activeService()" class="welcome-screen">
     <p>Molimo izaberite entitet iz liste iznad kako biste videli podatke.</p>
   </aside>

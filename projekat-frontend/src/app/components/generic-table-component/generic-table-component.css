@@ -1,7 +1,7 @@
 .table-container {
   width: 100%;
   overflow-x: auto;
-  margin-top: 1rem;
+  margin-top: 1rem;  /*rem - root em (dinamicko povecavanje fonta)*/
   border-radius: 8px;
   border: 1px solid #e2e8f0;
 }

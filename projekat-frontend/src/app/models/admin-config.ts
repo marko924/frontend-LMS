@@ -41,14 +41,20 @@ import { UlogaService } from "../services/uloga-service";
 import { IshodObrazovniCiljService } from "../services/ishod-obrazovni-cilj-service";
 import { KorisnikUlogaService } from "../services/korisnik-uloga-service";
 
-export interface EntityAdminConfig {
-  serviceToken: any;
-  columns: ColumnDef<any>[];
-  label: string; //naziv za select listu
-  disableCreate?: boolean;
+export interface EntityAdminConfig { //ovaj interfejs mi sluzi za definisanje pravila za kreiranje tabela i formi za svaki entitet
+  serviceToken: any; //Sluzi za prosledjivanje servisa iz kog ce se ucitati podaci
+  columns: ColumnDef<any>[]; //Sluzi za definisanje detaljne mape svakog polja (koje atribute ima i koje su mu refrence)
+  label: string; //Naziv entiteta kako bi administrator mogao da izabere koju tabelu hoce da mu se prikaze
+  disableCreate?: boolean; //Promenljiva koja sluzi da bi se zabranio unos podataka za odredjeni entitet
 }
 
-export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = { 
+//ADMIN_ENTITIES je centralna konfiguraciona mapa koja cuva sve potrebne informacije o tome kako jedan entitet 
+//treba da izgleda i kako se sa njime upravlja i sve je to smesteno u ovaj jedan objekat
+
+//Definisan je kao Record<string, EntityAdminConfig>, sto znaci da je to recnik gde je kljuc obican tekst (ID entiteta),
+//a vrednost objekat koji ispunjava pravila EntityAdminConfig interfejsa
+
+export const ADMIN_ENTITIES: Record<string, EntityAdminConfig> = {
 
   'registrovani_korisnici': {
     label: 'Registrovani korisnici',

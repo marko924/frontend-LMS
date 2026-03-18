@@ -20,6 +20,7 @@
             <p><strong>Podneto:</strong> {{ zahtev.vremePodnosenja | date:'dd.MM.yyyy - HH:mm' }}h</p>
           </div>
 
+          <!--Ovaj blok se vidi samo ako nijedna forma (ni za odobravanje, ni za odbijanje) nije aktivna za taj konkretan zahtev -->
           <div *ngIf="zahtevZaOdbijanjeId !== zahtev.id && zahtevZaOdobrenjeId !== zahtev.id" class="akcije">
             <button class="btn-odobri" (click)="prikaziFormuZaOdobravanje(zahtev.id!)">
               Odobri
@@ -29,6 +30,9 @@
             </button>
           </div>
 
+          <!--Kada korisnik klikne na dugme odbij onda se ova forma prikazuje-->
+          <!--Ovde sam koristio dvosmerno vezivanje sa [(ngModel)] da bih ono sta korisnik unese odmah bilo vidljivo u 
+          promenljivoj napomenaTekst-->
           <div *ngIf="zahtevZaOdbijanjeId === zahtev.id" class="odbijanje-container">
             <label class="odbijanje-label">Razlog odbijanja:</label>
             <textarea 
@@ -38,10 +42,12 @@
               placeholder="Unesite kratko obrazloženje...">
             </textarea>
             <div class="odbijanje-dugmici">
+              <!--Klikom na dugme otkazi forma se resetuje i zatvara-->
               <button class="btn-otkazi" (click)="zahtevZaOdbijanjeId = null">Otkaži</button>
               <button class="btn-confirm" (click)="potvrdiOdbijanje(zahtev.id!)">Potvrdi Odbijanje</button>
             </div>
           </div>
+          <!--Kada korisnik klikne na dugme odobri onda se ova forma prikazuje-->
           <div *ngIf="zahtevZaOdobrenjeId === zahtev.id" class="odobrenje-container">
             <label class="odobrenje-label">Broj indeksa:</label>
             <input 

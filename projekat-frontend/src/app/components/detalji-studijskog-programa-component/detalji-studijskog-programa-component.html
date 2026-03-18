@@ -14,6 +14,8 @@
     <div class="content-area">
 
       <div class="tabs-container">
+        <!--Ovde se za svaku godinu iz liste gleda da li je ona aktivna i ako jeste onda se primeni dinamicki still
+        .active i na klik se menja izabrana godina-->
         <button 
           *ngFor="let god of detalji.godineStudija" 
           class="tab-btn" 
@@ -24,17 +26,21 @@
       </div>
 
       <div class="predmeti-lista" *ngIf="aktivnaGodina">
+        <!--Ako je izabrana godina prolazimo kroz listu predmeta za tu godinu-->
         <div class="predmet-item" *ngFor="let predmet of aktivnaGodina.predmeti">
+          <!--Kada je korisnik kliknuo na predmet primenjuje se diamicki stil .open i belezi se koji je predmet izabran-->
           <div class="predmet-header" 
                [class.open]="otvorenPredmetId === predmet.id"
                (click)="togglePredmet(predmet.id)">
             <div class="status-icon">
+              <!--Sa ovim ako je predmet izabran prikazuje se popunjeni krug ali ako nije onda se prikazuje prazan krug-->
               <span *ngIf="otvorenPredmetId === predmet.id" class="icon-open">●</span>
               <span *ngIf="otvorenPredmetId !== predmet.id" class="icon-closed">○</span>
             </div>
             <span class="predmet-naziv">{{ predmet.naziv }}</span>
           </div>
 
+          <!--Ovde se na osnovu izabranog predmeta ispisuju njegovi detalji-->
           <div class="predmet-body" *ngIf="otvorenPredmetId === predmet.id">
             <p class="predmet-opis">{{ predmet.opis }}</p>
             <div class="predmet-meta">
@@ -43,6 +49,7 @@
           </div>
         </div>
         
+        <!--Ako studijskomprogramu nije dodeljena godina studija prikazuje se ova poruka-->
         <div *ngIf="aktivnaGodina.predmeti.length === 0" class="nema-predmeta">
           Nema unetih predmeta za ovu godinu studija.
         </div>
@@ -52,6 +59,7 @@
     <div class="sidebar-card">
       <div class="rukovodilac-info-new">
         <div class="avatar">
+          <!--Dobijanje prvog slova imena i prezimena rukovodioca-->
           {{ detalji.rukovodilacIme.charAt(0) }}{{ detalji.rukovodilacPrezime.charAt(0) }}
         </div>
         <div class="text">
@@ -62,6 +70,7 @@
       </div>
       
       <div class="action-buttons">
+        <!--Klikom na dugme se vracamo na listu svih programa-->
         <button class="btn-primary" [routerLink]="['/programi']">
           Nazad na listu
         </button>

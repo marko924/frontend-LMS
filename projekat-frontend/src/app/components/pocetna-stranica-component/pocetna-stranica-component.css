@@ -2,7 +2,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 60vh;
+  min-height: 60vh;  /*vh - viewport height*/
   text-align: center;
   padding: 40px;
   background-color: #f8f9fa;
@@ -27,10 +27,12 @@
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
   cursor: pointer;
-  transition: transform 0.2s;
+  transition: transform 0.2s;  /*koliko traje podizanje*/
   width: 250px;
 }
 
+/* Kada se predje preko jedne kartice pomera se vertikalno na gore
+i boji joj se ivica u plavo */
 .feature-item:hover {
   transform: translateY(-5px);
   border: 1px solid #1a237e;

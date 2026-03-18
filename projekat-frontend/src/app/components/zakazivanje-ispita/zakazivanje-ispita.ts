@@ -68,6 +68,7 @@ export class ZakazivanjeIspita implements OnInit {
     this.predmetService.getAllWithoutPagination().subscribe(data => this.predmeti = data);
   }
 
+  //Funkcija pomocu koje dobijam naziv predmeta iz realizacije predmeta
   getNazivPredmeta(predmetId: number): string {
     const predmet = this.predmeti.find(p => p.id === predmetId);
     return predmet ? predmet.naziv : 'Nepoznat predmet';
@@ -89,7 +90,7 @@ export class ZakazivanjeIspita implements OnInit {
           alert("Ispitni rok uspešno kreiran!");
           this.rokForm.reset();
           console.log('Kreirano:', response);
-          this.ispitniRokovi.push(response);
+          this.ispitniRokovi.push(response); //odmah guram ispitni rok u listu da bi mi se odmah video u drugoj formi
         },
         error: (err) => {
           alert("Došlo je do greške prilikom čuvanja na serveru.");
@@ -107,6 +108,7 @@ export class ZakazivanjeIspita implements OnInit {
           console.log('Sacuvan ispit:', res);
           alert("Ispit je uspešno zakazan u sistemu!");
 
+          //Resetujem polja posle uspesnog dodavanja
           this.ispitForm.reset({
             maksimalniBodovi: 100,
             tipEvaluacijeId: 1,
@@ -117,6 +119,7 @@ export class ZakazivanjeIspita implements OnInit {
             ispitniRokId: ''
           });
         },
+        //Ovde prikazujem custom gresku koja dolazi sa backenda 
         error: (err: HttpErrorResponse) => {
           alert(err.error || "Došlo je do greške na serveru.");
         }

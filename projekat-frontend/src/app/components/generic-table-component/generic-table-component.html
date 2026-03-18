@@ -2,23 +2,31 @@
   <table>
     <thead>
       <tr>
+        <!--Prolazim kroz definiciju kolona i ispisujem naslove-->
+        <!--Koristim funkciju hasAnyActions() da odredim da li uopšte treba da se iscrta kolona "Akcije"-->
         <th *ngFor="let col of columns">{{ col.label }}</th>
         <th *ngIf="hasAnyActions()">Akcije</th>
       </tr>
     </thead>
     <tbody>
+      <!--Prva petlja prolazi kroz sve podatke (redove)-->
       <tr *ngFor="let row of data">
+        <!--Druga petlja prlazi kroz definicije kolona kako bi znala kojim redosledom i koji podatak (row[col.key]) da prikaže.-->
         <td *ngFor="let col of columns">
-          {{ formatCell(row[col.key], col.type) }}
+          <!--Na osnovu tipa kolone i njenog naziva podatak se ispisuje u odgovarajucem formatu.-->
+          {{ formatCell(row[col.key], col.type) }}  
+          <!--Proveravam da li je za neku kolonu definisana posebna akcija i ako jeste onda na klik roditelju saljem
+          ceo objekat (podaci) iz tog specifičnog reda i prosledjujem naziv dogadjaja koji sam definisao u konfiguraciji -->
           <button *ngIf="col.actionButton" 
                   (click)="onCustomEvent(row, col.actionButton.event)"
                   class="btn-table btn-view">
             {{ col.actionButton.label }}
           </button>
         </td>
-        
+        <!--Ovde proveravam da li uopste imam akcija da ih ne bi html uzalud iscrtavao-->
         <td *ngIf="hasAnyActions()">
           <div class="actions-cell">
+            <!--Ovde konkretno proveravam sta je dozvoljeno od jednostavnih akcija-->
             <button *ngIf="actions.edit" (click)="onEdit(row)" class="btn-table btn-edit">Izmeni</button>
             <button *ngIf="actions.delete" (click)="onDelete(row)" class="btn-table btn-delete">Obriši</button>
           </div>

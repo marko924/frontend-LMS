@@ -22,7 +22,7 @@ export class DetaljiFakultetaComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      const id = +params['id'];
+      const id = +params['id'];  //znak plus sluzi da brzo pretvori id iz url-a u broj
       if (id) {
         this.fakultetService.getDetalji(id).subscribe({
           next: (data) => {

@@ -18,6 +18,9 @@ export class DetaljiStudijskogProgramaComponent implements OnInit {
   aktivnaGodina?: GodinaStudijaDetalji;
   otvorenPredmetId: number | null = null;
 
+  //Ovde sam koristio ChangeDetectorRef umesto signala zato sto sam imao samo jedan tok podatak (ucitaj i prikazi)
+  //pa mi je on bio dovoljan kako bi mi se sve prikazalo odmah pri ucitavanju komponente
+
   constructor(
     private programService: StudijskiProgramService,
     private route: ActivatedRoute,
@@ -26,14 +29,16 @@ export class DetaljiStudijskogProgramaComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      const id = +params['id'];
+      const id = +params['id']; //znak plus sluzi da brzo pretvori id iz url-a u broj
       if (id) {
         this.programService.getDetalji(id).subscribe(data => {
           this.detalji = data;
           console.log('Podaci unutar subscribe-a:', this.detalji);
+          //Provervamo da li u podacima postoji bar jedan podatak o godini studija
           if (this.detalji.godineStudija && this.detalji.godineStudija.length > 0) {
+            //Ako postoji sortiramo ga od godine 1 pa nadalje
             this.detalji.godineStudija.sort((a, b) => a.godina - b.godina);
-            this.aktivnaGodina = this.detalji.godineStudija[0];
+            this.aktivnaGodina = this.detalji.godineStudija[0]; //Prva godina ce biti automatski izabrana
           }
 
           this.cdr.detectChanges();
@@ -42,11 +47,13 @@ export class DetaljiStudijskogProgramaComponent implements OnInit {
     });
   }
 
+  //Kada korisnik klikne na drugu godinu to se ovde menja
   promeniGodinu(godina: GodinaStudijaDetalji): void {
     this.aktivnaGodina = godina;
     this.otvorenPredmetId = null;
   }
 
+  //Ova funkcija sluzi za prebacivanje prikaza jednog predmeta u drugi
   togglePredmet(predmetId: number): void {
     if (this.otvorenPredmetId === predmetId) {
       this.otvorenPredmetId = null;
@@ -55,8 +62,11 @@ export class DetaljiStudijskogProgramaComponent implements OnInit {
     }
   }
 
+  //Pretvaranje obicnog broja u rimski
   uRimski(broj: number): string {
     const rimski = ['I', 'II', 'III', 'IV', 'V', 'VI'];
-    return rimski[broj - 1] || broj.toString();
+    //ovde sam oduzimao jedan od broja kako bi ga pretvorio u pravi iz liste
+    //dodao sam uslov ako se prikaze neki broj koji ne postoji u listi da ga pretvori u string
+    return rimski[broj - 1] || broj.toString(); 
   }
 }
