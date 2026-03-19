@@ -4,7 +4,6 @@ import { ColumnDef } from '../../models/column-def';
 
 @Component({
   selector: 'app-generic-table',
-  standalone: true,
   imports: [CommonModule],
   templateUrl: './generic-table-component.html',
   styleUrls: ['./generic-table-component.css']
